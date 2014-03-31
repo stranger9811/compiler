@@ -1,8 +1,8 @@
-a.out:	lex.yy.c Ccfg.tab.c
-	gcc lex.yy.c Ccfg.tab.c -ll
-lex.yy.c:	Ccfg.l Ccfg.tab.h
+a.out:	lex.yy.c Ccfg.tab.cpp
+	g++ lex.yy.c Ccfg.tab.cpp -ll -D debug
+lex.yy.c:	Ccfg.l Ccfg.tab.hpp
 	flex Ccfg.l
-Ccfg.tab.h:	Ccfg.y
-	bison -d Ccfg.y
-Ccfg.tab.c:	Ccfg.y
-	bison -d Ccfg.y
+Ccfg.tab.hpp:	Ccfg.ypp
+	bison -dv Ccfg.ypp
+Ccfg.tab.cpp:	Ccfg.ypp
+	bison -dv Ccfg.ypp

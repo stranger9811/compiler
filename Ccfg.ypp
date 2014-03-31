@@ -1,0 +1,358 @@
+%{
+#include <stdlib.h>
+#include <stdio.h>
+#include <string>
+#include<vector>
+#include <cstring>
+#include <utility>
+#include <algorithm>
+
+using namespace std;
+void yyerror(const char *s)
+{
+
+   fprintf(stderr, "%s\n", s);
+ 
+}
+
+char all_lexemes[20000];
+int index_all_lexemes;
+struct llm {
+	char *start;
+	char token[20];
+	int dimension;
+};
+struct symbol_table {
+	vector <struct symbol_table *> children;
+	struct symbol_table *parent;
+	vector <struct llm> table;
+};
+
+struct symbol_table *current_symbol_table;
+
+
+int yylex();
+int yyparse();
+int yywrap();
+
+
+%}
+
+%union {
+
+long long integer;
+long double real;
+char lexeme[10000];
+struct aaaa {
+	int dimension;
+	char var_name[100];
+};
+struct bbbb {
+	char var_name[50][100];
+	int dimension[50];
+	int index;
+};
+struct bbbb init_struct;
+struct aaaa tuple;
+
+//Yet to include exponential numbers and hexadecimals.
+};
+
+
+%token T_STRUCT
+%token T_BREAK
+%token T_CONTINUE
+%token T_TYPEDEF
+%token T_CHAR
+%token T_DOUBLE
+%token T_INT
+%token T_FLOAT
+%token T_LONG_LONG
+%token T_FOR
+%token T_IF
+%token T_ELSE
+%token T_WHILE
+%token T_GOTO
+%token T_RETURN
+%token T_PRINTF
+%token T_VOID
+%token T_SCANF
+%token T_SIZEOF
+%token T_UNSIGNED
+%token T_SIGNED
+%token T_CONST
+%token T_SHORT
+%token T_EXTERN
+%token T_LONG
+%token T_BOOL
+%token T_APOS
+
+%token <real> T_DEC_FLOAT
+%token <integer> T_DEC_INT
+%token <lexeme> T_STRING
+%token <lexeme> T_HEADER
+%token <lexeme> ID
+
+%token <lexeme> T_MAIN
+%token <lexeme> T_AND
+%token <lexeme> T_GREATER_THAN_EQUAL
+%token <lexeme> T_LESS_THAN_EQUAL
+%token <lexeme> T_EQUAL_TEST
+%token <lexeme> T_NOT_EQUAL
+%token <lexeme> T_OR
+%token <lexeme> T_PLUS_SELF
+%token <lexeme> T_MINUS_SELF
+%token <lexeme> T_MULT_SELF
+%token <lexeme> T_DIVIDE_SELF
+%token <lexeme> T_THIS_POINTER
+%token <lexeme> T_ADD_ONE
+%token <lexeme> T_SUB_ONE
+%token <lexeme> T_IO_INT
+%token <lexeme> T_IO_LONG_LONG
+%token <lexeme> T_IO_STRING
+%token <lexeme> T_IO_FLOAT
+
+%right '{'
+%right '('
+%right '['
+%left ','
+%right  T_MULT_SELF T_DIVIDE_SELF
+%right  T_PLUS_SELF T_MINUS_SELF
+%right  '='
+%left T_OR
+%left T_AND
+%left '|'
+%left '^'
+%left '&'
+%left T_EQUAL_TEST T_NOT_EQUAL
+%left '>' T_GREATER_THAN_EQUAL
+%left '<' T_LESS_THAN_EQUAL
+%left '+' '-'
+%left '*' '/' '%'
+/*%right '&'                   address of a variable*/
+%right DEREF 	/* using unary * for dereferncing a pointer.*/
+/*%right   (type)              typecasting*/
+%right  '!'
+%right  UPLUS UMINUS	/*unary + and -*/
+%right  T_ADD_ONE T_SUB_ONE
+%left T_THIS_POINTER
+%left '.'
+%left ']'
+%left ')'
+%right '}'
+
+%type<lexeme> basic
+%type<lexeme> type
+%type<tuple> identifier
+%type<integer> array
+%type<init_struct> init
+%type<tuple> assign_stmt
+
+
+%start code
+
+%%
+code  : decl code	
+	| decl
+	;
+decl  : type identifier';'
+	| T_TYPEDEF type ID';'  
+	| type func block  	/*This is for function definition only. No rule yet for function declation.*/
+	| void func block	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
+	| T_STRUCT ID block';'  
+	| T_HEADER
+	;
+/*	| #define macro const*/
+type  : type '*' %prec DEREF
+	| basic  {strcpy($$,$1);}
+	;
+basic : T_LONG_LONG  	{strcpy($$, "long long");}
+	| T_INT 			{strcpy($$,"int");}
+	| T_CHAR 			{strcpy($$,"char");}
+	| T_FLOAT 			{strcpy($$,"float");}
+	| T_DOUBLE 			{strcpy($$,"double");}
+	| T_BOOL			{strcpy($$,"bool");}
+	;
+void  : void '*' %prec DEREF
+	| T_VOID
+	;
+func  : ID'('args')' 
+	| ID'('')' 
+	| T_MAIN'('args')' 
+	| T_MAIN'('')'
+	;
+args  : type identifier',' args  
+	| type identifier
+	;
+brac_open : '{' { 
+#ifdef debug
+	printf("creating new symbol table\n");
+#endif
+				  struct symbol_table *temp = (struct symbol_table *)malloc(sizeof(struct symbol_table));
+				  temp->table.clear();
+				  printf("in brac_open size of temp = %d\n",temp->table.size());
+				  current_symbol_table->children.push_back(temp); 
+				  temp->parent = current_symbol_table;
+
+				  current_symbol_table = temp;
+				  printf("in brac_open size of current symbol table = %d\n",current_symbol_table->table.size());
+		 }
+
+brac_close : '}' {
+#ifdef debug
+	printf("destroying symbol table\n");
+#endif
+				  struct symbol_table *temp = current_symbol_table;
+				  current_symbol_table = temp->parent;
+				  free(temp);
+		 }
+
+block  : brac_open M brac_close 	/*block can either be many statements enclosed in braces or just one S.*/
+	| S 		/*S can again be multiple statments separated by comma.*/
+	;
+
+M  : S M  		/*Expanding statements inside a block*/
+	| S 
+	;
+
+S  : S1';'		/* comma terminated statement or a block statement like if, for, while */
+	| block_stmt
+	;
+S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization*/
+	|stmt
+	|type init {
+			printf("debugxx\n");
+			struct llm temp;
+
+			strcpy(temp.token,$1); 
+			for(int i=0;i<$2.index;i++) {
+				/* checking if variable is already declared */
+					printf("size of current symbol table = %d\n",current_symbol_table->table.size());
+					for(int j=0; j<current_symbol_table->table.size(); j++) {
+			
+
+						if(strcmp(current_symbol_table->table[j].start,$2.var_name[i])==0) {
+							printf("redeclaration \n");
+						}
+					}
+					
+				/*    =------------------------------------ */
+					temp.dimension = $2.dimension[i];
+					temp.start = &(all_lexemes[index_all_lexemes]);
+					int len = strlen($2.var_name[i]);
+					printf("debug\n");
+					for(int j=0; j<len;j++)
+					{
+						all_lexemes[index_all_lexemes+j] = $2.var_name[i][j]; 
+					}
+					printf("33debug\n");
+					all_lexemes[index_all_lexemes+len] = '\0';
+					index_all_lexemes += len+1;
+					current_symbol_table->table.push_back(temp);
+				}
+			#ifdef debug
+				printf("Variables declared \n"); 
+				for(int i=0;i<$2.index;i++) {
+					printf("%s %d\n",$2.var_name[i],$2.dimension[i]);
+				}
+			#endif
+			printf("debug\n");
+
+	}
+	;
+
+init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializing, use assign_stmt*/
+						 {
+								strcpy($$.var_name[0],$1.var_name);
+								$$.dimension[0] = $1.dimension;
+								$$.index = 1;
+								for(int i=0; i<$3.index; i++) {
+									$$.dimension[$$.index] = $3.dimension[i];
+									strcpy($$.var_name[$$.index],$3.var_name[i]);
+									$$.index++;
+								}
+						} 
+	| identifier ',' init {
+								strcpy($$.var_name[0],$1.var_name);
+								$$.dimension[0] = $1.dimension;
+								$$.index = 1;
+								for(int i=0; i<$3.index; i++) {
+									$$.dimension[$$.index] = $3.dimension[i];
+									strcpy($$.var_name[$$.index],$3.var_name[i]);
+									$$.index++;
+								}
+							} 
+	| assign_stmt {
+						strcpy($$.var_name[0],$1.var_name);
+						$$.dimension[0] = $1.dimension;
+						$$.index = 1;
+					}
+	| identifier  {
+					strcpy($$.var_name[0],$1.var_name);
+					$$.dimension[0] = $1.dimension;
+					$$.index = 1;
+				  }
+	;
+
+block_stmt : T_IF '('stmt')' '{'M'}' 		/*without brace if statements not allowed!*/
+	| T_IF '('stmt')' '{' T_ELSE '}'
+	| T_FOR '('S1';'S1';'S1')' block  
+	| T_WHILE '('S1')' block  
+	;
+stmt: expr			/*Useless non-terminal. Too lazy to update.*/
+	;
+expr  : expr '+' expr
+	| func
+	| expr T_EQUAL_TEST expr
+	| expr '<' expr
+	| expr '>' expr
+	| expr T_LESS_THAN_EQUAL expr
+	| expr T_GREATER_THAN_EQUAL expr
+	| expr T_NOT_EQUAL expr
+	| assign_stmt
+    	| expr '-' expr
+	| expr '*' expr
+    	| expr '/' expr
+	| expr '%' expr
+	| expr T_AND expr
+	| expr T_OR expr
+	| '!' expr
+	| '('expr')'
+	| ID
+	| '+' expr %prec UPLUS
+	| '-' expr %prec UMINUS
+	|number 
+	;
+assign_stmt : ID '=' expr {
+							$$.dimension = 0;
+							strcpy($$.var_name,$1);
+
+				}/*Assignment statement.*/
+	;
+
+number : T_DEC_INT	
+	| T_DEC_FLOAT
+	;
+
+identifier  : ID	{  		strcpy($$.var_name,$1);
+							$$.dimension = 0;
+					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
+		| ID array {
+							strcpy($$.var_name,$1);
+							$$.dimension = $2;
+		}
+	;
+array  : '[' ID ']' array  {$$ = $4 +1;}
+	| '[' ID ']' {$$ = 1;}
+	| '[' T_DEC_INT ']' { $$ = 1;}
+	| '[' T_DEC_INT ']' array {$$ = $4 + 1;}
+	;
+%%
+
+int main()
+{
+		current_symbol_table = (struct symbol_table *)malloc(sizeof(struct symbol_table));
+		current_symbol_table->parent = current_symbol_table;
+        yyparse();
+		return 0;
+}

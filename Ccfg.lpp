@@ -56,8 +56,6 @@ hex [A-F0-9]
 <INITIAL>"+"			{return yytext[0];}
 <INITIAL>"."			{return yytext[0];}
 <INITIAL>"-"                      {return yytext[0];}
-<INITIAL>"["                      {return yytext[0];}
-<INITIAL>"]"                      {return yytext[0];}
 <INITIAL>"*"                      {return yytext[0];}
 <INITIAL>"/"                      {return yytext[0];}
 <INITIAL>"/*"                      {BEGIN(IN_COMMENT);}
