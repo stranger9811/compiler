@@ -20,6 +20,19 @@ Pointer
 
 };
 
+
+
+struct attr
+{
+	enum type_num my_type;
+
+	char var_name[50][100];	
+	int index;
+	int dimension[50];
+
+	
+};
+
 /*
 string enumtostring(enum type_enum type)
 {

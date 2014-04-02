@@ -29,28 +29,18 @@ void yyerror(const char *s)
 
 %}
 
+
 %code requires
 {
 	#include "resources.h"
 }
 
 %union {
-enum type_enum my_type;
 long long integer;
 long double real;
 char lexeme[10000];
-struct aaaa {
-	int dimension;
-	char var_name[100];
-};
-struct bbbb {
-	char var_name[50][100];
-	int dimension[50];
-	int index;
-};
-struct bbbb init_struct;
-struct aaaa tuple;
 
+struct attr attributes;
 //Yet to include exponential numbers and hexadecimals.
 };
 
@@ -137,13 +127,13 @@ struct aaaa tuple;
 %left ')'
 %right '}'
 
-%type<my_type> basic
-%type<my_type> type
-%type<tuple> identifier
-%type<integer> array
-%type<init_struct> init
-%type<tuple> assign_stmt
-%type<my_type> expr
+%type<attributes> basic
+%type<attributes> type
+%type<attributes> identifier
+%type<attributes> array
+%type<attributes> init
+%type<attributes> assign_stmt
+%type<attributes> expr
 
 
 %start code
@@ -161,14 +151,14 @@ decl  : type identifier';'
 	;
 /*	| #define macro const*/
 type  : type '*' %prec DEREF
-	| basic  {$$=$1;}
+	| basic  {$$.my_type=$1.my_type;}
 	;
-basic : T_LONG_LONG  			{$$=Long_long;}
-	| T_INT 			{$$=Int;}
-	| T_CHAR 			{$$=Char;}
-	| T_FLOAT 			{$$=Float;}
-	| T_DOUBLE 			{$$=Double;}
-	| T_BOOL			{$$=Bool;}
+basic : T_LONG_LONG  			{$$.my_type=Long_long;}
+	| T_INT 			{$$.my_type=Int;}
+	| T_CHAR 			{$$.my_type=Char;}
+	| T_FLOAT 			{$$.my_type=Float;}
+	| T_DOUBLE 			{$$.my_type=Double;}
+	| T_BOOL			{$$.my_type=Bool;}
 	;
 void  : void '*' %prec DEREF
 	| T_VOID
@@ -219,7 +209,7 @@ S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization
 			
 			struct llm temp;
 
-			temp.my_type= $1; 
+			temp.my_type= $1.my_type; 
 			for(int i=0;i<$2.index;i++) {
 				/* checking if variable is already declared */
 
@@ -269,8 +259,8 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 						$$.index = 1;
 					}
 	| identifier  {
-					strcpy($$.var_name[0],$1.var_name);
-					$$.dimension[0] = $1.dimension;
+					strcpy($$.var_name[0],$1.var_name[0]);
+					$$.dimension[0] = $1.dimension[0];
 					$$.index = 1;
 				  }
 	;
@@ -282,128 +272,171 @@ block_stmt : T_IF '('stmt')' '{'M'}' 		/*without brace if statements not allowed
 	;
 stmt: expr			/*Useless non-terminal. Too lazy to update.*/
 	;
-expr  : expr '+' expr/* { 
-						if(strcmp($1,"char")==0 || strcmp($1,"bool")==0)
+expr  : expr '+' expr 			{ 
+						if($1.my_type==Char || $1.my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
-						else if(strcmp($3,"char")==0 || strcmp($3,"bool")==0)
+						else if($3.my_type==Char || $3.my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
 						else {
-							if((strcmp($1,"double")==0) || (strcmp($3,"double")==0) )
-								strcpy($$,"double");
-							else if((strcmp($1,"float")==0) || (strcmp($3,"float")==0))
-								strcpy($$,"float");
-							else if((strcmp($1,"long long")==0) || (strcmp($3,"long long")==0))
-								strcpy($$,"long long");
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
 							else 
-								strcpy($$,$1);
+								$$.my_type=$1.my_type;
 						}
 					}
 	| func
-	| expr T_EQUAL_TEST expr
-	| expr '<' expr
-	| expr '>' expr
-	| expr T_LESS_THAN_EQUAL expr
-	| expr T_GREATER_THAN_EQUAL expr
-	| expr T_NOT_EQUAL expr*/
-	| assign_stmt/*
-    	| expr '-' expr { 
-						if(strcmp($1,"char")==0 || strcmp($1,"bool")==0)
+	| expr T_EQUAL_TEST expr	{
+						$$.my_type=Bool;
+					}
+	| expr '<' expr			{
+						$$.my_type=Bool;
+					}
+	| expr '>' expr			{
+						$$.my_type=Bool;
+					}
+	| expr T_LESS_THAN_EQUAL expr	{
+						$$.my_type=Bool;
+					}
+	| expr T_GREATER_THAN_EQUAL expr{
+						$$.my_type=Bool;
+					}
+	| expr T_NOT_EQUAL expr		{
+						$$.my_type=Bool;
+					}
+	| assign_stmt
+    	| expr '-' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
-						else if(strcmp($3,"char")==0 || strcmp($3,"bool")==0)
+						else if($3.my_type==Char || $3.my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
 						else {
-							if((strcmp($1,"double")==0) || (strcmp($3,"double")==0) )
-								strcpy($$,"double");
-							else if((strcmp($1,"float")==0) || (strcmp($3,"float")==0))
-								strcpy($$,"float");
-							else if((strcmp($1,"long long")==0) || (strcmp($3,"long long")==0))
-								strcpy($$,"long long");
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
 							else 
-								strcpy($$,$1);
+								$$.my_type=$1.my_type;
 						}
 					}
-	| expr '*' expr { 
-						if(strcmp($1,"char")==0 || strcmp($1,"bool")==0)
+	| expr '*' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
-						else if(strcmp($3,"char")==0 || strcmp($3,"bool")==0)
+						else if($3.my_type==Char || $3.my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
 						else {
-							if((strcmp($1,"double")==0) || (strcmp($3,"double")==0) )
-								strcpy($$,"double");
-							else if((strcmp($1,"float")==0) || (strcmp($3,"float")==0))
-								strcpy($$,"float");
-							else if((strcmp($1,"long long")==0) || (strcmp($3,"long long")==0))
-								strcpy($$,"long long");
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
 							else 
-								strcpy($$,$1);
+								$$.my_type=$1.my_type;
 						}
 					}
-    	| expr '/' expr { 
-						if(strcmp($1,"char")==0 || strcmp($1,"bool")==0)
+    	| expr '/' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
-						else if(strcmp($3,"char")==0 || strcmp($3,"bool")==0)
+						else if($3.my_type==Char || $3.my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
 						else {
-							if((strcmp($1,"double")==0) || (strcmp($3,"double")==0) )
-								strcpy($$,"double");
-							else if((strcmp($1,"float")==0) || (strcmp($3,"float")==0))
-								strcpy($$,"float");
-							else if((strcmp($1,"long long")==0) || (strcmp($3,"long long")==0))
-								strcpy($$,"long long");
+							if(($1.my_type==Double) || ($3.my_type==Double) )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
 							else 
-								strcpy($$,$1);
+								$$.my_type=$1.my_type;
 						}
 
 					}
-	| expr '%' expr   { 
-						if(!(strcmp($1,"int")==0 || strcmp($1,"long long")==0))
+	| expr '%' expr   		{ 
+						if(!($1.my_type==Int || $1.my_type==Long_long || $1.my_type==Bool))        /* Added Bool*/
 							yyerror("error: MOD supports only bool,int,long long");
-						else if(!(strcmp($3,"int")==0 || strcmp($3,"long long")==0))
+						else if(!($3.my_type==Int || $3.my_type==Long_long || $3.my_type==Bool))
 							yyerror("error: MOD supports only bool,int,long long");
 						else
-							strcpy($$,$3);
-					  }
-	| expr T_AND expr { 
-						if(!(strcmp($1,"bool")==0 || strcmp($1,"int")==0 || strcmp($1,"long long")==0))
+							$$.my_type=$3.my_type;
+					}
+	| expr T_AND expr 		{ 
+						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
-						else if(!(strcmp($3,"bool")==0 || strcmp($3,"int")==0 || strcmp($3,"long long")==0))
+						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
 						else 
-							strcpy($$,"bool");
-					}*/
-	| expr T_OR expr { 
-						if(!($1==Bool || $1==Int || $1==Long_long))
+							$$.my_type=Bool;
+					}
+	| expr T_OR expr 		{	 
+						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. left operand is \n");
-						else if(!($3==Bool || $3==Int || $3==Long_long))
+						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. right operand is \n");
 						else 
-							$$=Bool;
+							$$.my_type=Bool;
 					}
-	| '!' expr    {$$ = Bool;}
-	| '('expr')'  {$$ = $2;}
-	| ID  {
+	| '!' expr    {$$.my_type = Bool;}
+	| '('expr')'  {$$.my_type = $2.my_type;}
+	| identifier  {
 			struct symbol_table *temp = current_symbol_table;
 			int flag = 1;
 			while(flag) {
-			           	if( temp->table.find(string( $1)) != temp->table.end()){
-						$$ = temp->table[string($1)].my_type;
-						flag = 0;
-					
+			           	if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
+						$$.my_type = temp->table[string($1.var_name[0])].my_type;
+							flag = 0;
+						$$.dimension = temp->table[string($1.var_name[0])].dimension - $1.dimension;
 				}
-				if(temp->parent==NULL&&flag==1) {
+				if(temp->parent==NULL && flag==1) {
 					yyerror("error: variable not declared\n");
 					flag = 0;
 				}
 				temp = temp->parent;
 			}
 		  }
-	| '+' expr %prec UPLUS {$$=$2;}
-	| '-' expr %prec UMINUS {$$=$2;}
+	| '+' expr %prec UPLUS {$$.my_type=$2.my_type;}
+	| '-' expr %prec UMINUS {$$.my_type=$2.my_type;}
 	|number 
 	;
-assign_stmt : ID '=' expr {
-							$$.dimension = 0;
-							strcpy($$.var_name,$1);
+assign_stmt : identifier '=' expr {
+	                       struct symbol_table *temp = current_symbol_table;
+                       		int flag = 1;
+                        	while(flag) {
+                                        if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
+                                                $$.my_type = temp->table[string($1.var_name[0])].my_type;
+                                                flag = 0;
+						$$.dimension = temp->table[string($1.var_name[0])].dimension - $1.dimension;
+
+                                	}
+                                	if(temp->parent==NULL && flag==1) {
+                                        	yyerror("error: variable not declared\n");
+                                        	flag = 0;
+                                	}
+                                	temp = temp->parent;
+                        	}
+				enum type t = $$.my_type;
+				enum type tt = $3.my_type; 
+				if (t == Int && tt== Long_long)
+					yyerror("Warning: assigning long long to an integer");
+				else if (t==Int && tt == Float)
+					yyerror("Warning: assigning float to an int");
+				else if (t==Int && tt == Double)
+					yyerror("Warning: assigning int to double");
+				else if (t==Float && tt == Double)
+					yyerror("Warning: assigning float to a double");
+				else if (t==Long_long && tt == Float)
+					yyerror("Warning: assigning long long to a float");
+				else if (t==Long_long && tt == Double)
+					yyerror("Warning: assigning long long to a double");
+				else if (t != tt || $$.dimension != $3.dimension )
+					yyerror("Warning: Type mismatch");
+				
+			
 
 				}/*Assignment statement.*/
 	;
@@ -417,13 +450,13 @@ identifier  : ID	{  		strcpy($$.var_name,$1);
 					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
 		| ID array {
 							strcpy($$.var_name,$1);
-							$$.dimension = $2;
+							$$.dimension = $2.dimension;
 		}
 	;
-array  : '[' ID ']' array  {$$ = $4 +1; printf("%s",$2);}
-	| '[' ID ']' {$$ = 1;}
-	| '[' T_DEC_INT ']' { $$ = 1;}
-	| '[' T_DEC_INT ']' array {$$ = $4 + 1;}
+array  : '[' ID ']' array  {$$.dimension = $4.dimension +1; printf("%s",$2);}
+	| '[' ID ']' {$$.dimension = 1;}
+	| '[' T_DEC_INT ']' { $$.dimension = 1;}
+	| '[' T_DEC_INT ']' array {$$.dimension = $4.dimension + 1;}
 	;
 %%
 
