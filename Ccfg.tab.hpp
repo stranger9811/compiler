@@ -39,6 +39,15 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+/* Line 2053 of yacc.c  */
+#line 33 "Ccfg.ypp"
+
+	#include "resources.h"
+
+
+/* Line 2053 of yacc.c  */
+#line 51 "Ccfg.tab.hpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -107,9 +116,9 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 41 "Ccfg.ypp"
+#line 37 "Ccfg.ypp"
 
-
+enum type_enum my_type;
 long long integer;
 long double real;
 char lexeme[10000];
@@ -129,7 +138,7 @@ struct aaaa tuple;
 
 
 /* Line 2053 of yacc.c  */
-#line 133 "Ccfg.tab.hpp"
+#line 142 "Ccfg.tab.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

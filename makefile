@@ -1,8 +1,8 @@
 a.out:	lex.yy.c Ccfg.tab.cpp
-	g++ lex.yy.c Ccfg.tab.cpp -ll -D debug
-lex.yy.c:	Ccfg.l Ccfg.tab.hpp
-	flex Ccfg.l
-Ccfg.tab.hpp:	Ccfg.ypp
+	g++ lex.yy.c Ccfg.tab.cpp -ll -std=c++11
+lex.yy.c:	Ccfg.l Ccfg.tab.hpp resources.h
+	flex Ccfg.l 
+Ccfg.tab.hpp:	Ccfg.ypp resources.h
 	bison -dv Ccfg.ypp
-Ccfg.tab.cpp:	Ccfg.ypp
+Ccfg.tab.cpp:	Ccfg.ypp resources.h
 	bison -dv Ccfg.ypp

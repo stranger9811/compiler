@@ -285,13 +285,13 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 90
-#define YY_END_OF_BUFFER 91
+#define YY_NUM_RULES 91
+#define YY_END_OF_BUFFER 92
 static yyconst short int yy_accept[240] =
     {   0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-       91,   89,   88,   88,   66,   81,   89,   57,   68,   27,
+       92,   90,   89,   88,   66,   81,   90,   57,   68,   27,
        28,   34,   29,   74,   31,   30,   35,   79,   79,   73,
        51,   70,   52,   80,   32,   33,   80,   80,   80,   80,
        80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
@@ -556,6 +556,8 @@ char *yytext;
 	#include <utility>
 	#include <algorithm>
 
+	extern int no_line;
+
 #define STRING 1
 
 #define HEX 2
@@ -574,7 +576,7 @@ char *yytext;
 
 #define HEADER4 9
 
-#line 578 "lex.yy.c"
+#line 580 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -736,10 +738,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 26 "Ccfg.l"
+#line 28 "Ccfg.l"
 
 
-#line 743 "lex.yy.c"
+#line 745 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -824,455 +826,460 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 28 "Ccfg.l"
+#line 30 "Ccfg.l"
 {return (T_STRUCT);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 29 "Ccfg.l"
+#line 31 "Ccfg.l"
 {return (T_BREAK);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 30 "Ccfg.l"
+#line 32 "Ccfg.l"
 {return (T_CONTINUE);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 31 "Ccfg.l"
+#line 33 "Ccfg.l"
 {return (T_TYPEDEF);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 32 "Ccfg.l"
+#line 34 "Ccfg.l"
 {return (T_CHAR);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 33 "Ccfg.l"
+#line 35 "Ccfg.l"
 {return (T_DOUBLE);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 34 "Ccfg.l"
+#line 36 "Ccfg.l"
 {return (T_INT);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 35 "Ccfg.l"
+#line 37 "Ccfg.l"
 {return (T_FLOAT);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 36 "Ccfg.l"
+#line 38 "Ccfg.l"
 {return (T_LONG_LONG);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 37 "Ccfg.l"
+#line 39 "Ccfg.l"
 {return (T_BOOL);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 38 "Ccfg.l"
+#line 40 "Ccfg.l"
 {return (T_FOR);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 39 "Ccfg.l"
+#line 41 "Ccfg.l"
 {return (T_IF);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 40 "Ccfg.l"
+#line 42 "Ccfg.l"
 {return (T_ELSE);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 41 "Ccfg.l"
+#line 43 "Ccfg.l"
 {return (T_WHILE);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 42 "Ccfg.l"
+#line 44 "Ccfg.l"
 {return (T_GOTO);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 43 "Ccfg.l"
+#line 45 "Ccfg.l"
 {return (T_RETURN);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 44 "Ccfg.l"
+#line 46 "Ccfg.l"
 {return (T_PRINTF);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 45 "Ccfg.l"
+#line 47 "Ccfg.l"
 {return (T_VOID);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 46 "Ccfg.l"
+#line 48 "Ccfg.l"
 {return (T_SCANF);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 47 "Ccfg.l"
+#line 49 "Ccfg.l"
 {return (T_SIZEOF);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 48 "Ccfg.l"
+#line 50 "Ccfg.l"
 {return (T_UNSIGNED);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 49 "Ccfg.l"
+#line 51 "Ccfg.l"
 {return (T_SIGNED);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 50 "Ccfg.l"
+#line 52 "Ccfg.l"
 {return (T_CONST);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 51 "Ccfg.l"
+#line 53 "Ccfg.l"
 {return (T_SHORT);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 52 "Ccfg.l"
+#line 54 "Ccfg.l"
 {return (T_EXTERN);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 53 "Ccfg.l"
+#line 55 "Ccfg.l"
 {return (T_LONG);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 54 "Ccfg.l"
+#line 56 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 55 "Ccfg.l"
+#line 57 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 56 "Ccfg.l"
+#line 58 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 57 "Ccfg.l"
+#line 59 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 58 "Ccfg.l"
+#line 60 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 59 "Ccfg.l"
+#line 61 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 60 "Ccfg.l"
+#line 62 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 61 "Ccfg.l"
+#line 63 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 62 "Ccfg.l"
+#line 64 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 63 "Ccfg.l"
+#line 65 "Ccfg.l"
 {BEGIN(IN_COMMENT);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 64 "Ccfg.l"
+#line 66 "Ccfg.l"
 {BEGIN(COMMENT_TYPE_2);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 65 "Ccfg.l"
+#line 67 "Ccfg.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 66 "Ccfg.l"
+#line 68 "Ccfg.l"
 {}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 67 "Ccfg.l"
+#line 69 "Ccfg.l"
 {}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 68 "Ccfg.l"
+#line 70 "Ccfg.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 69 "Ccfg.l"
+#line 71 "Ccfg.l"
 {}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 70 "Ccfg.l"
+#line 72 "Ccfg.l"
 {return (T_MAIN);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 71 "Ccfg.l"
+#line 73 "Ccfg.l"
 {BEGIN(HEADER);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 72 "Ccfg.l"
+#line 74 "Ccfg.l"
 {BEGIN(HEADER1);}	
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 73 "Ccfg.l"
+#line 75 "Ccfg.l"
 {BEGIN(HEADER2);} 
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 74 "Ccfg.l"
+#line 76 "Ccfg.l"
 {BEGIN(HEADER3); strcpy(yylval.lexeme,yytext);return (T_HEADER);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 75 "Ccfg.l"
+#line 77 "Ccfg.l"
 {BEGIN(HEADER4); strcpy(yylval.lexeme,yytext);return (T_HEADER);;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 76 "Ccfg.l"
+#line 78 "Ccfg.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 77 "Ccfg.l"
+#line 79 "Ccfg.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 79 "Ccfg.l"
+#line 81 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 80 "Ccfg.l"
+#line 82 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 81 "Ccfg.l"
+#line 83 "Ccfg.l"
 {return (T_GREATER_THAN_EQUAL);}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 82 "Ccfg.l"
+#line 84 "Ccfg.l"
 {return (T_LESS_THAN_EQUAL);}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 83 "Ccfg.l"
+#line 85 "Ccfg.l"
 {return (T_EQUAL_TEST);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 84 "Ccfg.l"
+#line 86 "Ccfg.l"
 {return (T_NOT_EQUAL);}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 85 "Ccfg.l"
+#line 87 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 86 "Ccfg.l"
+#line 88 "Ccfg.l"
 {return (T_AND);}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 87 "Ccfg.l"
+#line 89 "Ccfg.l"
 {return (T_OR);}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 88 "Ccfg.l"
+#line 90 "Ccfg.l"
 {return (T_PLUS_SELF);}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 89 "Ccfg.l"
+#line 91 "Ccfg.l"
 {return (T_MINUS_SELF);}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 90 "Ccfg.l"
+#line 92 "Ccfg.l"
 {return (T_MULT_SELF);}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 91 "Ccfg.l"
+#line 93 "Ccfg.l"
 {return (T_DIVIDE_SELF);}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 92 "Ccfg.l"
+#line 94 "Ccfg.l"
 {return (T_ADD_ONE);}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 93 "Ccfg.l"
+#line 95 "Ccfg.l"
 {return (T_SUB_ONE);}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 94 "Ccfg.l"
+#line 96 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 95 "Ccfg.l"
+#line 97 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 96 "Ccfg.l"
+#line 98 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 97 "Ccfg.l"
+#line 99 "Ccfg.l"
 {return (T_THIS_POINTER);}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 98 "Ccfg.l"
+#line 100 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 100 "Ccfg.l"
+#line 102 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 101 "Ccfg.l"
+#line 103 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 102 "Ccfg.l"
+#line 104 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 103 "Ccfg.l"
+#line 105 "Ccfg.l"
 {return yytext[0];}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 105 "Ccfg.l"
+#line 107 "Ccfg.l"
 {printf("(T_HEX_INT, \"%s\")",yytext);}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 106 "Ccfg.l"
+#line 108 "Ccfg.l"
 {printf("(T_EXP, \"%s\")",yytext);}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 107 "Ccfg.l"
+#line 109 "Ccfg.l"
 {printf("(T_EXP, \"%s\")",yytext);}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 108 "Ccfg.l"
+#line 110 "Ccfg.l"
 {yylval.real= atof(yytext);return (T_DEC_FLOAT);}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 109 "Ccfg.l"
+#line 111 "Ccfg.l"
 {yylval.integer=atol(yytext);return (T_DEC_INT);}
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 111 "Ccfg.l"
+#line 113 "Ccfg.l"
 {strcpy(yylval.lexeme,yytext);return (ID);}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 112 "Ccfg.l"
+#line 114 "Ccfg.l"
 {return (T_APOS);BEGIN(STRING);}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 113 "Ccfg.l"
+#line 115 "Ccfg.l"
 {return (T_IO_INT);}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 114 "Ccfg.l"
+#line 116 "Ccfg.l"
 {return (T_IO_LONG_LONG);}
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 115 "Ccfg.l"
+#line 117 "Ccfg.l"
 {return (T_IO_STRING);}
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 116 "Ccfg.l"
+#line 118 "Ccfg.l"
 {return (T_IO_FLOAT);}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 117 "Ccfg.l"
+#line 119 "Ccfg.l"
 {return (T_APOS);BEGIN(INITIAL);}
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 118 "Ccfg.l"
+#line 120 "Ccfg.l"
 {strcpy(yylval.lexeme,yytext);return (T_STRING);}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 121 "Ccfg.l"
-;
+#line 122 "Ccfg.l"
+{no_line++;}
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 122 "Ccfg.l"
-{printf("\nERROR\nAborting %s ...\n",yytext); exit(0);}
+#line 123 "Ccfg.l"
+;
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 123 "Ccfg.l"
+#line 124 "Ccfg.l"
+{printf("\nERROR\nAborting %s ...\n",yytext); exit(0);}
+	YY_BREAK
+case 91:
+YY_RULE_SETUP
+#line 125 "Ccfg.l"
 ECHO;
 	YY_BREAK
-#line 1276 "lex.yy.c"
+#line 1283 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(HEX):
@@ -2171,6 +2178,6 @@ int main()
 	return 0;
 	}
 #endif
-#line 123 "Ccfg.l"
+#line 125 "Ccfg.l"
 
 

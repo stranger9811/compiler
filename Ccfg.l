@@ -6,6 +6,8 @@
 	#include <utility>
 	#include <algorithm>
 
+	extern int no_line;
+
 %}
 
 identifier_start  [a-zA-Z_]
@@ -117,8 +119,8 @@ hex [A-F0-9]
 <STRING>"\""      {return (T_APOS);BEGIN(INITIAL);}
 <STRING>{text_all}+      {strcpy(yylval.lexeme,yytext);return (T_STRING);}
 
-
-" "|"\n"|"\t"   ;
+"\n"          {no_line++;}
+" "|"\t"   ;
 .				{printf("\nERROR\nAborting %s ...\n",yytext); exit(0);}
 %%
 

@@ -8,9 +8,45 @@
 #include <utility>
 #include <algorithm>
 #include <map>
+#include "resources.h"
 
 using namespace std;
 int no_line;
+
+using namespace type_enum;
+std::string enumtostring(type_enum type)
+{
+
+	if(type==Bool) return "bool";
+	if(type==Long_long) return "long long";
+	if(type==Char) return "char";
+	if(type==Int) return "int";
+	if(Float==type) return "float";
+	if(Double==type) return "double";
+	if(Void==type) return "void";
+	if(Pointer==type) return "Pointer";
+}
+
+void yyerror(const char *s, string e = "")
+{
+
+   fprintf(stderr, "line %d: %s %s",no_line , s,c.c_str());
+ 
+}
+
+char all_lexemes[20000];
+int index_all_lexemes;
+struct llm {
+	type_enum my_type;
+	int dimension;
+};
+struct symbol_table {
+	vector <struct symbol_table *> children;
+	struct symbol_table *parent;
+	map <string, struct llm> table;
+	symbol_table() {}
+};
+
 struct symbol_table *current_symbol_table;
 
 
@@ -18,24 +54,12 @@ int yylex();
 int yyparse();
 int yywrap();
 
-void yyerror(const char *s)
-{
-
-        string e="";
-   fprintf(stderr, "line %d: %s %s",no_line , s,e.c_str());
-
-}
-
 
 %}
 
-%code requires
-{
-	#include "resources.h"
-}
 
 %union {
-enum type_enum my_type;
+type_enum my_type;
 long long integer;
 long double real;
 char lexeme[10000];
@@ -137,8 +161,8 @@ struct aaaa tuple;
 %left ')'
 %right '}'
 
-%type<my_type> basic
-%type<my_type> type
+%type<type_enum> basic
+%type<type_enum> type
 %type<tuple> identifier
 %type<integer> array
 %type<init_struct> init
@@ -227,13 +251,20 @@ S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization
 							yyerror("error: redeclaration \n");
 					
 				/*   ------------------------------------ */
-						else {
-							temp.dimension = $2.dimension[i];
-							current_symbol_table->table[string($2.var_name[i])]=(temp);
-						}
-			}
-#ifdef debug
-			printf("Variables declared \n"); 
+					temp.dimension = $2.dimension[i];
+					temp.start = &(all_lexemes[index_all_lexemes]);
+					int len = strlen($2.var_name[i]);
+					
+					for(int j=0; j<len;j++)
+					{
+						all_lexemes[index_all_lexemes+j] = $2.var_name[i][j]; 
+					}
+					all_lexemes[index_all_lexemes+len] = '\0';
+					index_all_lexemes += len+1;
+					current_symbol_table->table[string($2.var_name[i])]=(temp);
+				}
+			#ifdef debug
+				printf("Variables declared \n"); 
 				for(int i=0;i<$2.index;i++) {
 					printf("%s %d\n",$2.var_name[i],$2.dimension[i]);
 				}
@@ -304,8 +335,8 @@ expr  : expr '+' expr/* {
 	| expr '>' expr
 	| expr T_LESS_THAN_EQUAL expr
 	| expr T_GREATER_THAN_EQUAL expr
-	| expr T_NOT_EQUAL expr*/
-	| assign_stmt/*
+	| expr T_NOT_EQUAL expr
+	| assign_stmt
     	| expr '-' expr { 
 						if(strcmp($1,"char")==0 || strcmp($1,"bool")==0)
 							yyerror("error: MINUS does not support bool and char\n");
@@ -335,7 +366,7 @@ expr  : expr '+' expr/* {
 							else if((strcmp($1,"long long")==0) || (strcmp($3,"long long")==0))
 								strcpy($$,"long long");
 							else 
-								strcpy($$,$1);
+		2						strcpy($$,$1);
 						}
 					}
     	| expr '/' expr { 
@@ -373,9 +404,9 @@ expr  : expr '+' expr/* {
 					}*/
 	| expr T_OR expr { 
 						if(!($1==Bool || $1==Int || $1==Long_long))
-							yyerror("error: OR supports only bool,int,long long. left operand is \n");
-						else if(!($3==Bool || $3==Int || $3==Long_long))
-							yyerror("error: OR supports only bool,int,long long. right operand is \n");
+							yyerror("error: OR supports only bool,int,long long. left operand is ",enumtostring($1));
+						if(!($3==Bool || $3==Int || $3==Long_long))
+							yyerror("error: OR supports only bool,int,long long. right operand is ",enumtostring($3));
 						else 
 							$$=Bool;
 					}
