@@ -1,0 +1,139 @@
+%{
+#include <stdlib.h>
+#include <stdio.h>
+#include <string>
+#include<vector>
+#include <cstring>
+#include<iostream>
+#include <utility>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+int no_line;
+struct symbol_table *current_symbol_table;
+
+
+int yylex();
+int yyparse();
+int yywrap();
+
+void yyerror(const char *s)
+{
+
+        string e="";
+   fprintf(stderr, "line %d: %s %s",no_line , s,e.c_str());
+
+}
+
+
+%}
+
+
+%code requires
+{
+	#include "resources.h"
+}
+
+%union {
+long long integer;
+long double real;
+char lexeme[10000];
+
+struct attr attributes;
+//Yet to include exponential numbers and hexadecimals.
+};
+
+
+%token T_STRUCT
+%token T_BREAK
+%token T_CONTINUE
+%token T_TYPEDEF
+%token T_CHAR
+%token T_DOUBLE
+%token T_INT
+%token T_FLOAT
+%token T_LONG_LONG
+%token T_FOR
+%token T_IF
+%token T_ELSE
+%token T_WHILE
+%token T_GOTO
+%token T_RETURN
+%token T_PRINTF
+%token T_VOID
+%token T_SCANF
+%token T_SIZEOF
+%token T_UNSIGNED
+%token T_SIGNED
+%token T_CONST
+%token T_SHORT
+%token T_EXTERN
+%token T_LONG
+%token T_BOOL
+%token T_APOS
+
+%token <real> T_DEC_FLOAT
+%token <integer> T_DEC_INT
+%token <lexeme> T_STRING
+%token <lexeme> T_HEADER
+%token <lexeme> ID
+
+%token <lexeme> T_MAIN
+%token <lexeme> T_AND
+%token <lexeme> T_GREATER_THAN_EQUAL
+%token <lexeme> T_LESS_THAN_EQUAL
+%token <lexeme> T_EQUAL_TEST
+%token <lexeme> T_NOT_EQUAL
+%token <lexeme> T_OR
+%token <lexeme> T_PLUS_SELF
+%token <lexeme> T_MINUS_SELF
+%token <lexeme> T_MULT_SELF
+%token <lexeme> T_DIVIDE_SELF
+%token <lexeme> T_THIS_POINTER
+%token <lexeme> T_ADD_ONE
+%token <lexeme> T_SUB_ONE
+%token <lexeme> T_IO_INT
+%token <lexeme> T_IO_LONG_LONG
+%token <lexeme> T_IO_STRING
+%token <lexeme> T_IO_FLOAT
+
+%right '{'
+%right '('
+%right '['
+%left ','
+%right  T_MULT_SELF T_DIVIDE_SELF
+%right  T_PLUS_SELF T_MINUS_SELF
+%right  '='
+%left T_OR
+%left T_AND
+%left '|'
+%left '^'
+%left '&'
+%left T_EQUAL_TEST T_NOT_EQUAL
+%left '>' T_GREATER_THAN_EQUAL
+%left '<' T_LESS_THAN_EQUAL
+%left '+' '-'
+%left '*' '/' '%'
+/*%right '&'                   address of a variable*/
+%right DEREF 	/* using unary * for dereferncing a pointer.*/
+/*%right   (type)              typecasting*/
+%right  '!'
+%right  UPLUS UMINUS	/*unary + and -*/
+%right  T_ADD_ONE T_SUB_ONE
+%left T_THIS_POINTER
+%left '.'
+%left ']'
+%left ')'
+%right '}'
+
+%type<attributes> basic
+%type<attributes> type
+%type<attributes> identifier
+%type<attributes> array
+%type<attributes> init
+%type<attributes> assign_stmt
+%type<attributes> expr
+
+
+%start code

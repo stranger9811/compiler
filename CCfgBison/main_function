@@ -1,0 +1,11 @@
+
+
+
+int main()
+{
+		no_line = 1;
+		current_symbol_table = new symbol_table;
+		current_symbol_table->parent = NULL;
+        yyparse();
+		return 0;
+}

@@ -1,0 +1,61 @@
+S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization*/
+	|stmt
+	|type init {
+			
+			struct llm temp;
+
+			temp.my_type= $1.my_type; 
+			for(int i=0;i<$2.index;i++) {
+				/* checking if variable is already declared */
+
+						if(current_symbol_table->table.find(string( $2.var_name[i])) != current_symbol_table->table.end())
+							yyerror("error: redeclaration \n");
+					
+				/*   ------------------------------------ */
+						else {
+							temp.dimension = $2.dimension[i];
+							current_symbol_table->table[string($2.var_name[i])]=(temp);
+						}
+			}
+#ifdef debug
+			printf("Variables declared \n"); 
+				for(int i=0;i<$2.index;i++) {
+					printf("%s %d\n",$2.var_name[i],$2.dimension[i]);
+				}
+			#endif
+
+	}
+	;
+
+init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializing, use assign_stmt*/
+						 {
+								strcpy($$.var_name[0],$1.var_name);
+								$$.dimension[0] = $1.dimension;
+								$$.index = 1;
+								for(int i=0; i<$3.index; i++) {
+									$$.dimension[$$.index] = $3.dimension[i];
+									strcpy($$.var_name[$$.index],$3.var_name[i]);
+									$$.index++;
+								}
+						} 
+	| identifier ',' init {
+								strcpy($$.var_name[0],$1.var_name);
+								$$.dimension[0] = $1.dimension;
+								$$.index = 1;
+								for(int i=0; i<$3.index; i++) {
+									$$.dimension[$$.index] = $3.dimension[i];
+									strcpy($$.var_name[$$.index],$3.var_name[i]);
+									$$.index++;
+								}
+							} 
+	| assign_stmt {
+						strcpy($$.var_name[0],$1.var_name);
+						$$.dimension[0] = $1.dimension;
+						$$.index = 1;
+					}
+	| identifier  {
+					strcpy($$.var_name[0],$1.var_name[0]);
+					$$.dimension[0] = $1.dimension[0];
+					$$.index = 1;
+				  }
+	;

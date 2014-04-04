@@ -1,0 +1,139 @@
+
+block_stmt : T_IF '('stmt')' '{'M'}' 		/*without brace if statements not allowed!*/
+	| T_IF '('stmt')' '{' T_ELSE '}'
+	| T_FOR '('S1';'S1';'S1')' block  
+	| T_WHILE '('S1')' block  
+	;
+stmt: expr			/*Useless non-terminal. Too lazy to update.*/
+	;
+expr  : expr '+' expr 			{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: PLUS does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: PLUS does not support bool and char\n");
+						else {
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+					}
+	| func
+	| expr T_EQUAL_TEST expr	{
+						$$.my_type=Bool;
+					}
+	| expr '<' expr			{
+						$$.my_type=Bool;
+					}
+	| expr '>' expr			{
+						$$.my_type=Bool;
+					}
+	| expr T_LESS_THAN_EQUAL expr	{
+						$$.my_type=Bool;
+					}
+	| expr T_GREATER_THAN_EQUAL expr{
+						$$.my_type=Bool;
+					}
+	| expr T_NOT_EQUAL expr		{
+						$$.my_type=Bool;
+					}
+	| assign_stmt
+    	| expr '-' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: MINUS does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: MINUS does not support bool and char\n");
+						else {
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+					}
+	| expr '*' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: MULTIPLY does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: MULTIPLY does not support bool and char\n");
+						else {
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+					}
+    	| expr '/' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: DIVIDE does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: DIVIDE does not support bool and char\n");
+						else {
+							if(($1.my_type==Double) || ($3.my_type==Double) )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+
+					}
+	| expr '%' expr   		{ 
+						if(!($1.my_type==Int || $1.my_type==Long_long || $1.my_type==Bool))        /* Added Bool*/
+							yyerror("error: MOD supports only bool,int,long long");
+						else if(!($3.my_type==Int || $3.my_type==Long_long || $3.my_type==Bool))
+							yyerror("error: MOD supports only bool,int,long long");
+						else
+							$$.my_type=$3.my_type;
+					}
+	| expr T_AND expr 		{ 
+						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+							yyerror("error: AND supports only bool,int,long long");
+						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+							yyerror("error: AND supports only bool,int,long long");
+						else 
+							$$.my_type=Bool;
+					}
+	| expr T_OR expr 		{	 
+						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+							yyerror("error: OR supports only bool,int,long long. left operand is \n");
+						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+							yyerror("error: OR supports only bool,int,long long. right operand is \n");
+						else 
+							$$.my_type=Bool;
+					}
+	| '!' expr    {$$.my_type = Bool;}
+	| '('expr')'  {$$.my_type = $2.my_type;}
+	| identifier  {
+			struct symbol_table *temp = current_symbol_table;
+			int flag = 1;
+			while(flag) {
+			           	if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
+						$$.my_type = temp->table[string($1.var_name[0])].my_type;
+							flag = 0;
+						$$.dimension = temp->table[string($1.var_name[0])].dimension - $1.dimension;
+				}
+				if(temp->parent==NULL && flag==1) {
+					yyerror("error: variable not declared\n");
+					flag = 0;
+				}
+				temp = temp->parent;
+			}
+		  }
+	| '+' expr %prec UPLUS {$$.my_type=$2.my_type;}
+	| '-' expr %prec UMINUS {$$.my_type=$2.my_type;}
+	|number 
+	;

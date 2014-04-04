@@ -1,0 +1,33 @@
+
+brac_open : '{' { 
+#ifdef debug
+	printf("creating new symbol table\n");
+#endif
+				  struct symbol_table *temp = new  symbol_table;
+				  current_symbol_table->children.push_back(temp); 
+				  temp->parent = current_symbol_table;
+
+				  current_symbol_table = temp;
+				 
+		 }
+
+brac_close : '}' {
+#ifdef debug
+	printf("destroying symbol table\n");
+#endif
+				  struct symbol_table *temp = current_symbol_table;
+				  current_symbol_table = temp->parent;
+				  delete temp;
+		 }
+
+block  : brac_open M brac_close 	/*block can either be many statements enclosed in braces or just one S.*/
+	| S 		/*S can again be multiple statments separated by comma.*/
+	;
+
+M  : S M  		/*Expanding statements inside a block*/
+	| S 
+	;
+
+S  : S1';'		/* comma terminated statement or a block statement like if, for, while */
+	| block_stmt
+	;

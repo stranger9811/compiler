@@ -1,0 +1,34 @@
+
+%%
+code  : decl code	
+	| decl
+	;
+decl  : type identifier';'
+	| T_TYPEDEF type ID';'  
+	| type func block  	/*This is for function definition only. No rule yet for function declation.*/
+	| void func block	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
+	| T_STRUCT ID block';'  
+	| T_HEADER
+	;
+/*	| #define macro const*/
+type  : type '*' %prec DEREF
+	| basic  {$$.my_type=$1.my_type;}
+	;
+basic : T_LONG_LONG  			{$$.my_type=Long_long;}
+	| T_INT 			{$$.my_type=Int;}
+	| T_CHAR 			{$$.my_type=Char;}
+	| T_FLOAT 			{$$.my_type=Float;}
+	| T_DOUBLE 			{$$.my_type=Double;}
+	| T_BOOL			{$$.my_type=Bool;}
+	;
+void  : void '*' %prec DEREF
+	| T_VOID
+	;
+func  : ID'('args')' 
+	| ID'('')' 
+	| T_MAIN'('args')' 
+	| T_MAIN'('')'
+	;
+args  : type identifier',' args  
+	| type identifier
+	;
