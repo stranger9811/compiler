@@ -6,3 +6,7 @@ Ccfg.tab.hpp:	Ccfg.ypp resources.h
 	bison -dv Ccfg.ypp
 Ccfg.tab.cpp:	Ccfg.ypp resources.h
 	bison -dv Ccfg.ypp
+Ccfg.ypp:	CCfgBison
+	cd CCfgBison
+	make
+	cp Ccfg.ypp ../Ccfg.ypp
