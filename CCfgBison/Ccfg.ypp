@@ -1,0 +1,473 @@
+%{
+#include <stdlib.h>
+#include <stdio.h>
+#include <string>
+#include<vector>
+#include <cstring>
+#include<iostream>
+#include <utility>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+int no_line;
+struct symbol_table *current_symbol_table;
+
+
+int yylex();
+int yyparse();
+int yywrap();
+
+void yyerror(const char *s)
+{
+
+        string e="";
+   fprintf(stderr, "line %d: %s %s",no_line , s,e.c_str());
+
+}
+
+
+%}
+
+
+%code requires
+{
+	#include "resources.h"
+}
+
+%union {
+long long integer;
+long double real;
+char lexeme[10000];
+
+struct attr attributes;
+//Yet to include exponential numbers and hexadecimals.
+};
+
+
+%token T_STRUCT
+%token T_BREAK
+%token T_CONTINUE
+%token T_TYPEDEF
+%token T_CHAR
+%token T_DOUBLE
+%token T_INT
+%token T_FLOAT
+%token T_LONG_LONG
+%token T_FOR
+%token T_IF
+%token T_ELSE
+%token T_WHILE
+%token T_GOTO
+%token T_RETURN
+%token T_PRINTF
+%token T_VOID
+%token T_SCANF
+%token T_SIZEOF
+%token T_UNSIGNED
+%token T_SIGNED
+%token T_CONST
+%token T_SHORT
+%token T_EXTERN
+%token T_LONG
+%token T_BOOL
+%token T_APOS
+
+%token <real> T_DEC_FLOAT
+%token <integer> T_DEC_INT
+%token <lexeme> T_STRING
+%token <lexeme> T_HEADER
+%token <lexeme> ID
+
+%token <lexeme> T_MAIN
+%token <lexeme> T_AND
+%token <lexeme> T_GREATER_THAN_EQUAL
+%token <lexeme> T_LESS_THAN_EQUAL
+%token <lexeme> T_EQUAL_TEST
+%token <lexeme> T_NOT_EQUAL
+%token <lexeme> T_OR
+%token <lexeme> T_PLUS_SELF
+%token <lexeme> T_MINUS_SELF
+%token <lexeme> T_MULT_SELF
+%token <lexeme> T_DIVIDE_SELF
+%token <lexeme> T_THIS_POINTER
+%token <lexeme> T_ADD_ONE
+%token <lexeme> T_SUB_ONE
+%token <lexeme> T_IO_INT
+%token <lexeme> T_IO_LONG_LONG
+%token <lexeme> T_IO_STRING
+%token <lexeme> T_IO_FLOAT
+
+%right '{'
+%right '('
+%right '['
+%left ','
+%right  T_MULT_SELF T_DIVIDE_SELF
+%right  T_PLUS_SELF T_MINUS_SELF
+%right  '='
+%left T_OR
+%left T_AND
+%left '|'
+%left '^'
+%left '&'
+%left T_EQUAL_TEST T_NOT_EQUAL
+%left '>' T_GREATER_THAN_EQUAL
+%left '<' T_LESS_THAN_EQUAL
+%left '+' '-'
+%left '*' '/' '%'
+/*%right '&'                   address of a variable*/
+%right DEREF 	/* using unary * for dereferncing a pointer.*/
+/*%right   (type)              typecasting*/
+%right  '!'
+%right  UPLUS UMINUS	/*unary + and -*/
+%right  T_ADD_ONE T_SUB_ONE
+%left T_THIS_POINTER
+%left '.'
+%left ']'
+%left ')'
+%right '}'
+
+%type<attributes> basic
+%type<attributes> type
+%type<attributes> identifier
+%type<attributes> array
+%type<attributes> init
+%type<attributes> assign_stmt
+%type<attributes> expr
+
+
+%start code
+%%
+code  : decl code	
+	| decl
+	;
+decl  : type identifier';'
+	| T_TYPEDEF type ID';'  
+	| type func block  	/*This is for function definition only. No rule yet for function declation.*/
+	| void func block	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
+	| T_STRUCT ID block';'  
+	| T_HEADER
+	;
+/*	| #define macro const*/
+type  : type '*' %prec DEREF
+	| basic  {$$.my_type=$1.my_type;}
+	;
+basic : T_LONG_LONG  			{$$.my_type=Long_long;}
+	| T_INT 			{$$.my_type=Int;}
+	| T_CHAR 			{$$.my_type=Char;}
+	| T_FLOAT 			{$$.my_type=Float;}
+	| T_DOUBLE 			{$$.my_type=Double;}
+	| T_BOOL			{$$.my_type=Bool;}
+	;
+void  : void '*' %prec DEREF
+	| T_VOID
+	;
+func  : ID'('args')' 
+	| ID'('')' 
+	| T_MAIN'('args')' 
+	| T_MAIN'('')'
+	;
+args  : type identifier',' args  
+	| type identifier
+	;
+brac_open : '{' { 
+#ifdef debug
+	printf("creating new symbol table\n");
+#endif
+				  struct symbol_table *temp = new  symbol_table;
+				  current_symbol_table->children.push_back(temp); 
+				  temp->parent = current_symbol_table;
+
+				  current_symbol_table = temp;
+				 
+		 }
+
+brac_close : '}' {
+#ifdef debug
+	printf("destroying symbol table\n");
+#endif
+				  struct symbol_table *temp = current_symbol_table;
+				  current_symbol_table = temp->parent;
+				  delete temp;
+		 }
+
+block  : brac_open M brac_close 	/*block can either be many statements enclosed in braces or just one S.*/
+	| S 		/*S can again be multiple statments separated by comma.*/
+	;
+
+M  : S M  		/*Expanding statements inside a block*/
+	| S 
+	;
+
+S  : S1';'		/* comma terminated statement or a block statement like if, for, while */
+	| block_stmt
+	;
+
+
+S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization*/
+	|stmt
+	|type init {
+			
+			struct llm temp;
+
+			temp.my_type= $1.my_type; 
+			for(int i=0;i<$2.index;i++) {
+				/* checking if variable is already declared */
+
+						if(current_symbol_table->table.find(string( $2.var_name[i])) != current_symbol_table->table.end())
+							yyerror("error: redeclaration \n");
+					
+				/*   ------------------------------------ */
+						else {
+							temp.dimension = $2.dimension[i];
+							current_symbol_table->table[string($2.var_name[i])]=(temp);
+						}
+			}
+#ifdef debug
+			printf("Variables declared \n"); 
+				for(int i=0;i<$2.index;i++) {
+					printf("%s %d\n",$2.var_name[i],$2.dimension[i]);
+				}
+			#endif
+
+	}
+	;
+
+init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializing, use assign_stmt*/
+						 {
+								strcpy($$.var_name[0],$1.var_name[0]);
+								$$.dimension[0] = $1.dimension[0];
+								$$.index = 1;
+								for(int i=0; i<$3.index; i++) {
+									$$.dimension[$$.index] = $3.dimension[i];
+									strcpy($$.var_name[$$.index],$3.var_name[i]);
+									$$.index++;
+								}
+						} 
+	| identifier ',' init {
+								strcpy($$.var_name[0],$1.var_name[0]);
+								$$.dimension[0] = $1.dimension[0];
+								$$.index = 1;
+								for(int i=0; i<$3.index; i++) {
+									$$.dimension[$$.index] = $3.dimension[i];
+									strcpy($$.var_name[$$.index],$3.var_name[i]);
+									$$.index++;
+								}
+							} 
+	| assign_stmt {
+						strcpy($$.var_name[0],$1.var_name[0]);
+						$$.dimension[0] = $1.dimension[0];
+						$$.index = 1;
+					}
+	| identifier  {
+					strcpy($$.var_name[0],$1.var_name[0]);
+					$$.dimension[0] = $1.dimension[0];
+					$$.index = 1;
+				  }
+	;
+
+block_stmt : T_IF '('stmt')' '{'M'}' 		/*without brace if statements not allowed!*/
+	| T_IF '('stmt')' '{' T_ELSE '}'
+	| T_FOR '('S1';'S1';'S1')' block  
+	| T_WHILE '('S1')' block  
+	;
+stmt: expr			/*Useless non-terminal. Too lazy to update.*/
+	;
+expr  : expr '+' expr 			{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: PLUS does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: PLUS does not support bool and char\n");
+						else {
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+					}
+	| func
+	| expr T_EQUAL_TEST expr	{
+						$$.my_type=Bool;
+					}
+	| expr '<' expr			{
+						$$.my_type=Bool;
+					}
+	| expr '>' expr			{
+						$$.my_type=Bool;
+					}
+	| expr T_LESS_THAN_EQUAL expr	{
+						$$.my_type=Bool;
+					}
+	| expr T_GREATER_THAN_EQUAL expr{
+						$$.my_type=Bool;
+					}
+	| expr T_NOT_EQUAL expr		{
+						$$.my_type=Bool;
+					}
+	| assign_stmt
+    	| expr '-' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: MINUS does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: MINUS does not support bool and char\n");
+						else {
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+					}
+	| expr '*' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: MULTIPLY does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: MULTIPLY does not support bool and char\n");
+						else {
+							if($1.my_type==Double || $3.my_type==Double )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+					}
+    	| expr '/' expr 		{ 
+						if($1.my_type==Char || $1.my_type==Bool)
+							yyerror("error: DIVIDE does not support bool and char\n");
+						else if($3.my_type==Char || $3.my_type==Bool)
+							yyerror("error: DIVIDE does not support bool and char\n");
+						else {
+							if(($1.my_type==Double) || ($3.my_type==Double) )
+								$$.my_type=Double;
+							else if($1.my_type==Float || $3.my_type==Float)
+								$$.my_type=Float;
+							else if($1.my_type==Long_long || $3.my_type==Long_long)
+								$$.my_type=Long_long;
+							else 
+								$$.my_type=$1.my_type;
+						}
+
+					}
+	| expr '%' expr   		{ 
+						if(!($1.my_type==Int || $1.my_type==Long_long || $1.my_type==Bool))        /* Added Bool*/
+							yyerror("error: MOD supports only bool,int,long long");
+						else if(!($3.my_type==Int || $3.my_type==Long_long || $3.my_type==Bool))
+							yyerror("error: MOD supports only bool,int,long long");
+						else
+							$$.my_type=$3.my_type;
+					}
+	| expr T_AND expr 		{ 
+						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+							yyerror("error: AND supports only bool,int,long long");
+						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+							yyerror("error: AND supports only bool,int,long long");
+						else 
+							$$.my_type=Bool;
+					}
+	| expr T_OR expr 		{	 
+						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+							yyerror("error: OR supports only bool,int,long long. left operand is \n");
+						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+							yyerror("error: OR supports only bool,int,long long. right operand is \n");
+						else 
+							$$.my_type=Bool;
+					}
+	| '!' expr    {$$.my_type = Bool;}
+	| '('expr')'  {$$.my_type = $2.my_type;}
+	| identifier  {
+			struct symbol_table *temp = current_symbol_table;
+			int flag = 1;
+			while(flag) {
+			           	if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
+						$$.my_type = temp->table[string($1.var_name[0])].my_type;
+							flag = 0;
+						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
+				}
+				if(temp->parent==NULL && flag==1) {
+					yyerror("error: variable not declared\n");
+					flag = 0;
+				}
+				temp = temp->parent;
+			}
+		  }
+	| '+' expr %prec UPLUS {$$.my_type=$2.my_type;}
+	| '-' expr %prec UMINUS {$$.my_type=$2.my_type;}
+	|number 
+	;
+	
+assign_stmt : identifier '=' expr {
+	                       struct symbol_table *temp = current_symbol_table;
+                       		int flag = 1;
+                        	while(flag) {
+                                        if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
+                                                $$.my_type = temp->table[string($1.var_name[0])].my_type;
+                                                flag = 0;
+						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
+
+                                	}
+                                	if(temp->parent==NULL && flag==1) {
+                                        	yyerror("error: variable not declared\n");
+                                        	flag = 0;
+                                	}
+                                	temp = temp->parent;
+                        	}
+				enum type_enum t = $$.my_type;
+				enum type_enum tt = $3.my_type; 
+				if (t == Int && tt== Long_long)
+					yyerror("Warning: assigning long long to an integer");
+				else if (t==Int && tt == Float)
+					yyerror("Warning: assigning float to an int");
+				else if (t==Int && tt == Double)
+					yyerror("Warning: assigning int to double");
+				else if (t==Float && tt == Double)
+					yyerror("Warning: assigning float to a double");
+				else if (t==Long_long && tt == Float)
+					yyerror("Warning: assigning long long to a float");
+				else if (t==Long_long && tt == Double)
+					yyerror("Warning: assigning long long to a double");
+				else if (t != tt || $$.dimension != $3.dimension )
+					yyerror("Warning: Type mismatch");
+
+			
+
+				}/*Assignment statement.*/
+	;
+
+number : T_DEC_INT	
+	| T_DEC_FLOAT
+	;
+
+identifier  : ID	{  		strcpy($$.var_name[0],$1);
+							$$.dimension[0] = 0;
+					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
+		| ID array {
+							strcpy($$.var_name[0],$1);
+							$$.dimension[0] = $2.dimension[0];
+		}
+	;
+array  : '[' ID ']' array  {$$.dimension[0] = $4.dimension[0] +1; printf("%s",$2);}
+	| '[' ID ']' {$$.dimension[0] = 1;}
+	| '[' T_DEC_INT ']' { $$.dimension[0] = 1;}
+	| '[' T_DEC_INT ']' array {$$.dimension[0] = $4.dimension[0] + 1;}
+	;
+%%
+
+
+int main()
+{
+		no_line = 1;
+		current_symbol_table = new symbol_table;
+		current_symbol_table->parent = NULL;
+        yyparse();
+		return 0;
+}

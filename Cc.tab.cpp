@@ -63,7 +63,7 @@
 
 /* Copy the first part of user declarations.  */
 /* Line 371 of yacc.c  */
-#line 1 "Ccfg.ypp"
+#line 1 "Cc.ypp"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -95,7 +95,7 @@ void yyerror(const char *s)
 
 
 /* Line 371 of yacc.c  */
-#line 99 "Ccfg.tab.cpp"
+#line 99 "Cc.tab.cpp"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -114,9 +114,9 @@ void yyerror(const char *s)
 #endif
 
 /* In a future release of Bison, this section will be replaced
-   by #include "Ccfg.tab.hpp".  */
-#ifndef YY_YY_CCFG_TAB_HPP_INCLUDED
-# define YY_YY_CCFG_TAB_HPP_INCLUDED
+   by #include "Cc.tab.hpp".  */
+#ifndef YY_YY_CC_TAB_HPP_INCLUDED
+# define YY_YY_CC_TAB_HPP_INCLUDED
 /* Enabling traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -126,13 +126,13 @@ extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
 /* Line 387 of yacc.c  */
-#line 34 "Ccfg.ypp"
+#line 34 "Cc.ypp"
 
 	#include "resources.h"
 
 
 /* Line 387 of yacc.c  */
-#line 136 "Ccfg.tab.cpp"
+#line 136 "Cc.tab.cpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -201,7 +201,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 38 "Ccfg.ypp"
+#line 38 "Cc.ypp"
 
 long long integer;
 long double real;
@@ -212,7 +212,7 @@ struct attr attributes;
 
 
 /* Line 387 of yacc.c  */
-#line 216 "Ccfg.tab.cpp"
+#line 216 "Cc.tab.cpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -235,12 +235,12 @@ int yyparse ();
 #endif
 #endif /* ! YYPARSE_PARAM */
 
-#endif /* !YY_YY_CCFG_TAB_HPP_INCLUDED  */
+#endif /* !YY_YY_CC_TAB_HPP_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 244 "Ccfg.tab.cpp"
+#line 244 "Cc.tab.cpp"
 
 #ifdef short
 # undef short
@@ -573,14 +573,14 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   141,   141,   142,   144,   145,   146,   147,   148,   149,
-     152,   153,   155,   156,   157,   158,   159,   160,   162,   163,
-     165,   166,   167,   168,   170,   171,   173,   185,   194,   195,
-     198,   199,   202,   203,   207,   208,   209,   236,   247,   257,
-     262,   269,   270,   271,   272,   274,   276,   292,   293,   296,
-     299,   302,   305,   308,   311,   312,   328,   344,   361,   369,
-     377,   385,   386,   387,   403,   404,   405,   408,   446,   447,
-     450,   453,   458,   459,   460,   461
+       0,   142,   142,   143,   145,   146,   147,   148,   149,   150,
+     153,   154,   156,   157,   158,   159,   160,   161,   163,   164,
+     166,   167,   168,   169,   171,   172,   174,   186,   195,   196,
+     199,   200,   203,   204,   206,   207,   208,   235,   246,   256,
+     261,   268,   269,   270,   271,   273,   275,   291,   292,   295,
+     298,   301,   304,   307,   310,   311,   327,   343,   360,   368,
+     376,   384,   385,   386,   402,   403,   404,   406,   444,   445,
+     448,   451,   456,   457,   458,   459
 };
 #endif
 
@@ -1609,49 +1609,49 @@ yyreduce:
     {
         case 11:
 /* Line 1787 of yacc.c  */
-#line 153 "Ccfg.ypp"
+#line 154 "Cc.ypp"
     {(yyval.attributes).my_type=(yyvsp[(1) - (1)].attributes).my_type;}
     break;
 
   case 12:
 /* Line 1787 of yacc.c  */
-#line 155 "Ccfg.ypp"
+#line 156 "Cc.ypp"
     {(yyval.attributes).my_type=Long_long;}
     break;
 
   case 13:
 /* Line 1787 of yacc.c  */
-#line 156 "Ccfg.ypp"
+#line 157 "Cc.ypp"
     {(yyval.attributes).my_type=Int;}
     break;
 
   case 14:
 /* Line 1787 of yacc.c  */
-#line 157 "Ccfg.ypp"
+#line 158 "Cc.ypp"
     {(yyval.attributes).my_type=Char;}
     break;
 
   case 15:
 /* Line 1787 of yacc.c  */
-#line 158 "Ccfg.ypp"
+#line 159 "Cc.ypp"
     {(yyval.attributes).my_type=Float;}
     break;
 
   case 16:
 /* Line 1787 of yacc.c  */
-#line 159 "Ccfg.ypp"
+#line 160 "Cc.ypp"
     {(yyval.attributes).my_type=Double;}
     break;
 
   case 17:
 /* Line 1787 of yacc.c  */
-#line 160 "Ccfg.ypp"
+#line 161 "Cc.ypp"
     {(yyval.attributes).my_type=Bool;}
     break;
 
   case 26:
 /* Line 1787 of yacc.c  */
-#line 173 "Ccfg.ypp"
+#line 174 "Cc.ypp"
     { 
 #ifdef debug
 	printf("creating new symbol table\n");
@@ -1667,7 +1667,7 @@ yyreduce:
 
   case 27:
 /* Line 1787 of yacc.c  */
-#line 185 "Ccfg.ypp"
+#line 186 "Cc.ypp"
     {
 #ifdef debug
 	printf("destroying symbol table\n");
@@ -1680,7 +1680,7 @@ yyreduce:
 
   case 36:
 /* Line 1787 of yacc.c  */
-#line 209 "Ccfg.ypp"
+#line 208 "Cc.ypp"
     {
 			
 			struct llm temp;
@@ -1710,10 +1710,10 @@ yyreduce:
 
   case 37:
 /* Line 1787 of yacc.c  */
-#line 237 "Ccfg.ypp"
+#line 236 "Cc.ypp"
     {
-								strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (3)].attributes).var_name[0]);
-								(yyval.attributes).dimension[0] = (yyvsp[(1) - (3)].attributes).dimension[0];
+								strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (3)].attributes).var_name);
+								(yyval.attributes).dimension[0] = (yyvsp[(1) - (3)].attributes).dimension;
 								(yyval.attributes).index = 1;
 								for(int i=0; i<(yyvsp[(3) - (3)].attributes).index; i++) {
 									(yyval.attributes).dimension[(yyval.attributes).index] = (yyvsp[(3) - (3)].attributes).dimension[i];
@@ -1725,10 +1725,10 @@ yyreduce:
 
   case 38:
 /* Line 1787 of yacc.c  */
-#line 247 "Ccfg.ypp"
+#line 246 "Cc.ypp"
     {
-								strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (3)].attributes).var_name[0]);
-								(yyval.attributes).dimension[0] = (yyvsp[(1) - (3)].attributes).dimension[0];
+								strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (3)].attributes).var_name);
+								(yyval.attributes).dimension[0] = (yyvsp[(1) - (3)].attributes).dimension;
 								(yyval.attributes).index = 1;
 								for(int i=0; i<(yyvsp[(3) - (3)].attributes).index; i++) {
 									(yyval.attributes).dimension[(yyval.attributes).index] = (yyvsp[(3) - (3)].attributes).dimension[i];
@@ -1740,17 +1740,17 @@ yyreduce:
 
   case 39:
 /* Line 1787 of yacc.c  */
-#line 257 "Ccfg.ypp"
+#line 256 "Cc.ypp"
     {
-						strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (1)].attributes).var_name[0]);
-						(yyval.attributes).dimension[0] = (yyvsp[(1) - (1)].attributes).dimension[0];
+						strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (1)].attributes).var_name);
+						(yyval.attributes).dimension[0] = (yyvsp[(1) - (1)].attributes).dimension;
 						(yyval.attributes).index = 1;
 					}
     break;
 
   case 40:
 /* Line 1787 of yacc.c  */
-#line 262 "Ccfg.ypp"
+#line 261 "Cc.ypp"
     {
 					strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (1)].attributes).var_name[0]);
 					(yyval.attributes).dimension[0] = (yyvsp[(1) - (1)].attributes).dimension[0];
@@ -1760,7 +1760,7 @@ yyreduce:
 
   case 46:
 /* Line 1787 of yacc.c  */
-#line 276 "Ccfg.ypp"
+#line 275 "Cc.ypp"
     { 
 						if((yyvsp[(1) - (3)].attributes).my_type==Char || (yyvsp[(1) - (3)].attributes).my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
@@ -1781,7 +1781,7 @@ yyreduce:
 
   case 48:
 /* Line 1787 of yacc.c  */
-#line 293 "Ccfg.ypp"
+#line 292 "Cc.ypp"
     {
 						(yyval.attributes).my_type=Bool;
 					}
@@ -1789,7 +1789,7 @@ yyreduce:
 
   case 49:
 /* Line 1787 of yacc.c  */
-#line 296 "Ccfg.ypp"
+#line 295 "Cc.ypp"
     {
 						(yyval.attributes).my_type=Bool;
 					}
@@ -1797,7 +1797,7 @@ yyreduce:
 
   case 50:
 /* Line 1787 of yacc.c  */
-#line 299 "Ccfg.ypp"
+#line 298 "Cc.ypp"
     {
 						(yyval.attributes).my_type=Bool;
 					}
@@ -1805,7 +1805,7 @@ yyreduce:
 
   case 51:
 /* Line 1787 of yacc.c  */
-#line 302 "Ccfg.ypp"
+#line 301 "Cc.ypp"
     {
 						(yyval.attributes).my_type=Bool;
 					}
@@ -1813,7 +1813,7 @@ yyreduce:
 
   case 52:
 /* Line 1787 of yacc.c  */
-#line 305 "Ccfg.ypp"
+#line 304 "Cc.ypp"
     {
 						(yyval.attributes).my_type=Bool;
 					}
@@ -1821,7 +1821,7 @@ yyreduce:
 
   case 53:
 /* Line 1787 of yacc.c  */
-#line 308 "Ccfg.ypp"
+#line 307 "Cc.ypp"
     {
 						(yyval.attributes).my_type=Bool;
 					}
@@ -1829,7 +1829,7 @@ yyreduce:
 
   case 55:
 /* Line 1787 of yacc.c  */
-#line 312 "Ccfg.ypp"
+#line 311 "Cc.ypp"
     { 
 						if((yyvsp[(1) - (3)].attributes).my_type==Char || (yyvsp[(1) - (3)].attributes).my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
@@ -1850,7 +1850,7 @@ yyreduce:
 
   case 56:
 /* Line 1787 of yacc.c  */
-#line 328 "Ccfg.ypp"
+#line 327 "Cc.ypp"
     { 
 						if((yyvsp[(1) - (3)].attributes).my_type==Char || (yyvsp[(1) - (3)].attributes).my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
@@ -1871,7 +1871,7 @@ yyreduce:
 
   case 57:
 /* Line 1787 of yacc.c  */
-#line 344 "Ccfg.ypp"
+#line 343 "Cc.ypp"
     { 
 						if((yyvsp[(1) - (3)].attributes).my_type==Char || (yyvsp[(1) - (3)].attributes).my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
@@ -1893,7 +1893,7 @@ yyreduce:
 
   case 58:
 /* Line 1787 of yacc.c  */
-#line 361 "Ccfg.ypp"
+#line 360 "Cc.ypp"
     { 
 						if(!((yyvsp[(1) - (3)].attributes).my_type==Int || (yyvsp[(1) - (3)].attributes).my_type==Long_long || (yyvsp[(1) - (3)].attributes).my_type==Bool))        /* Added Bool*/
 							yyerror("error: MOD supports only bool,int,long long");
@@ -1906,7 +1906,7 @@ yyreduce:
 
   case 59:
 /* Line 1787 of yacc.c  */
-#line 369 "Ccfg.ypp"
+#line 368 "Cc.ypp"
     { 
 						if(!((yyvsp[(1) - (3)].attributes).my_type==Bool || (yyvsp[(1) - (3)].attributes).my_type==Int || (yyvsp[(1) - (3)].attributes).my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
@@ -1919,7 +1919,7 @@ yyreduce:
 
   case 60:
 /* Line 1787 of yacc.c  */
-#line 377 "Ccfg.ypp"
+#line 376 "Cc.ypp"
     {	 
 						if(!((yyvsp[(1) - (3)].attributes).my_type==Bool || (yyvsp[(1) - (3)].attributes).my_type==Int || (yyvsp[(1) - (3)].attributes).my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. left operand is \n");
@@ -1932,19 +1932,19 @@ yyreduce:
 
   case 61:
 /* Line 1787 of yacc.c  */
-#line 385 "Ccfg.ypp"
+#line 384 "Cc.ypp"
     {(yyval.attributes).my_type = Bool;}
     break;
 
   case 62:
 /* Line 1787 of yacc.c  */
-#line 386 "Ccfg.ypp"
+#line 385 "Cc.ypp"
     {(yyval.attributes).my_type = (yyvsp[(2) - (3)].attributes).my_type;}
     break;
 
   case 63:
 /* Line 1787 of yacc.c  */
-#line 387 "Ccfg.ypp"
+#line 386 "Cc.ypp"
     {
 			struct symbol_table *temp = current_symbol_table;
 			int flag = 1;
@@ -1952,7 +1952,7 @@ yyreduce:
 			           	if( temp->table.find(string( (yyvsp[(1) - (1)].attributes).var_name[0])) != temp->table.end()){
 						(yyval.attributes).my_type = temp->table[string((yyvsp[(1) - (1)].attributes).var_name[0])].my_type;
 							flag = 0;
-						(yyval.attributes).dimension[0] = temp->table[string((yyvsp[(1) - (1)].attributes).var_name[0])].dimension - (yyvsp[(1) - (1)].attributes).dimension[0];
+						(yyval.attributes).dimension = temp->table[string((yyvsp[(1) - (1)].attributes).var_name[0])].dimension - (yyvsp[(1) - (1)].attributes).dimension;
 				}
 				if(temp->parent==NULL && flag==1) {
 					yyerror("error: variable not declared\n");
@@ -1965,19 +1965,19 @@ yyreduce:
 
   case 64:
 /* Line 1787 of yacc.c  */
-#line 403 "Ccfg.ypp"
+#line 402 "Cc.ypp"
     {(yyval.attributes).my_type=(yyvsp[(2) - (2)].attributes).my_type;}
     break;
 
   case 65:
 /* Line 1787 of yacc.c  */
-#line 404 "Ccfg.ypp"
+#line 403 "Cc.ypp"
     {(yyval.attributes).my_type=(yyvsp[(2) - (2)].attributes).my_type;}
     break;
 
   case 67:
 /* Line 1787 of yacc.c  */
-#line 408 "Ccfg.ypp"
+#line 406 "Cc.ypp"
     {
 	                       struct symbol_table *temp = current_symbol_table;
                        		int flag = 1;
@@ -1985,7 +1985,7 @@ yyreduce:
                                         if( temp->table.find(string( (yyvsp[(1) - (3)].attributes).var_name[0])) != temp->table.end()){
                                                 (yyval.attributes).my_type = temp->table[string((yyvsp[(1) - (3)].attributes).var_name[0])].my_type;
                                                 flag = 0;
-						(yyval.attributes).dimension[0] = temp->table[string((yyvsp[(1) - (3)].attributes).var_name[0])].dimension - (yyvsp[(1) - (3)].attributes).dimension[0];
+						(yyval.attributes).dimension = temp->table[string((yyvsp[(1) - (3)].attributes).var_name[0])].dimension - (yyvsp[(1) - (3)].attributes).dimension;
 
                                 	}
                                 	if(temp->parent==NULL && flag==1) {
@@ -1994,8 +1994,8 @@ yyreduce:
                                 	}
                                 	temp = temp->parent;
                         	}
-				enum type_enum t = (yyval.attributes).my_type;
-				enum type_enum tt = (yyvsp[(3) - (3)].attributes).my_type; 
+				enum type t = (yyval.attributes).my_type;
+				enum type tt = (yyvsp[(3) - (3)].attributes).my_type; 
 				if (t == Int && tt== Long_long)
 					yyerror("Warning: assigning long long to an integer");
 				else if (t==Int && tt == Float)
@@ -2010,7 +2010,7 @@ yyreduce:
 					yyerror("Warning: assigning long long to a double");
 				else if (t != tt || (yyval.attributes).dimension != (yyvsp[(3) - (3)].attributes).dimension )
 					yyerror("Warning: Type mismatch");
-
+				
 			
 
 				}
@@ -2018,48 +2018,48 @@ yyreduce:
 
   case 70:
 /* Line 1787 of yacc.c  */
-#line 450 "Ccfg.ypp"
-    {  		strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (1)].lexeme));
-							(yyval.attributes).dimension[0] = 0;
+#line 448 "Cc.ypp"
+    {  		strcpy((yyval.attributes).var_name,(yyvsp[(1) - (1)].lexeme));
+							(yyval.attributes).dimension = 0;
 					 }
     break;
 
   case 71:
 /* Line 1787 of yacc.c  */
-#line 453 "Ccfg.ypp"
+#line 451 "Cc.ypp"
     {
-							strcpy((yyval.attributes).var_name[0],(yyvsp[(1) - (2)].lexeme));
-							(yyval.attributes).dimension[0] = (yyvsp[(2) - (2)].attributes).dimension[0];
+							strcpy((yyval.attributes).var_name,(yyvsp[(1) - (2)].lexeme));
+							(yyval.attributes).dimension = (yyvsp[(2) - (2)].attributes).dimension;
 		}
     break;
 
   case 72:
 /* Line 1787 of yacc.c  */
-#line 458 "Ccfg.ypp"
-    {(yyval.attributes).dimension[0] = (yyvsp[(4) - (4)].attributes).dimension[0] +1; printf("%s",(yyvsp[(2) - (4)].lexeme));}
+#line 456 "Cc.ypp"
+    {(yyval.attributes).dimension = (yyvsp[(4) - (4)].attributes).dimension +1; printf("%s",(yyvsp[(2) - (4)].lexeme));}
     break;
 
   case 73:
 /* Line 1787 of yacc.c  */
-#line 459 "Ccfg.ypp"
-    {(yyval.attributes).dimension[0] = 1;}
+#line 457 "Cc.ypp"
+    {(yyval.attributes).dimension = 1;}
     break;
 
   case 74:
 /* Line 1787 of yacc.c  */
-#line 460 "Ccfg.ypp"
-    { (yyval.attributes).dimension[0] = 1;}
+#line 458 "Cc.ypp"
+    { (yyval.attributes).dimension = 1;}
     break;
 
   case 75:
 /* Line 1787 of yacc.c  */
-#line 461 "Ccfg.ypp"
-    {(yyval.attributes).dimension[0] = (yyvsp[(4) - (4)].attributes).dimension[0] + 1;}
+#line 459 "Cc.ypp"
+    {(yyval.attributes).dimension = (yyvsp[(4) - (4)].attributes).dimension + 1;}
     break;
 
 
 /* Line 1787 of yacc.c  */
-#line 2063 "Ccfg.tab.cpp"
+#line 2063 "Cc.tab.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2291,8 +2291,7 @@ yyreturn:
 
 
 /* Line 2050 of yacc.c  */
-#line 463 "Ccfg.ypp"
-
+#line 461 "Cc.ypp"
 
 
 int main()

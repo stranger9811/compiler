@@ -1,3 +1,5 @@
+
+
 S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization*/
 	|stmt
 	|type init {
@@ -29,8 +31,8 @@ S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization
 
 init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializing, use assign_stmt*/
 						 {
-								strcpy($$.var_name[0],$1.var_name);
-								$$.dimension[0] = $1.dimension;
+								strcpy($$.var_name[0],$1.var_name[0]);
+								$$.dimension[0] = $1.dimension[0];
 								$$.index = 1;
 								for(int i=0; i<$3.index; i++) {
 									$$.dimension[$$.index] = $3.dimension[i];
@@ -39,8 +41,8 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 								}
 						} 
 	| identifier ',' init {
-								strcpy($$.var_name[0],$1.var_name);
-								$$.dimension[0] = $1.dimension;
+								strcpy($$.var_name[0],$1.var_name[0]);
+								$$.dimension[0] = $1.dimension[0];
 								$$.index = 1;
 								for(int i=0; i<$3.index; i++) {
 									$$.dimension[$$.index] = $3.dimension[i];
@@ -49,8 +51,8 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 								}
 							} 
 	| assign_stmt {
-						strcpy($$.var_name[0],$1.var_name);
-						$$.dimension[0] = $1.dimension;
+						strcpy($$.var_name[0],$1.var_name[0]);
+						$$.dimension[0] = $1.dimension[0];
 						$$.index = 1;
 					}
 	| identifier  {

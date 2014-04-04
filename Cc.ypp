@@ -137,6 +137,7 @@ struct attr attributes;
 
 
 %start code
+
 %%
 code  : decl code	
 	| decl
@@ -202,7 +203,6 @@ M  : S M  		/*Expanding statements inside a block*/
 S  : S1';'		/* comma terminated statement or a block statement like if, for, while */
 	| block_stmt
 	;
-
 
 S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization*/
 	|stmt
@@ -404,7 +404,6 @@ expr  : expr '+' expr 			{
 	| '-' expr %prec UMINUS {$$.my_type=$2.my_type;}
 	|number 
 	;
-	
 assign_stmt : identifier '=' expr {
 	                       struct symbol_table *temp = current_symbol_table;
                        		int flag = 1;

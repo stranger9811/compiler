@@ -124,7 +124,7 @@ expr  : expr '+' expr 			{
 			           	if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
 						$$.my_type = temp->table[string($1.var_name[0])].my_type;
 							flag = 0;
-						$$.dimension = temp->table[string($1.var_name[0])].dimension - $1.dimension;
+						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
 				}
 				if(temp->parent==NULL && flag==1) {
 					yyerror("error: variable not declared\n");
@@ -137,3 +137,4 @@ expr  : expr '+' expr 			{
 	| '-' expr %prec UMINUS {$$.my_type=$2.my_type;}
 	|number 
 	;
+	

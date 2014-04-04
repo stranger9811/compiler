@@ -24,7 +24,7 @@ Pointer
 
 struct attr
 {
-	enum type_num my_type;
+	enum type_enum my_type;
 
 	char var_name[50][100];	
 	int index;

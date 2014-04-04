@@ -6,7 +6,7 @@ assign_stmt : identifier '=' expr {
                                         if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
                                                 $$.my_type = temp->table[string($1.var_name[0])].my_type;
                                                 flag = 0;
-						$$.dimension = temp->table[string($1.var_name[0])].dimension - $1.dimension;
+						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
 
                                 	}
                                 	if(temp->parent==NULL && flag==1) {
@@ -15,8 +15,8 @@ assign_stmt : identifier '=' expr {
                                 	}
                                 	temp = temp->parent;
                         	}
-				enum type t = $$.my_type;
-				enum type tt = $3.my_type; 
+				enum type_enum t = $$.my_type;
+				enum type_enum tt = $3.my_type; 
 				if (t == Int && tt== Long_long)
 					yyerror("Warning: assigning long long to an integer");
 				else if (t==Int && tt == Float)
@@ -31,7 +31,7 @@ assign_stmt : identifier '=' expr {
 					yyerror("Warning: assigning long long to a double");
 				else if (t != tt || $$.dimension != $3.dimension )
 					yyerror("Warning: Type mismatch");
-				
+
 			
 
 				}/*Assignment statement.*/
@@ -41,17 +41,18 @@ number : T_DEC_INT
 	| T_DEC_FLOAT
 	;
 
-identifier  : ID	{  		strcpy($$.var_name,$1);
-							$$.dimension = 0;
+identifier  : ID	{  		strcpy($$.var_name[0],$1);
+							$$.dimension[0] = 0;
 					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
 		| ID array {
-							strcpy($$.var_name,$1);
-							$$.dimension = $2.dimension;
+							strcpy($$.var_name[0],$1);
+							$$.dimension[0] = $2.dimension[0];
 		}
 	;
-array  : '[' ID ']' array  {$$.dimension = $4.dimension +1; printf("%s",$2);}
-	| '[' ID ']' {$$.dimension = 1;}
-	| '[' T_DEC_INT ']' { $$.dimension = 1;}
-	| '[' T_DEC_INT ']' array {$$.dimension = $4.dimension + 1;}
+array  : '[' ID ']' array  {$$.dimension[0] = $4.dimension[0] +1; printf("%s",$2);}
+	| '[' ID ']' {$$.dimension[0] = 1;}
+	| '[' T_DEC_INT ']' { $$.dimension[0] = 1;}
+	| '[' T_DEC_INT ']' array {$$.dimension[0] = $4.dimension[0] + 1;}
 	;
 %%
+
