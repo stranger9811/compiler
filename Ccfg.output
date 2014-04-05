@@ -90,7 +90,7 @@ Grammar
    39     | identifier
 
    40 block_stmt: T_IF '(' stmt ')' '{' M '}'
-   41           | T_IF '(' stmt ')' '{' T_ELSE '}'
+   41           | T_IF '(' stmt ')' T_ELSE '{' M '}'
    42           | T_FOR '(' S1 ';' S1 ';' S1 ')' block
    43           | T_WHILE '(' S1 ')' block
 
@@ -237,7 +237,7 @@ brac_close (86)
 block (87)
     on left: 27 28, on right: 5 6 7 42 43
 M (88)
-    on left: 29 30, on right: 27 29 40
+    on left: 29 30, on right: 27 29 40 41
 S (89)
     on left: 31 32, on right: 28 29 30
 S1 (90)
@@ -626,7 +626,7 @@ State 28
 State 29
 
    40 block_stmt: T_IF . '(' stmt ')' '{' M '}'
-   41           | T_IF . '(' stmt ')' '{' T_ELSE '}'
+   41           | T_IF . '(' stmt ')' T_ELSE '{' M '}'
 
     '('  shift, and go to state 59
 
@@ -1006,7 +1006,7 @@ State 58
 State 59
 
    40 block_stmt: T_IF '(' . stmt ')' '{' M '}'
-   41           | T_IF '(' . stmt ')' '{' T_ELSE '}'
+   41           | T_IF '(' . stmt ')' T_ELSE '{' M '}'
 
     T_DEC_FLOAT  shift, and go to state 31
     T_DEC_INT    shift, and go to state 32
@@ -1634,7 +1634,7 @@ State 96
 State 97
 
    40 block_stmt: T_IF '(' stmt . ')' '{' M '}'
-   41           | T_IF '(' stmt . ')' '{' T_ELSE '}'
+   41           | T_IF '(' stmt . ')' T_ELSE '{' M '}'
 
     ')'  shift, and go to state 126
 
@@ -2159,9 +2159,10 @@ State 125
 State 126
 
    40 block_stmt: T_IF '(' stmt ')' . '{' M '}'
-   41           | T_IF '(' stmt ')' . '{' T_ELSE '}'
+   41           | T_IF '(' stmt ')' . T_ELSE '{' M '}'
 
-    '{'  shift, and go to state 134
+    T_ELSE  shift, and go to state 134
+    '{'     shift, and go to state 135
 
 
 State 127
@@ -2191,7 +2192,7 @@ State 127
     basic        go to state 14
     func         go to state 39
     brac_open    go to state 40
-    block        go to state 135
+    block        go to state 136
     S            go to state 42
     S1           go to state 43
     block_stmt   go to state 44
@@ -2229,7 +2230,7 @@ State 130
 
     type   go to state 90
     basic  go to state 14
-    args   go to state 136
+    args   go to state 137
 
 
 State 131
@@ -2250,13 +2251,19 @@ State 133
 
    42 block_stmt: T_FOR '(' S1 ';' S1 . ';' S1 ')' block
 
-    ';'  shift, and go to state 137
+    ';'  shift, and go to state 138
 
 
 State 134
 
+   41 block_stmt: T_IF '(' stmt ')' T_ELSE . '{' M '}'
+
+    '{'  shift, and go to state 139
+
+
+State 135
+
    40 block_stmt: T_IF '(' stmt ')' '{' . M '}'
-   41           | T_IF '(' stmt ')' '{' . T_ELSE '}'
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -2265,7 +2272,6 @@ State 134
     T_LONG_LONG  shift, and go to state 7
     T_FOR        shift, and go to state 28
     T_IF         shift, and go to state 29
-    T_ELSE       shift, and go to state 138
     T_WHILE      shift, and go to state 30
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 31
@@ -2280,7 +2286,7 @@ State 134
     type         go to state 38
     basic        go to state 14
     func         go to state 39
-    M            go to state 139
+    M            go to state 140
     S            go to state 70
     S1           go to state 43
     block_stmt   go to state 44
@@ -2291,21 +2297,21 @@ State 134
     identifier   go to state 49
 
 
-State 135
+State 136
 
    43 block_stmt: T_WHILE '(' S1 ')' block .
 
     $default  reduce using rule 43 (block_stmt)
 
 
-State 136
+State 137
 
    23 args: type identifier ',' args .
 
     $default  reduce using rule 23 (args)
 
 
-State 137
+State 138
 
    42 block_stmt: T_FOR '(' S1 ';' S1 ';' . S1 ')' block
 
@@ -2327,7 +2333,7 @@ State 137
     type         go to state 38
     basic        go to state 14
     func         go to state 39
-    S1           go to state 140
+    S1           go to state 141
     stmt         go to state 45
     expr         go to state 46
     assign_stmt  go to state 47
@@ -2335,42 +2341,71 @@ State 137
     identifier   go to state 49
 
 
-State 138
-
-   41 block_stmt: T_IF '(' stmt ')' '{' T_ELSE . '}'
-
-    '}'  shift, and go to state 141
-
-
 State 139
 
-   40 block_stmt: T_IF '(' stmt ')' '{' M . '}'
+   41 block_stmt: T_IF '(' stmt ')' T_ELSE '{' . M '}'
 
-    '}'  shift, and go to state 142
+    T_CHAR       shift, and go to state 3
+    T_DOUBLE     shift, and go to state 4
+    T_INT        shift, and go to state 5
+    T_FLOAT      shift, and go to state 6
+    T_LONG_LONG  shift, and go to state 7
+    T_FOR        shift, and go to state 28
+    T_IF         shift, and go to state 29
+    T_WHILE      shift, and go to state 30
+    T_BOOL       shift, and go to state 9
+    T_DEC_FLOAT  shift, and go to state 31
+    T_DEC_INT    shift, and go to state 32
+    ID           shift, and go to state 20
+    T_MAIN       shift, and go to state 21
+    '('          shift, and go to state 34
+    '+'          shift, and go to state 35
+    '-'          shift, and go to state 36
+    '!'          shift, and go to state 37
+
+    type         go to state 38
+    basic        go to state 14
+    func         go to state 39
+    M            go to state 142
+    S            go to state 70
+    S1           go to state 43
+    block_stmt   go to state 44
+    stmt         go to state 45
+    expr         go to state 46
+    assign_stmt  go to state 47
+    number       go to state 48
+    identifier   go to state 49
 
 
 State 140
 
-   42 block_stmt: T_FOR '(' S1 ';' S1 ';' S1 . ')' block
+   40 block_stmt: T_IF '(' stmt ')' '{' M . '}'
 
-    ')'  shift, and go to state 143
+    '}'  shift, and go to state 143
 
 
 State 141
 
-   41 block_stmt: T_IF '(' stmt ')' '{' T_ELSE '}' .
+   42 block_stmt: T_FOR '(' S1 ';' S1 ';' S1 . ')' block
 
-    $default  reduce using rule 41 (block_stmt)
+    ')'  shift, and go to state 144
 
 
 State 142
+
+   41 block_stmt: T_IF '(' stmt ')' T_ELSE '{' M . '}'
+
+    '}'  shift, and go to state 145
+
+
+State 143
 
    40 block_stmt: T_IF '(' stmt ')' '{' M '}' .
 
     $default  reduce using rule 40 (block_stmt)
 
 
-State 143
+State 144
 
    42 block_stmt: T_FOR '(' S1 ';' S1 ';' S1 ')' . block
 
@@ -2397,7 +2432,7 @@ State 143
     basic        go to state 14
     func         go to state 39
     brac_open    go to state 40
-    block        go to state 144
+    block        go to state 146
     S            go to state 42
     S1           go to state 43
     block_stmt   go to state 44
@@ -2408,7 +2443,14 @@ State 143
     identifier   go to state 49
 
 
-State 144
+State 145
+
+   41 block_stmt: T_IF '(' stmt ')' T_ELSE '{' M '}' .
+
+    $default  reduce using rule 41 (block_stmt)
+
+
+State 146
 
    42 block_stmt: T_FOR '(' S1 ';' S1 ';' S1 ')' block .
 

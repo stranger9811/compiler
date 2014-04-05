@@ -39,8 +39,7 @@ void yyerror(const char *s)
 long long integer;
 long double real;
 char lexeme[10000];
-
-struct attr attributes;
+struct attr *attributes;
 //Yet to include exponential numbers and hexadecimals.
 };
 
@@ -133,7 +132,20 @@ struct attr attributes;
 %type<attributes> array
 %type<attributes> init
 %type<attributes> assign_stmt
+%type<attributes> code
+%type<attributes> decl
+%type<attributes> void
+%type<attributes> func
+%type<attributes> args
+%type<attributes> brac_open
+%type<attributes> brac_close
+%type<attributes> block
+%type<attributes> M
+%type<attributes> S
+%type<attributes> S1
+%type<attributes> block_stmt
+%type<attributes> stmt
 %type<attributes> expr
-
+%type<attributes> number
 
 %start code

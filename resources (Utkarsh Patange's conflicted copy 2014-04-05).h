@@ -21,32 +21,14 @@ Pointer
 };
 
 
-struct llm {
-        enum type_enum my_type;
-        int dimension;
-};
-union Data {
-	map<string ,struct llm>::iterator it;
-	int index;
-};
-struct code_element  {
-	union Data first;
-	union Data second;
-	string op;
-	union Data third;
-	bool first_type;
-	bool second_type;
-	bool third_type; 		// 0 means we are using temp variables. 1 means we are using pointer to symbol table
-};
+
 struct attr
 {
 	enum type_enum my_type;
-	union Data place;
-	bool place_type;
 	char var_name[50][100];	
 	int index;
 	int dimension[50];
-	
+	vector <int> x;
 	
 };
 
@@ -65,6 +47,14 @@ string enumtostring(enum type_enum type)
 }
 */
 
+struct llm {
+        enum type_enum my_type;
+        int dimension;
+};
+union Data {
+        int index;
+        map<string, struct llm>::iterator it;
+};
 struct symbol_table {
         vector <struct symbol_table *> children;
         struct symbol_table *parent;

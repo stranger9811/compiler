@@ -1,5 +1,7 @@
 
 brac_open : '{' { 
+					$$ = (attr*)malloc(sizeof(attr));
+
 #ifdef debug
 	printf("creating new symbol table\n");
 #endif
@@ -12,6 +14,8 @@ brac_open : '{' {
 		 }
 
 brac_close : '}' {
+				$$ = (attr*)malloc(sizeof(attr));
+
 #ifdef debug
 	printf("destroying symbol table\n");
 #endif
@@ -20,14 +24,20 @@ brac_close : '}' {
 				  delete temp;
 		 }
 
-block  : brac_open M brac_close 	/*block can either be many statements enclosed in braces or just one S.*/
-	| S 		/*S can again be multiple statments separated by comma.*/
+block  : brac_open M brac_close  {$$ = (attr*)malloc(sizeof(attr)); free($2);
+}	/*block can either be many statements enclosed in braces or just one S.*/
+	| S  {$$ = (attr*)malloc(sizeof(attr)); free($1);
+}		/*S can again be multiple statments separated by comma.*/
 	;
 
-M  : S M  		/*Expanding statements inside a block*/
-	| S 
+M  : S M  	{$$ = (attr*)malloc(sizeof(attr));
+				free($1);free($2);}	/*Expanding statements inside a block*/
+	| S 	{$$ = (attr*)malloc(sizeof(attr));
+				free($1);}
 	;
 
-S  : S1';'		/* comma terminated statement or a block statement like if, for, while */
-	| block_stmt
+S  : S1';'	{$$ = (attr*)malloc(sizeof(attr));
+				free($1);}	/* comma terminated statement or a block statement like if, for, while */
+	| block_stmt {$$ = (attr*)malloc(sizeof(attr));
+					free($1);}
 	;

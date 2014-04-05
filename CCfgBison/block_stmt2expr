@@ -1,130 +1,199 @@
 
-block_stmt : T_IF '('stmt')' '{'M'}' 		/*without brace if statements not allowed!*/
-	| T_IF '('stmt')' '{' T_ELSE '}'
-	| T_FOR '('S1';'S1';'S1')' block  
-	| T_WHILE '('S1')' block  
+block_stmt : T_IF '('stmt')' '{'M'}' 	{$$ = (attr*)malloc(sizeof(attr)); free($3); free($6);
+}	/*without brace if statements not allowed!*/
+	| T_IF '('stmt')' T_ELSE '{' M '}' {$$ = (attr*)malloc(sizeof(attr)); free($3); free($7);}
+
+	| T_FOR '('S1';'S1';'S1')' block  {$$ = (attr*)malloc(sizeof(attr));
+	free($3);
+	free($5);
+	free($7);
+	free($9);
+	}
+
+	| T_WHILE '('S1')' block  {$$ = (attr*)malloc(sizeof(attr));	free($3);
+	free($5);}
+
 	;
-stmt: expr			/*Useless non-terminal. Too lazy to update.*/
+stmt: expr		{$$ = (attr*)malloc(sizeof(attr));free($1);}
+	/*Useless non-terminal. Too lazy to update.*/
 	;
 expr  : expr '+' expr 			{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
 						else {
-							if($1.my_type==Double || $3.my_type==Double )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if($1->my_type==Double || $3->my_type==Double )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
+						free($1);
+						free($3);
 					}
-	| func
+	| func			{$$ = (attr*)malloc(sizeof(attr)); free($1);
+}
 	| expr T_EQUAL_TEST expr	{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr '<' expr			{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr '>' expr			{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr T_LESS_THAN_EQUAL expr	{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr T_GREATER_THAN_EQUAL expr{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr T_NOT_EQUAL expr		{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
-	| assign_stmt
+	| assign_stmt  {$$ = (attr*)malloc(sizeof(attr)); free($1);
+}
     	| expr '-' expr 		{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+    					$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
 						else {
-							if($1.my_type==Double || $3.my_type==Double )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if($1->my_type==Double || $3->my_type==Double )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
+						free($1);
+						free($3);
 					}
+	
 	| expr '*' expr 		{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
 						else {
-							if($1.my_type==Double || $3.my_type==Double )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if($1->my_type==Double || $3->my_type==Double )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
+						free($1);
+						free($3);
 					}
     	| expr '/' expr 		{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+    					$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
 						else {
-							if(($1.my_type==Double) || ($3.my_type==Double) )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if(($1->my_type==Double) || ($3->my_type==Double) )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
-
+						free($1);
+						free($3);
 					}
 	| expr '%' expr   		{ 
-						if(!($1.my_type==Int || $1.my_type==Long_long || $1.my_type==Bool))        /* Added Bool*/
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if(!($1->my_type==Int || $1->my_type==Long_long || $1->my_type==Bool))        /* Added Bool*/
 							yyerror("error: MOD supports only bool,int,long long");
-						else if(!($3.my_type==Int || $3.my_type==Long_long || $3.my_type==Bool))
+						else if(!($3->my_type==Int || $3->my_type==Long_long || $3->my_type==Bool))
 							yyerror("error: MOD supports only bool,int,long long");
 						else
-							$$.my_type=$3.my_type;
+							$$->my_type=$3->my_type;
+						free($1);
+						free($3);
 					}
 	| expr T_AND expr 		{ 
-						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
-						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+						else if(!($3->my_type==Bool || $3->my_type==Int || $3->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
 						else 
-							$$.my_type=Bool;
+							$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
-	| expr T_OR expr 		{	 
-						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+	| expr T_OR expr 		{	
+						$$ = (attr*)malloc(sizeof(attr));
+ 
+						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. left operand is \n");
-						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+						else if(!($3->my_type==Bool || $3->my_type==Int || $3->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. right operand is \n");
 						else 
-							$$.my_type=Bool;
+							$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
-	| '!' expr    {$$.my_type = Bool;}
-	| '('expr')'  {$$.my_type = $2.my_type;}
+	| '!' expr    {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type = Bool; free($2);}
+	| '('expr')'  {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type = $2->my_type; free($2);}
 	| identifier  {
+			$$ = (attr*)malloc(sizeof(attr));
+
 			struct symbol_table *temp = current_symbol_table;
 			int flag = 1;
 			while(flag) {
-			           	if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
-						$$.my_type = temp->table[string($1.var_name[0])].my_type;
+			           	if( temp->table.find(string( $1->var_name[0])) != temp->table.end()){
+						$$->my_type = temp->table[string($1->var_name[0])].my_type;
 							flag = 0;
-						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
+						$$->dimension[0] = temp->table[string($1->var_name[0])].dimension - $1->dimension[0];
 				}
 				if(temp->parent==NULL && flag==1) {
 					yyerror("error: variable not declared\n");
@@ -132,9 +201,13 @@ expr  : expr '+' expr 			{
 				}
 				temp = temp->parent;
 			}
+			free($1);
 		  }
-	| '+' expr %prec UPLUS {$$.my_type=$2.my_type;}
-	| '-' expr %prec UMINUS {$$.my_type=$2.my_type;}
-	|number 
+	| '+' expr %prec UPLUS {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type=$2->my_type; free($2);}
+	| '-' expr %prec UMINUS {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type=$2->my_type; free($2);}
+	|number {$$ = (attr*)malloc(sizeof(attr));
+			free($1);}
 	;
 	

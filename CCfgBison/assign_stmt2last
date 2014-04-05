@@ -1,12 +1,13 @@
 
 assign_stmt : identifier '=' expr {
+							$$ = (attr*)malloc(sizeof(attr));
 	                       struct symbol_table *temp = current_symbol_table;
                        		int flag = 1;
                         	while(flag) {
-                                        if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
-                                                $$.my_type = temp->table[string($1.var_name[0])].my_type;
+                                        if( temp->table.find(string( $1->var_name[0])) != temp->table.end()){
+                                                $$->my_type = temp->table[string($1->var_name[0])].my_type;
                                                 flag = 0;
-						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
+						$$->dimension[0] = temp->table[string($1->var_name[0])].dimension - $1->dimension[0];
 
                                 	}
                                 	if(temp->parent==NULL && flag==1) {
@@ -15,8 +16,8 @@ assign_stmt : identifier '=' expr {
                                 	}
                                 	temp = temp->parent;
                         	}
-				enum type_enum t = $$.my_type;
-				enum type_enum tt = $3.my_type; 
+				enum type_enum t = $$->my_type;
+				enum type_enum tt = $3->my_type; 
 				if (t == Int && tt== Long_long)
 					yyerror("Warning: assigning long long to an integer");
 				else if (t==Int && tt == Float)
@@ -29,30 +30,35 @@ assign_stmt : identifier '=' expr {
 					yyerror("Warning: assigning long long to a float");
 				else if (t==Long_long && tt == Double)
 					yyerror("Warning: assigning long long to a double");
-				else if (t != tt || $$.dimension != $3.dimension )
+				else if (t != tt || $$->dimension != $3->dimension )
 					yyerror("Warning: Type mismatch");
 
-			
+				free($1);
+				free($3);
 
 				}/*Assignment statement.*/
 	;
 
-number : T_DEC_INT	
-	| T_DEC_FLOAT
+number : T_DEC_INT	{$$ = (attr*)malloc(sizeof(attr));}
+	| T_DEC_FLOAT {$$ = (attr*)malloc(sizeof(attr));}
 	;
 
-identifier  : ID	{  		strcpy($$.var_name[0],$1);
-							$$.dimension[0] = 0;
+identifier  : ID	{  	
+						$$ = (attr*)malloc(sizeof(attr));	
+						strcpy($$->var_name[0],$1);
+							$$->dimension[0] = 0;
 					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
 		| ID array {
-							strcpy($$.var_name[0],$1);
-							$$.dimension[0] = $2.dimension[0];
+							$$ = (attr*)malloc(sizeof(attr));
+							strcpy($$->var_name[0],$1);
+							$$->dimension[0] = $2->dimension[0];
+							free($2);
 		}
 	;
-array  : '[' ID ']' array  {$$.dimension[0] = $4.dimension[0] +1; printf("%s",$2);}
-	| '[' ID ']' {$$.dimension[0] = 1;}
-	| '[' T_DEC_INT ']' { $$.dimension[0] = 1;}
-	| '[' T_DEC_INT ']' array {$$.dimension[0] = $4.dimension[0] + 1;}
+array  : '[' ID ']' array  {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);}
+	| '[' ID ']' {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = 1;}
+	| '[' T_DEC_INT ']' {$$ = (attr*)malloc(sizeof(attr));  $$->dimension[0] = 1;}
+	| '[' T_DEC_INT ']' array {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = $4->dimension[0] + 1; free($4);}
 	;
 %%
 

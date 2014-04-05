@@ -39,8 +39,7 @@ void yyerror(const char *s)
 long long integer;
 long double real;
 char lexeme[10000];
-
-struct attr attributes;
+struct attr *attributes;
 //Yet to include exponential numbers and hexadecimals.
 };
 
@@ -133,44 +132,81 @@ struct attr attributes;
 %type<attributes> array
 %type<attributes> init
 %type<attributes> assign_stmt
+%type<attributes> code
+%type<attributes> decl
+%type<attributes> void
+%type<attributes> func
+%type<attributes> args
+%type<attributes> brac_open
+%type<attributes> brac_close
+%type<attributes> block
+%type<attributes> M
+%type<attributes> S
+%type<attributes> S1
+%type<attributes> block_stmt
+%type<attributes> stmt
 %type<attributes> expr
-
+%type<attributes> number
 
 %start code
 %%
-code  : decl code	
-	| decl
+code  : decl code	{$$ = (attr*)malloc(sizeof(attr));
+						free($1);
+						free($2);}
+	| decl {$$ = (attr*)malloc(sizeof(attr));
+
+			free($1);}
 	;
-decl  : type identifier';'
-	| T_TYPEDEF type ID';'  
-	| type func block  	/*This is for function definition only. No rule yet for function declation.*/
-	| void func block	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
-	| T_STRUCT ID block';'  
-	| T_HEADER
+decl  : type identifier';' {$$ = (attr*)malloc(sizeof(attr));
+
+							free($1);
+							free($2);}
+	| T_TYPEDEF type ID';'  {$$ = (attr*)malloc(sizeof(attr));
+
+								free($2);}
+	| type func block   {$$ = (attr*)malloc(sizeof(attr));
+
+								free($1);
+								free($2);
+								free($3);}	/*This is for function definition only. No rule yet for function declation.*/
+	| void func block {$$ = (attr*)malloc(sizeof(attr));
+
+								free($1);
+								free($2);
+								free($3);}	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
+	| T_STRUCT ID block';'  {$$ = (attr*)malloc(sizeof(attr));
+								free($3);
+								}
+	| T_HEADER					{$$ = (attr*)	malloc(sizeof(attr));}
 	;
 /*	| #define macro const*/
-type  : type '*' %prec DEREF
-	| basic  {$$.my_type=$1.my_type;}
+type  : type '*' %prec DEREF   {$$ = (attr*)malloc(sizeof(attr));
+
+								free($1);
+								}
+	| basic  {$$ = (attr*)malloc(sizeof(attr)); $$->my_type=$1->my_type; free($1);}
 	;
-basic : T_LONG_LONG  			{$$.my_type=Long_long;}
-	| T_INT 			{$$.my_type=Int;}
-	| T_CHAR 			{$$.my_type=Char;}
-	| T_FLOAT 			{$$.my_type=Float;}
-	| T_DOUBLE 			{$$.my_type=Double;}
-	| T_BOOL			{$$.my_type=Bool;}
+basic : T_LONG_LONG  			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Long_long;}
+	| T_INT 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Int;}
+	| T_CHAR 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Char;}
+	| T_FLOAT 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Float;}
+	| T_DOUBLE 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Double;}
+	| T_BOOL			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Bool;}
 	;
-void  : void '*' %prec DEREF
-	| T_VOID
+void  : void '*' %prec DEREF   {$$ = (attr*)malloc(sizeof(attr)); free($1);}
+	| T_VOID  {$$ = (attr*)malloc(sizeof(attr));}
 	;
-func  : ID'('args')' 
-	| ID'('')' 
-	| T_MAIN'('args')' 
-	| T_MAIN'('')'
+func  : ID'('args')'   {$$ = (attr*)malloc(sizeof(attr)); free($3);}
+	| ID'('')'   {$$ = (attr*)malloc(sizeof(attr));}
+	| T_MAIN'('args')'   {$$ = (attr*)malloc(sizeof(attr)); free($3);}
+	| T_MAIN'('')'  {$$ = (attr*)malloc(sizeof(attr));}
 	;
-args  : type identifier',' args  
-	| type identifier
+args  : type identifier',' args    {$$ = (attr*)malloc(sizeof(attr));   free($1); free($2);}
+	| type identifier  {$$ = (attr*)malloc(sizeof(attr));   free($1); free($2);}
 	;
 brac_open : '{' { 
+					$$ = (attr*)malloc(sizeof(attr));
+
 #ifdef debug
 	printf("creating new symbol table\n");
 #endif
@@ -183,6 +219,8 @@ brac_open : '{' {
 		 }
 
 brac_close : '}' {
+				$$ = (attr*)malloc(sizeof(attr));
+
 #ifdef debug
 	printf("destroying symbol table\n");
 #endif
@@ -191,207 +229,294 @@ brac_close : '}' {
 				  delete temp;
 		 }
 
-block  : brac_open M brac_close 	/*block can either be many statements enclosed in braces or just one S.*/
-	| S 		/*S can again be multiple statments separated by comma.*/
+block  : brac_open M brac_close  {$$ = (attr*)malloc(sizeof(attr)); free($2);
+}	/*block can either be many statements enclosed in braces or just one S.*/
+	| S  {$$ = (attr*)malloc(sizeof(attr)); free($1);
+}		/*S can again be multiple statments separated by comma.*/
 	;
 
-M  : S M  		/*Expanding statements inside a block*/
-	| S 
+M  : S M  	{$$ = (attr*)malloc(sizeof(attr));
+				free($1);free($2);}	/*Expanding statements inside a block*/
+	| S 	{$$ = (attr*)malloc(sizeof(attr));
+				free($1);}
 	;
 
-S  : S1';'		/* comma terminated statement or a block statement like if, for, while */
-	| block_stmt
+S  : S1';'	{$$ = (attr*)malloc(sizeof(attr));
+				free($1);}	/* comma terminated statement or a block statement like if, for, while */
+	| block_stmt {$$ = (attr*)malloc(sizeof(attr));
+					free($1);}
 	;
 
 
-S1  : stmt','S1 	/*statements separated by comma or a declaration/initialization*/
-	|stmt
+S1  : stmt','S1  {$$ = (attr*)malloc(sizeof(attr)); free($1);
+free($3);}	/*statements separated by comma or a declaration/initialization*/
+	|stmt  {$$ = (attr*)malloc(sizeof(attr));free($1);}
 	|type init {
-			
+			$$ = (attr*)malloc(sizeof(attr));
 			struct llm temp;
 
-			temp.my_type= $1.my_type; 
-			for(int i=0;i<$2.index;i++) {
+			temp.my_type= $1->my_type; 
+			for(int i=0;i<$2->index;i++) {
 				/* checking if variable is already declared */
 
-						if(current_symbol_table->table.find(string( $2.var_name[i])) != current_symbol_table->table.end())
+						if(current_symbol_table->table.find(string( $2->var_name[i])) != current_symbol_table->table.end())
 							yyerror("error: redeclaration \n");
 					
 				/*   ------------------------------------ */
 						else {
-							temp.dimension = $2.dimension[i];
-							current_symbol_table->table[string($2.var_name[i])]=(temp);
+							temp.dimension = $2->dimension[i];
+							current_symbol_table->table[string($2->var_name[i])]=(temp);
 						}
 			}
 #ifdef debug
 			printf("Variables declared \n"); 
-				for(int i=0;i<$2.index;i++) {
-					printf("%s %d\n",$2.var_name[i],$2.dimension[i]);
+				for(int i=0;i<$2->index;i++) {
+					printf("%s %d\n",$2->var_name[i],$2->dimension[i]);
 				}
 			#endif
-
+			free($1);
+			free($2);
 	}
 	;
 
 init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializing, use assign_stmt*/
 						 {
-								strcpy($$.var_name[0],$1.var_name[0]);
-								$$.dimension[0] = $1.dimension[0];
-								$$.index = 1;
-								for(int i=0; i<$3.index; i++) {
-									$$.dimension[$$.index] = $3.dimension[i];
-									strcpy($$.var_name[$$.index],$3.var_name[i]);
-									$$.index++;
+						 		$$ = (attr*)malloc(sizeof(attr));
+								strcpy($$->var_name[0],$1->var_name[0]);
+								$$->dimension[0] = $1->dimension[0];
+								$$->index = 1;
+								for(int i=0; i<$3->index; i++) {
+									$$->dimension[$$->index] = $3->dimension[i];
+									strcpy($$->var_name[$$->index],$3->var_name[i]);
+									$$->index++;
 								}
+								free($1);
+								free($3);
 						} 
 	| identifier ',' init {
-								strcpy($$.var_name[0],$1.var_name[0]);
-								$$.dimension[0] = $1.dimension[0];
-								$$.index = 1;
-								for(int i=0; i<$3.index; i++) {
-									$$.dimension[$$.index] = $3.dimension[i];
-									strcpy($$.var_name[$$.index],$3.var_name[i]);
-									$$.index++;
+								$$ = (attr*)malloc(sizeof(attr));
+								strcpy($$->var_name[0],$1->var_name[0]);
+								$$->dimension[0] = $1->dimension[0];
+								$$->index = 1;
+								for(int i=0; i<$3->index; i++) {
+									$$->dimension[$$->index] = $3->dimension[i];
+									strcpy($$->var_name[$$->index],$3->var_name[i]);
+									$$->index++;
 								}
+								free($1);
+								free($3);
 							} 
 	| assign_stmt {
-						strcpy($$.var_name[0],$1.var_name[0]);
-						$$.dimension[0] = $1.dimension[0];
-						$$.index = 1;
+						$$ = (attr*)malloc(sizeof(attr));
+						strcpy($$->var_name[0],$1->var_name[0]);
+						$$->dimension[0] = $1->dimension[0];
+						$$->index = 1;
+						free($1);
 					}
 	| identifier  {
-					strcpy($$.var_name[0],$1.var_name[0]);
-					$$.dimension[0] = $1.dimension[0];
-					$$.index = 1;
+					$$ = (attr*)malloc(sizeof(attr));
+					strcpy($$->var_name[0],$1->var_name[0]);
+					$$->dimension[0] = $1->dimension[0];
+					$$->index = 1;
+					free($1);
 				  }
 	;
 
-block_stmt : T_IF '('stmt')' '{'M'}' 		/*without brace if statements not allowed!*/
-	| T_IF '('stmt')' '{' T_ELSE '}'
-	| T_FOR '('S1';'S1';'S1')' block  
-	| T_WHILE '('S1')' block  
+block_stmt : T_IF '('stmt')' '{'M'}' 	{$$ = (attr*)malloc(sizeof(attr)); free($3); free($6);
+}	/*without brace if statements not allowed!*/
+	| T_IF '('stmt')' T_ELSE '{' M '}' {$$ = (attr*)malloc(sizeof(attr)); free($3); free($7);}
+
+	| T_FOR '('S1';'S1';'S1')' block  {$$ = (attr*)malloc(sizeof(attr));
+	free($3);
+	free($5);
+	free($7);
+	free($9);
+	}
+
+	| T_WHILE '('S1')' block  {$$ = (attr*)malloc(sizeof(attr));	free($3);
+	free($5);}
+
 	;
-stmt: expr			/*Useless non-terminal. Too lazy to update.*/
+stmt: expr		{$$ = (attr*)malloc(sizeof(attr));free($1);}
+	/*Useless non-terminal. Too lazy to update.*/
 	;
 expr  : expr '+' expr 			{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
 						else {
-							if($1.my_type==Double || $3.my_type==Double )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if($1->my_type==Double || $3->my_type==Double )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
+						free($1);
+						free($3);
 					}
-	| func
+	| func			{$$ = (attr*)malloc(sizeof(attr)); free($1);
+}
 	| expr T_EQUAL_TEST expr	{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr '<' expr			{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr '>' expr			{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr T_LESS_THAN_EQUAL expr	{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr T_GREATER_THAN_EQUAL expr{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
 	| expr T_NOT_EQUAL expr		{
-						$$.my_type=Bool;
+						$$ = (attr*)malloc(sizeof(attr));
+
+						$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
-	| assign_stmt
+	| assign_stmt  {$$ = (attr*)malloc(sizeof(attr)); free($1);
+}
     	| expr '-' expr 		{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+    					$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
 						else {
-							if($1.my_type==Double || $3.my_type==Double )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if($1->my_type==Double || $3->my_type==Double )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
+						free($1);
+						free($3);
 					}
+	
 	| expr '*' expr 		{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
 						else {
-							if($1.my_type==Double || $3.my_type==Double )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if($1->my_type==Double || $3->my_type==Double )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
+						free($1);
+						free($3);
 					}
     	| expr '/' expr 		{ 
-						if($1.my_type==Char || $1.my_type==Bool)
+    					$$ = (attr*)malloc(sizeof(attr));
+
+						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
-						else if($3.my_type==Char || $3.my_type==Bool)
+						else if($3->my_type==Char || $3->my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
 						else {
-							if(($1.my_type==Double) || ($3.my_type==Double) )
-								$$.my_type=Double;
-							else if($1.my_type==Float || $3.my_type==Float)
-								$$.my_type=Float;
-							else if($1.my_type==Long_long || $3.my_type==Long_long)
-								$$.my_type=Long_long;
+							if(($1->my_type==Double) || ($3->my_type==Double) )
+								$$->my_type=Double;
+							else if($1->my_type==Float || $3->my_type==Float)
+								$$->my_type=Float;
+							else if($1->my_type==Long_long || $3->my_type==Long_long)
+								$$->my_type=Long_long;
 							else 
-								$$.my_type=$1.my_type;
+								$$->my_type=$1->my_type;
 						}
-
+						free($1);
+						free($3);
 					}
 	| expr '%' expr   		{ 
-						if(!($1.my_type==Int || $1.my_type==Long_long || $1.my_type==Bool))        /* Added Bool*/
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if(!($1->my_type==Int || $1->my_type==Long_long || $1->my_type==Bool))        /* Added Bool*/
 							yyerror("error: MOD supports only bool,int,long long");
-						else if(!($3.my_type==Int || $3.my_type==Long_long || $3.my_type==Bool))
+						else if(!($3->my_type==Int || $3->my_type==Long_long || $3->my_type==Bool))
 							yyerror("error: MOD supports only bool,int,long long");
 						else
-							$$.my_type=$3.my_type;
+							$$->my_type=$3->my_type;
+						free($1);
+						free($3);
 					}
 	| expr T_AND expr 		{ 
-						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+						$$ = (attr*)malloc(sizeof(attr));
+
+						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
-						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+						else if(!($3->my_type==Bool || $3->my_type==Int || $3->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
 						else 
-							$$.my_type=Bool;
+							$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
-	| expr T_OR expr 		{	 
-						if(!($1.my_type==Bool || $1.my_type==Int || $1.my_type==Long_long))
+	| expr T_OR expr 		{	
+						$$ = (attr*)malloc(sizeof(attr));
+ 
+						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. left operand is \n");
-						else if(!($3.my_type==Bool || $3.my_type==Int || $3.my_type==Long_long))
+						else if(!($3->my_type==Bool || $3->my_type==Int || $3->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. right operand is \n");
 						else 
-							$$.my_type=Bool;
+							$$->my_type=Bool;
+						free($1);
+						free($3);
 					}
-	| '!' expr    {$$.my_type = Bool;}
-	| '('expr')'  {$$.my_type = $2.my_type;}
+	| '!' expr    {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type = Bool; free($2);}
+	| '('expr')'  {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type = $2->my_type; free($2);}
 	| identifier  {
+			$$ = (attr*)malloc(sizeof(attr));
+
 			struct symbol_table *temp = current_symbol_table;
 			int flag = 1;
 			while(flag) {
-			           	if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
-						$$.my_type = temp->table[string($1.var_name[0])].my_type;
+			           	if( temp->table.find(string( $1->var_name[0])) != temp->table.end()){
+						$$->my_type = temp->table[string($1->var_name[0])].my_type;
 							flag = 0;
-						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
+						$$->dimension[0] = temp->table[string($1->var_name[0])].dimension - $1->dimension[0];
 				}
 				if(temp->parent==NULL && flag==1) {
 					yyerror("error: variable not declared\n");
@@ -399,20 +524,25 @@ expr  : expr '+' expr 			{
 				}
 				temp = temp->parent;
 			}
+			free($1);
 		  }
-	| '+' expr %prec UPLUS {$$.my_type=$2.my_type;}
-	| '-' expr %prec UMINUS {$$.my_type=$2.my_type;}
-	|number 
+	| '+' expr %prec UPLUS {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type=$2->my_type; free($2);}
+	| '-' expr %prec UMINUS {$$ = (attr*)malloc(sizeof(attr));
+$$->my_type=$2->my_type; free($2);}
+	|number {$$ = (attr*)malloc(sizeof(attr));
+			free($1);}
 	;
 	
 assign_stmt : identifier '=' expr {
+							$$ = (attr*)malloc(sizeof(attr));
 	                       struct symbol_table *temp = current_symbol_table;
                        		int flag = 1;
                         	while(flag) {
-                                        if( temp->table.find(string( $1.var_name[0])) != temp->table.end()){
-                                                $$.my_type = temp->table[string($1.var_name[0])].my_type;
+                                        if( temp->table.find(string( $1->var_name[0])) != temp->table.end()){
+                                                $$->my_type = temp->table[string($1->var_name[0])].my_type;
                                                 flag = 0;
-						$$.dimension[0] = temp->table[string($1.var_name[0])].dimension - $1.dimension[0];
+						$$->dimension[0] = temp->table[string($1->var_name[0])].dimension - $1->dimension[0];
 
                                 	}
                                 	if(temp->parent==NULL && flag==1) {
@@ -421,8 +551,8 @@ assign_stmt : identifier '=' expr {
                                 	}
                                 	temp = temp->parent;
                         	}
-				enum type_enum t = $$.my_type;
-				enum type_enum tt = $3.my_type; 
+				enum type_enum t = $$->my_type;
+				enum type_enum tt = $3->my_type; 
 				if (t == Int && tt== Long_long)
 					yyerror("Warning: assigning long long to an integer");
 				else if (t==Int && tt == Float)
@@ -435,30 +565,35 @@ assign_stmt : identifier '=' expr {
 					yyerror("Warning: assigning long long to a float");
 				else if (t==Long_long && tt == Double)
 					yyerror("Warning: assigning long long to a double");
-				else if (t != tt || $$.dimension != $3.dimension )
+				else if (t != tt || $$->dimension != $3->dimension )
 					yyerror("Warning: Type mismatch");
 
-			
+				free($1);
+				free($3);
 
 				}/*Assignment statement.*/
 	;
 
-number : T_DEC_INT	
-	| T_DEC_FLOAT
+number : T_DEC_INT	{$$ = (attr*)malloc(sizeof(attr));}
+	| T_DEC_FLOAT {$$ = (attr*)malloc(sizeof(attr));}
 	;
 
-identifier  : ID	{  		strcpy($$.var_name[0],$1);
-							$$.dimension[0] = 0;
+identifier  : ID	{  	
+						$$ = (attr*)malloc(sizeof(attr));	
+						strcpy($$->var_name[0],$1);
+							$$->dimension[0] = 0;
 					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
 		| ID array {
-							strcpy($$.var_name[0],$1);
-							$$.dimension[0] = $2.dimension[0];
+							$$ = (attr*)malloc(sizeof(attr));
+							strcpy($$->var_name[0],$1);
+							$$->dimension[0] = $2->dimension[0];
+							free($2);
 		}
 	;
-array  : '[' ID ']' array  {$$.dimension[0] = $4.dimension[0] +1; printf("%s",$2);}
-	| '[' ID ']' {$$.dimension[0] = 1;}
-	| '[' T_DEC_INT ']' { $$.dimension[0] = 1;}
-	| '[' T_DEC_INT ']' array {$$.dimension[0] = $4.dimension[0] + 1;}
+array  : '[' ID ']' array  {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);}
+	| '[' ID ']' {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = 1;}
+	| '[' T_DEC_INT ']' {$$ = (attr*)malloc(sizeof(attr));  $$->dimension[0] = 1;}
+	| '[' T_DEC_INT ']' array {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = $4->dimension[0] + 1; free($4);}
 	;
 %%
 
