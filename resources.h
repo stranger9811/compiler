@@ -19,35 +19,42 @@ Void,
 Pointer
 
 };
-
+enum type_instr{
+Jump,
+Assignment
+};
 
 struct llm {
         enum type_enum my_type;
         int dimension;
 };
-union Data {
-	map<string ,struct llm>::iterator it;
-	int index;
+
+struct args {
+	string var;
+	int temp;
+	int int_val;
+	float float_val;
+	int args_type;
 };
-struct code_element  {
-	union Data first;
-	union Data second;
-	string op;
-	union Data third;
-	bool first_type;
-	bool second_type;
-	bool third_type; 		// 0 means we are using temp variables. 1 means we are using pointer to symbol table
+struct code_element {
+	enum type_instr data1;
+	string data2;
+	struct args arg1;
+	struct args arg2;
+	struct args result; 
 };
 struct attr
 {
 	enum type_enum my_type;
-	union Data place;
-	bool place_type;
+	struct args place;
+	
+	vector <code_element> code;
 	char var_name[50][100];	
 	int index;
+	vector <int> truelist;
+	vector <int> falselist;
 	int dimension[50];
-	
-	
+	attr() {}
 };
 
 /*

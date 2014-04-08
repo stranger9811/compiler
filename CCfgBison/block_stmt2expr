@@ -18,7 +18,28 @@ stmt: expr		{$$ = (attr*)malloc(sizeof(attr));free($1);}
 	/*Useless non-terminal. Too lazy to update.*/
 	;
 expr  : expr '+' expr 			{ 
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr();
+						
+						$$->place.temp = newTemp();
+						$$->place.args_type = 2;
+						struct code_element temp_code;
+						temp_code.arg1 = $1->place;
+						temp_code.arg2 = $3->place;
+						temp_code.result = $$->place;
+						temp_code.data2 = "+";
+						temp_code.data1 = Assignment;
+
+						$$->code.insert ($$->code.end(),$1->code.begin(),$1->code.end());
+						$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
+						$$->code.push_back(temp_code);
+						global_code.push_back(temp_code);
+
+
+
+						#ifdef debug
+							printf("in expr-> expr+expr\n");
+
+						#endif
 
 						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
@@ -84,7 +105,28 @@ expr  : expr '+' expr 			{
 	| assign_stmt  {$$ = (attr*)malloc(sizeof(attr)); free($1);
 }
     	| expr '-' expr 		{ 
-    					$$ = (attr*)malloc(sizeof(attr));
+    					$$ = new attr();
+						
+						$$->place.temp = newTemp();
+						$$->place.args_type = 2;
+						struct code_element temp_code;
+						temp_code.arg1 = $1->place;
+						temp_code.arg2 = $3->place;
+						temp_code.result = $$->place;
+						temp_code.data2 = "-";
+						temp_code.data1 = Assignment;
+
+						$$->code.insert ($$->code.end(),$1->code.begin(),$1->code.end());
+						$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
+						$$->code.push_back(temp_code);
+						global_code.push_back(temp_code);
+
+
+
+						#ifdef debug
+							printf("in expr-> expr-expr\n");
+
+						#endif
 
 						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
@@ -105,7 +147,28 @@ expr  : expr '+' expr 			{
 					}
 	
 	| expr '*' expr 		{ 
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr();
+						
+						$$->place.temp = newTemp();
+						$$->place.args_type = 2;
+						struct code_element temp_code;
+						temp_code.arg1 = $1->place;
+						temp_code.arg2 = $3->place;
+						temp_code.result = $$->place;
+						temp_code.data2 = "*";
+						temp_code.data1 = Assignment;
+
+						$$->code.insert ($$->code.end(),$1->code.begin(),$1->code.end());
+						$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
+						$$->code.push_back(temp_code);
+						global_code.push_back(temp_code);
+
+
+
+						#ifdef debug
+							printf("in expr-> expr*expr\n");
+
+						#endif
 
 						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
@@ -125,7 +188,28 @@ expr  : expr '+' expr 			{
 						free($3);
 					}
     	| expr '/' expr 		{ 
-    					$$ = (attr*)malloc(sizeof(attr));
+    					$$ = new attr();
+						
+						$$->place.temp = newTemp();
+						$$->place.args_type = 2;
+						struct code_element temp_code;
+						temp_code.arg1 = $1->place;
+						temp_code.arg2 = $3->place;
+						temp_code.result = $$->place;
+						temp_code.data2 = "";
+						temp_code.data1 = Assignment;
+
+						$$->code.insert ($$->code.end(),$1->code.begin(),$1->code.end());
+						$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
+						$$->code.push_back(temp_code);
+						global_code.push_back(temp_code);
+
+
+
+						#ifdef debug
+							printf("in expr-> expr/expr\n");
+
+						#endif
 
 						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
@@ -145,7 +229,27 @@ expr  : expr '+' expr 			{
 						free($3);
 					}
 	| expr '%' expr   		{ 
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr();
+						
+						$$->place.temp = newTemp();
+						$$->place.args_type = 2;
+						struct code_element temp_code;
+						temp_code.arg1 = $1->place;
+						temp_code.arg2 = $3->place;
+						temp_code.result = $$->place;
+						temp_code.data2 = "%";
+						temp_code.data1 = Assignment;
+
+						$$->code.insert ($$->code.end(),$1->code.begin(),$1->code.end());
+						$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
+						$$->code.push_back(temp_code);
+						global_code.push_back(temp_code);
+
+
+
+						#ifdef debug
+							printf("in expr-> expr\%expr\n");
+						#endif
 
 						if(!($1->my_type==Int || $1->my_type==Long_long || $1->my_type==Bool))        /* Added Bool*/
 							yyerror("error: MOD supports only bool,int,long long");
@@ -156,37 +260,42 @@ expr  : expr '+' expr 			{
 						free($1);
 						free($3);
 					}
-	| expr T_AND expr 		{ 
-						$$ = (attr*)malloc(sizeof(attr));
+	| expr T_AND Marker_e expr 		{
+						$$ = new attr();
+						backpatch($1->falselist,$3);
+						$$->truelist = merge($1->truelist.begin(),$1->truelist.end(),$4->truelist.begin(),$4->truelist.end());
+						for(int x=0; x<$4->falselist.size();x++) {
+								$$->falselist.push_back($4->falselist[x]);
+						}
 
 						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
-						else if(!($3->my_type==Bool || $3->my_type==Int || $3->my_type==Long_long))
+						else if(!($4->my_type==Bool || $4->my_type==Int || $4->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
 						else 
 							$$->my_type=Bool;
 						free($1);
-						free($3);
+						free($4);
 					}
-	| expr T_OR expr 		{	
+	| expr T_OR Marker_e expr 		{	
 						$$ = (attr*)malloc(sizeof(attr));
  
 						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. left operand is \n");
-						else if(!($3->my_type==Bool || $3->my_type==Int || $3->my_type==Long_long))
+						else if(!($4->my_type==Bool || $4->my_type==Int || $4->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. right operand is \n");
 						else 
 							$$->my_type=Bool;
 						free($1);
-						free($3);
+						free($4);
 					}
 	| '!' expr    {$$ = (attr*)malloc(sizeof(attr));
 $$->my_type = Bool; free($2);}
 	| '('expr')'  {$$ = (attr*)malloc(sizeof(attr));
 $$->my_type = $2->my_type; free($2);}
 	| identifier  {
-			$$ = (attr*)malloc(sizeof(attr));
-
+			$$ = new attr();
+			$$->place.var = $1->place.var; 
 			struct symbol_table *temp = current_symbol_table;
 			int flag = 1;
 			while(flag) {
@@ -207,7 +316,11 @@ $$->my_type = $2->my_type; free($2);}
 $$->my_type=$2->my_type; free($2);}
 	| '-' expr %prec UMINUS {$$ = (attr*)malloc(sizeof(attr));
 $$->my_type=$2->my_type; free($2);}
-	|number {$$ = (attr*)malloc(sizeof(attr));
-			free($1);}
+	|number {
+				$$ = new attr();
+				$$->place = $1->place;
+				$$->place.args_type = $$->place.args_type;
+				$$->my_type = $1->my_type;
+			}
 	;
 	

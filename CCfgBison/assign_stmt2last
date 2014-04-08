@@ -1,6 +1,30 @@
 
 assign_stmt : identifier '=' expr {
-							$$ = (attr*)malloc(sizeof(attr));
+							#ifdef debug
+								printf("In assign_stmt -> identifier '=' expr\n");
+
+							#endif 
+							$$ = new attr();
+							$$->my_type = Void;
+							struct code_element temp_code;
+							temp_code.arg1 = $3->place;
+							temp_code.result = $1->place;
+							temp_code.data2 = "=";
+							temp_code.data1 = Assignment;
+							$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
+							$$->code.push_back(temp_code);
+							global_code.push_back(temp_code);
+
+
+							#ifdef debug
+								printf("===============CODE GENERATED====================\n");
+								for(int i=0;i<global_code.size();i++) {
+									cout << global_code[i].data2 << "\t";
+									cout << "(" << global_code[i].arg1.var << "," << global_code[i].arg1.temp << "," << global_code[i].arg1.int_val << "," << global_code[i].arg1.float_val << "," << global_code[i].arg1.args_type << ")\t(" << global_code[i].arg2.var << ","<<global_code[i].arg2.temp << "," << global_code[i].arg2.int_val << "," << global_code[i].arg2.float_val << "," << global_code[i].arg2.args_type<<")\t(" << global_code[i].result.var << "," << global_code[i].result.temp << "," << global_code[i].result.int_val << "," << global_code[i].result.float_val << "," << global_code[i].result.args_type<< ")\n";
+
+								}	
+								printf("===============CODE GENERATION END====================\n");
+							#endif 
 	                       struct symbol_table *temp = current_symbol_table;
                        		int flag = 1;
                         	while(flag) {
@@ -38,13 +62,31 @@ assign_stmt : identifier '=' expr {
 
 				}/*Assignment statement.*/
 	;
-
-number : T_DEC_INT	{$$ = (attr*)malloc(sizeof(attr));}
-	| T_DEC_FLOAT {$$ = (attr*)malloc(sizeof(attr));}
+Marker_e :  {
+				$$ = global_code.size()  + 1;
+			}
+		;
+number : T_DEC_INT	{
+						#ifdef debug 
+							printf("number-> T_DEC_INT\n");
+						#endif
+						$$ = new attr();
+						$$->place.int_val = $1;
+						$$->place.args_type = 3;
+						$$->my_type =Int;
+					}
+	| T_DEC_FLOAT {
+						$$ = new attr();
+						$$->place.float_val = $1;
+						$$->place.args_type = 4;
+						$$->my_type = Int;
+					}
 	;
 
 identifier  : ID	{  	
-						$$ = (attr*)malloc(sizeof(attr));	
+						$$ = new attr();
+						$$->place.var = $1;
+						$$->place.args_type = 1;
 						strcpy($$->var_name[0],$1);
 							$$->dimension[0] = 0;
 					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
