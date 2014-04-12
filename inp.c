@@ -2,5 +2,8 @@
 
 int main()
 {
-	int x = 3+ 2 - 5;
+		int x;
+		if(x>=4) {
+			x = 9;
+		}
 }

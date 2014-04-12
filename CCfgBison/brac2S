@@ -1,10 +1,10 @@
 
 brac_open : '{' { 
-					$$ = (attr*)malloc(sizeof(attr));
+					$$ = new attr();
 
-#ifdef debug
-	printf("creating new symbol table\n");
-#endif
+					#ifdef debug
+						printf("creating new symbol table\n");
+					#endif
 				  struct symbol_table *temp = new  symbol_table;
 				  current_symbol_table->children.push_back(temp); 
 				  temp->parent = current_symbol_table;
@@ -14,30 +14,76 @@ brac_open : '{' {
 		 }
 
 brac_close : '}' {
-				$$ = (attr*)malloc(sizeof(attr));
+				$$ = new attr();
 
-#ifdef debug
-	printf("destroying symbol table\n");
-#endif
+				#ifdef debug
+					printf("destroying symbol table\n");
+				#endif
 				  struct symbol_table *temp = current_symbol_table;
 				  current_symbol_table = temp->parent;
 				  delete temp;
 		 }
 
-block  : brac_open M brac_close  {$$ = (attr*)malloc(sizeof(attr)); free($2);
-}	/*block can either be many statements enclosed in braces or just one S.*/
-	| S  {$$ = (attr*)malloc(sizeof(attr)); free($1);
+block  : brac_open M brac_close  {	
+									#ifdef debug
+						 				cout << "block -> brac_open M brac_close \n";
+						 			#endif
+									$$ = (attr*)malloc(sizeof(attr)); 
+									$$->my_type = $2->my_type;
+									$$->dimension[0] = $2->dimension[0];
+
+									free($2);
+									}
+									/*block can either be many statements enclosed in braces or just one S.*/
+	| S  						{$$ = (attr*)malloc(sizeof(attr)); free($1);
 }		/*S can again be multiple statments separated by comma.*/
 	;
 
-M  : S M  	{$$ = (attr*)malloc(sizeof(attr));
-				free($1);free($2);}	/*Expanding statements inside a block*/
-	| S 	{$$ = (attr*)malloc(sizeof(attr));
-				free($1);}
+M  : S M  	{
+				$$ = (attr*)malloc(sizeof(attr));
+				#ifdef debug
+					cout << "M -> S M\n";
+				#endif
+				if ($1->my_type != Useless)
+				{
+					$$->my_type = $1->my_type;
+					$$->dimension[0] = $1->dimension[0];
+				}
+				else
+				{
+					$$->my_type = $2->my_type;
+					$$->dimension[0] = $2->dimension[0];
+				}
+				if ($$->my_type!=$2->my_type) yyerror("Different return types for same function\n");
+				free($1);free($2);
+				}	/*Expanding statements inside a block*/
+	| S 	{
+				#ifdef debug
+						cout << "M -> S\n";
+				#endif
+				$$ = (attr*)malloc(sizeof(attr));
+				$$->my_type = $1->my_type;
+				$$->dimension[0] = $1->dimension[0];	
+				free($1);
+				}
 	;
 
-S  : S1';'	{$$ = (attr*)malloc(sizeof(attr));
-				free($1);}	/* comma terminated statement or a block statement like if, for, while */
-	| block_stmt {$$ = (attr*)malloc(sizeof(attr));
-					free($1);}
+S  : S1';'	{
+				#ifdef debug
+						cout << "S -> S1\n";
+				#endif
+				$$ = (attr*)malloc(sizeof(attr));
+				$$->my_type = $1->my_type;
+				$$->dimension[0] = $1->dimension[0];
+				free($1);
+				}	/* comma terminated statement or a block statement like if, for, while */
+	| block_stmt {
+					#ifdef debug
+							cout << "S -> block_stmt\n";
+					#endif
+					$$ = (attr*)malloc(sizeof(attr));
+					$$->my_type = $1->my_type;
+					$$->dimension[0] = $1->dimension[0];
+					free($1);
+					}
 	;

@@ -16,7 +16,9 @@ Int,
 Float, 
 Double,
 Void,
-Pointer
+Pointer,
+Useless,
+Error
 
 };
 enum type_instr{

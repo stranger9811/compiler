@@ -1,4 +1,9 @@
 %%
+Marker_e :  {
+				$$ = global_code.size()  + 1;
+			}
+		;
+
 code  : decl code	{$$ = (attr*)malloc(sizeof(attr));
 						free($1);
 						free($2);}
@@ -7,48 +12,126 @@ code  : decl code	{$$ = (attr*)malloc(sizeof(attr));
 			free($1);}
 	;
 decl  : type identifier';' {$$ = (attr*)malloc(sizeof(attr));
+							if(current_symbol_table->table.find(string( $2->var_name[0])) != current_symbol_table->table.end())
+								yyerror("error: redeclaration \n");
+							else{
+							$2->my_type = $1->my_type;
+							$2->dimension[0]= $1->dimension[0];
+							} 
+							
 
 							free($1);
-							free($2);}
+							free($2);
+							}
 	| T_TYPEDEF type ID';'  {$$ = (attr*)malloc(sizeof(attr));
 
 								free($2);}
-	| type func block   {$$ = (attr*)malloc(sizeof(attr));
+	| type func block   {
+								$$ = (attr*)malloc(sizeof(attr));
+								if ($1->my_type == $3->my_type)
+								{
+									if ($1->dimension[0] == $3->dimension[0])
+									{	/* Everything is fine. Enter in symbol table */
+										struct llm temp;
+
+										temp.my_type= $1->my_type; 
+										temp.dimension = $1->dimension[0];
+										current_symbol_table->table[string($2->var_name[0])]=(temp);									}
+									else
+									{
+										yyerror("Dimension Mismatch\n");
+									}
+								}
+								else yyerror("Type mismatch: Return type doesn't match declared type\n");
+								printf("type is %d. block is %d\n",$1->my_type,$3->my_type);
+								free($1);
+								free($2);
+								free($3);
+								}	/*This is for function definition only. No rule yet for function declation.*/
+	| void func block {
+								$$ = (attr*)malloc(sizeof(attr));
+								if ($1->my_type == $3->my_type)
+								{
+									if ($1->dimension[0] == $3->dimension[0])
+									{	/* Everything is fine. Enter in symbol table */
+										struct llm temp;
+
+										temp.my_type= $1->my_type; 
+										temp.dimension = $1->dimension[0];
+										current_symbol_table->table[string($2->var_name[0])]=(temp);									}
+									else
+									{
+										yyerror("Dimension Mismatch\n");
+									}
+								}
+								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
 								free($1);
 								free($2);
-								free($3);}	/*This is for function definition only. No rule yet for function declation.*/
-	| void func block {$$ = (attr*)malloc(sizeof(attr));
-
-								free($1);
-								free($2);
-								free($3);}	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
+								free($3);
+								}	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
 	| T_STRUCT ID block';'  {$$ = (attr*)malloc(sizeof(attr));
 								free($3);
 								}
 	| T_HEADER					{$$ = (attr*)	malloc(sizeof(attr));}
 	;
 /*	| #define macro const*/
-type  : type '*' %prec DEREF   {$$ = (attr*)malloc(sizeof(attr));
-
+type  : type '*' %prec DEREF   {
+								$$ = (attr*)malloc(sizeof(attr));
+								$$->my_type = $1->my_type;
+								$$->dimension[0] = $1->dimension[0]+1;
 								free($1);
 								}
-	| basic  {$$ = (attr*)malloc(sizeof(attr)); $$->my_type=$1->my_type; free($1);}
+	| basic  {
+				$$ = (attr*)malloc(sizeof(attr)); 
+				$$->my_type=$1->my_type; 
+				$$->dimension[0] = $1->dimension[0];
+				free($1);
+				}
 	;
-basic : T_LONG_LONG  			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Long_long;}
-	| T_INT 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Int;}
-	| T_CHAR 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Char;}
-	| T_FLOAT 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Float;}
-	| T_DOUBLE 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Double;}
-	| T_BOOL			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Bool;}
+basic : T_LONG_LONG  			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Long_long; $$->dimension[0] = 0; }
+	| T_INT 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Int; $$->dimension[0] = 0; }
+	| T_CHAR 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Char; $$->dimension[0] = 0; }
+	| T_FLOAT 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Float; $$->dimension[0] = 0; }
+	| T_DOUBLE 			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Double; $$->dimension[0] = 0; }
+	| T_BOOL			{$$ = (attr*)malloc(sizeof(attr));$$->my_type=Bool; $$->dimension[0] = 0; }
 	;
-void  : void '*' %prec DEREF   {$$ = (attr*)malloc(sizeof(attr)); free($1);}
-	| T_VOID  {$$ = (attr*)malloc(sizeof(attr));}
+void  : void '*' %prec DEREF   {
+				$$ = (attr*)malloc(sizeof(attr));
+				$$->my_type = $1->my_type;
+				$$->dimension[0] = $1->dimension[0]+1;
+				free($1);
+				}
+	| T_VOID  {
+				$$ = (attr*)malloc(sizeof(attr));
+				$$->my_type = Void;
+				$$->dimension[0] = 0;
+				}
 	;
-func  : ID'('args')'   {$$ = (attr*)malloc(sizeof(attr)); free($3);}
-	| ID'('')'   {$$ = (attr*)malloc(sizeof(attr));}
-	| T_MAIN'('args')'   {$$ = (attr*)malloc(sizeof(attr)); free($3);}
-	| T_MAIN'('')'  {$$ = (attr*)malloc(sizeof(attr));}
+func  : ID'('args')'   {
+						$$ = (attr*)malloc(sizeof(attr));
+						strcpy($$->var_name[0],$1);
+						 free($3);
+						}
+	| ID'('')'   {
+							$$ = (attr*)malloc(sizeof(attr));
+							strcpy($$->var_name[0],$1);
+
+							}
+	| T_MAIN'('args')'   {
+							$$ = (attr*)malloc(sizeof(attr));
+							if (!maindef)
+								maindef = 1;
+							else yyerror("Conflicting declaration of function main");
+							 free($3);
+							}
+	| T_MAIN'('')'  {
+							$$ = (attr*)malloc(sizeof(attr));
+							if (!maindef)
+								maindef = 1;
+							else yyerror("Conflicting declaration of function main");
+
+							}
 	;
 args  : type identifier',' args    {$$ = (attr*)malloc(sizeof(attr));   free($1); free($2);}
 	| type identifier  {$$ = (attr*)malloc(sizeof(attr));   free($1); free($2);}

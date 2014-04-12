@@ -21,6 +21,7 @@
 
 using namespace std;
 int no_line;
+bool maindef;
 struct symbol_table *current_symbol_table;
 int max_index=0;
 vector <struct code_element> global_code;
@@ -33,17 +34,30 @@ int newTemp() {
 	max_index++;
 	return max_index;		
 }
-void yyerror(const char *s)
+void yyerror(const char *s,string color=KRED,string e="")
 {
 
-        string e="";
-   fprintf(stderr, "line %d: %s %s",no_line , s,e.c_str());
+        
+   fprintf(stderr, "%sline %d: %s %s%s",color.c_str(),no_line, s,e.c_str(),KNRM);
 
 }
-
+void backpatch(vector <int> lines, int label) {
+	int i;
+}
+vector <int> makelist(int p) {
+	vector <int> new1;
+	new1.push_back(p);
+	return new1;
+}
+vector <int> merge_list(vector <int> l1,vector <int> l2) {
+	
+	for(int i=0; i<l1.size(); i++) {
+		l2.push_back(l1[i]);
+	}
+	return l2;
+ }
 
 %}
-
 
 %code requires
 {
@@ -152,6 +166,7 @@ struct attr *attributes;
 %type<attributes> void
 %type<attributes> func
 %type<attributes> args
+%type<attributes> Rel
 %type<attributes> brac_open
 %type<attributes> brac_close
 %type<attributes> block

@@ -19,6 +19,10 @@ assign_stmt : identifier '=' expr {
 							#ifdef debug
 								printf("===============CODE GENERATED====================\n");
 								for(int i=0;i<global_code.size();i++) {
+									if(global_code[i].data1==Jump) {
+										cout << "jump instruction\n";
+										continue;
+									}
 									cout << global_code[i].data2 << "\t";
 									cout << "(" << global_code[i].arg1.var << "," << global_code[i].arg1.temp << "," << global_code[i].arg1.int_val << "," << global_code[i].arg1.float_val << "," << global_code[i].arg1.args_type << ")\t(" << global_code[i].arg2.var << ","<<global_code[i].arg2.temp << "," << global_code[i].arg2.int_val << "," << global_code[i].arg2.float_val << "," << global_code[i].arg2.args_type<<")\t(" << global_code[i].result.var << "," << global_code[i].result.temp << "," << global_code[i].result.int_val << "," << global_code[i].result.float_val << "," << global_code[i].result.args_type<< ")\n";
 
@@ -43,29 +47,25 @@ assign_stmt : identifier '=' expr {
 				enum type_enum t = $$->my_type;
 				enum type_enum tt = $3->my_type; 
 				if (t == Int && tt== Long_long)
-					yyerror("Warning: assigning long long to an integer");
+					yyerror("Warning: assigning long long to an integer\n",KYEL);
 				else if (t==Int && tt == Float)
-					yyerror("Warning: assigning float to an int");
+					yyerror("Warning: assigning float to an int\n",KYEL);
 				else if (t==Int && tt == Double)
-					yyerror("Warning: assigning int to double");
+					yyerror("Warning: assigning int to double\n",KYEL);
 				else if (t==Float && tt == Double)
-					yyerror("Warning: assigning float to a double");
+					yyerror("Warning: assigning float to a double\n",KYEL);
 				else if (t==Long_long && tt == Float)
-					yyerror("Warning: assigning long long to a float");
+					yyerror("Warning: assigning long long to a float\n",KYEL);
 				else if (t==Long_long && tt == Double)
-					yyerror("Warning: assigning long long to a double");
+					yyerror("Warning: assigning long long to a double\n",KYEL);
 				else if (t != tt || $$->dimension != $3->dimension )
-					yyerror("Warning: Type mismatch");
+					yyerror("Warning: Type mismatch\n",KYEL);
 
 				free($1);
 				free($3);
 
 				}/*Assignment statement.*/
 	;
-Marker_e :  {
-				$$ = global_code.size()  + 1;
-			}
-		;
 number : T_DEC_INT	{
 						#ifdef debug 
 							printf("number-> T_DEC_INT\n");

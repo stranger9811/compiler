@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 49 "Ccfg.ypp" /* yacc.c:1915  */
+#line 63 "Ccfg.ypp" /* yacc.c:1915  */
 
 	#include "resources.h"
 
@@ -112,7 +112,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 53 "Ccfg.ypp" /* yacc.c:1915  */
+#line 67 "Ccfg.ypp" /* yacc.c:1915  */
 
 long long integer;
 long double real;

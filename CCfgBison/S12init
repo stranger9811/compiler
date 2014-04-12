@@ -1,9 +1,12 @@
 
 
-S1  : stmt','S1  {$$ = (attr*)malloc(sizeof(attr)); free($1);
+S1  : stmt','S1  {$$ = (attr*)malloc(sizeof(attr)); $$->my_type = $3->my_type; free($1);
 free($3);}	/*statements separated by comma or a declaration/initialization*/
-	|stmt  {$$ = (attr*)malloc(sizeof(attr));free($1);}
+	|stmt  {$$ = (attr*)malloc(sizeof(attr));$$->my_type = Useless; free($1);}
 	|type init {
+			#ifdef debug
+						 cout << "S1 -> type init\n";
+			#endif
 			$$ = (attr*)malloc(sizeof(attr));
 			struct llm temp;
 
@@ -19,6 +22,7 @@ free($3);}	/*statements separated by comma or a declaration/initialization*/
 							temp.dimension = $2->dimension[i];
 							current_symbol_table->table[string($2->var_name[i])]=(temp);
 						}
+
 			}
 #ifdef debug
 			printf("Variables declared \n"); 
@@ -26,13 +30,30 @@ free($3);}	/*statements separated by comma or a declaration/initialization*/
 					printf("%s %d\n",$2->var_name[i],$2->dimension[i]);
 				}
 			#endif
-			free($1);
-			free($2);
+				$$->my_type = Useless;
+				free($1);
+				free($2);
 	}
+	| T_RETURN expr 	{
+								$$ = (attr*)malloc(sizeof(attr));
+
+								$$->my_type = $2->my_type;
+								$$->dimension[0] = $2->dimension[0];
+								free($2);
+								}
+	| T_RETURN 				{
+								$$ = (attr*)malloc(sizeof(attr));
+								$$->my_type = Void;
+								$$->dimension[0] = 0;
+						
+								}
 	;
 
 init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializing, use assign_stmt*/
 						 {
+						 		#ifdef debug
+						 				cout << "init -> assign_stmt ',' init\n";
+						 		#endif
 						 		$$ = (attr*)malloc(sizeof(attr));
 								strcpy($$->var_name[0],$1->var_name[0]);
 								$$->dimension[0] = $1->dimension[0];
@@ -44,7 +65,7 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 								}
 								free($1);
 								free($3);
-						} 
+						} /* Initialization is not done properly. declaration check is done in the assignment statment. Such declarations will always fail since the variable is not yet entered in the symbol table. */
 	| identifier ',' init {
 								$$ = (attr*)malloc(sizeof(attr));
 								strcpy($$->var_name[0],$1->var_name[0]);
@@ -59,6 +80,9 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 								free($3);
 							} 
 	| assign_stmt {
+						#ifdef debug
+						 				cout << "init -> assign_stmt\n";
+						 		#endif
 						$$ = (attr*)malloc(sizeof(attr));
 						strcpy($$->var_name[0],$1->var_name[0]);
 						$$->dimension[0] = $1->dimension[0];

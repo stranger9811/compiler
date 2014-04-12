@@ -2,8 +2,10 @@
 int main()
 {
 		no_line = 1;
+		maindef = 0;
 		current_symbol_table = new symbol_table;
 		current_symbol_table->parent = NULL;
         yyparse();
+        if (!maindef) yyerror("main function not defined");
 		return 0;
 }
