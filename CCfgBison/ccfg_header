@@ -9,6 +9,7 @@
 #include <utility>
 #include <algorithm>
 #include <map>
+//#include "functions.h"
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -41,21 +42,9 @@ void yyerror(const char *s,string color=KRED,string e="")
    fprintf(stderr, "%sline %d: %s %s%s",color.c_str(),no_line, s,e.c_str(),KNRM);
 
 }
-void backpatch(vector <int> lines, int label) {
-	int i;
-}
-vector <int> makelist(int p) {
-	vector <int> new1;
-	new1.push_back(p);
-	return new1;
-}
-vector <int> merge_list(vector <int> l1,vector <int> l2) {
-	
-	for(int i=0; i<l1.size(); i++) {
-		l2.push_back(l1[i]);
-	}
-	return l2;
- }
+
+void *c;
+
 
 %}
 
@@ -108,19 +97,6 @@ struct attr *attributes;
 %token <lexeme> ID
 
 %token <lexeme> T_MAIN
-%token <lexeme> T_AND
-%token <lexeme> T_GREATER_THAN_EQUAL
-%token <lexeme> T_LESS_THAN_EQUAL
-%token <lexeme> T_EQUAL_TEST
-%token <lexeme> T_NOT_EQUAL
-%token <lexeme> T_OR
-%token <lexeme> T_PLUS_SELF
-%token <lexeme> T_MINUS_SELF
-%token <lexeme> T_MULT_SELF
-%token <lexeme> T_DIVIDE_SELF
-%token <lexeme> T_THIS_POINTER
-%token <lexeme> T_ADD_ONE
-%token <lexeme> T_SUB_ONE
 %token <lexeme> T_IO_INT
 %token <lexeme> T_IO_LONG_LONG
 %token <lexeme> T_IO_STRING
@@ -170,13 +146,14 @@ struct attr *attributes;
 %type<attributes> brac_close
 %type<attributes> block
 %type<attributes> M
-%type<integer> Marker_e
+%type<integer> Marker_For
+%type<integer> Marker_If
+%type<attributes> Marker_Else
 %type<attributes> S
 %type<attributes> S1
 %type<attributes> block_stmt
-%type<attributes> stmt
 %type<attributes> expr
 %type<attributes> number
 
 
-%start code
+%start code1

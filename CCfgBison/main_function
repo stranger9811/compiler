@@ -1,3 +1,48 @@
+void wrg(args a)
+{
+	switch (a.args_type)
+	{
+		case 1: cout << a.var;
+				break;
+		case 2: cout << "t" << a.temp;
+				break;
+		case 3: cout << a.int_val;
+				break;
+		case 4: cout << a.float_val;
+				break;				
+	}
+}
+
+
+void print()
+{
+	for (int i=0;i<global_code.size();i++)
+	{
+		code_element a=global_code[i];
+		if (a.data1==Assignment)
+		{
+			cout << i << ":\t";
+			 wrg(a.result); cout << "= ";
+			 wrg(a.arg1);
+			 cout << " " << a.data2 << " ";
+			 wrg(a.arg2);
+		}
+		else if(a.data1==Jump)
+		{
+			cout << i << ":\t";
+			if (a.data2 == "") cout << "\t\tgoto " << a.result.int_val;
+			else
+			{ 
+				cout << "if ";
+			 	wrg(a.arg1);
+			 	cout << " " << a.data2 << " ";
+			 	wrg(a.arg2);
+			 	cout << " then goto " << a.result.int_val;
+			}
+		}
+		cout << endl;
+	}
+}
 
 int main()
 {
@@ -5,7 +50,11 @@ int main()
 		maindef = 0;
 		current_symbol_table = new symbol_table;
 		current_symbol_table->parent = NULL;
+		c = (void *) (new compiler);
         yyparse();
         if (!maindef) yyerror("main function not defined");
+		print();
+
+
 		return 0;
 }

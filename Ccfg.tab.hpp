@@ -41,7 +41,7 @@ extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
 /* Line 2053 of yacc.c  */
-#line 63 "Ccfg.ypp"
+#line 52 "Ccfg.ypp"
 
 	#include "resources.h"
 
@@ -88,26 +88,26 @@ extern int yydebug;
      T_HEADER = 288,
      ID = 289,
      T_MAIN = 290,
-     T_AND = 291,
-     T_GREATER_THAN_EQUAL = 292,
-     T_LESS_THAN_EQUAL = 293,
-     T_EQUAL_TEST = 294,
-     T_NOT_EQUAL = 295,
-     T_OR = 296,
-     T_PLUS_SELF = 297,
-     T_MINUS_SELF = 298,
-     T_MULT_SELF = 299,
-     T_DIVIDE_SELF = 300,
-     T_THIS_POINTER = 301,
-     T_ADD_ONE = 302,
-     T_SUB_ONE = 303,
-     T_IO_INT = 304,
-     T_IO_LONG_LONG = 305,
-     T_IO_STRING = 306,
-     T_IO_FLOAT = 307,
-     DEREF = 308,
-     UMINUS = 309,
-     UPLUS = 310
+     T_IO_INT = 291,
+     T_IO_LONG_LONG = 292,
+     T_IO_STRING = 293,
+     T_IO_FLOAT = 294,
+     T_DIVIDE_SELF = 295,
+     T_MULT_SELF = 296,
+     T_MINUS_SELF = 297,
+     T_PLUS_SELF = 298,
+     T_OR = 299,
+     T_AND = 300,
+     T_NOT_EQUAL = 301,
+     T_EQUAL_TEST = 302,
+     T_GREATER_THAN_EQUAL = 303,
+     T_LESS_THAN_EQUAL = 304,
+     DEREF = 305,
+     UMINUS = 306,
+     UPLUS = 307,
+     T_SUB_ONE = 308,
+     T_ADD_ONE = 309,
+     T_THIS_POINTER = 310
    };
 #endif
 
@@ -116,7 +116,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 67 "Ccfg.ypp"
+#line 56 "Ccfg.ypp"
 
 long long integer;
 long double real;

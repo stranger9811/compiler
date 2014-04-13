@@ -1,38 +1,89 @@
 
-block_stmt : T_IF '('stmt')' '{' Marker_e M '}' 	{
+block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_close 	{
 											#ifdef debug
-												cout << "block_stmt : T_IF '('stmt')' '{'M'}'";
+												cout << "block_expr : T_IF '('expr')' '{'M'}'";
 											#endif
-											$$ = (attr*)malloc(sizeof(attr));
+											$$ = new attr();
+											if ($3->my_type != Bool) yyerror("condition is not bool inside if statement");
 											$$->my_type = $7->my_type;
 											$$->dimension[0]= $7->dimension[0];
+
+											((compiler *)c)->backpatch($3->truelist, $6);
+											$$->nextlist = ((compiler *)c)->merge_list($3->falselist,$7->nextlist);
+											
+											delete $5;
+											delete $8;
  											free($3); free($7);
 }	/*without brace if statements not allowed!*/
-	| T_IF '('stmt')' '{' Marker_e M '}' T_ELSE '{' Marker_e M '}' {$$ = (attr*)malloc(sizeof(attr));
-											
-	 											free($3); free($7); free($12);}
+	| T_IF     '('    expr    ')'     brac_open     Marker_If     M     brac_close  Marker_Else    T_ELSE     brac_open     Marker_If     M      brac_close
+											{
+												$$ = new attr();
+												if ($3->my_type != Bool) yyerror("Condition is not bool inside if statement\n");										
+												((compiler *)c)->backpatch($3->truelist, $6);
+												((compiler *)c)->backpatch($3->falselist, $12);
+												vector <int> temp;
+												temp = ((compiler *)c)->merge_list($7->nextlist, $9->nextlist);
+												$$->nextlist = ((compiler *)c)->merge_list(temp, $13->nextlist);
+													
+												delete $5;
+												delete $8,delete $11,delete $14;
+	 											free($3); free($7); free($13);
+	 											free($9);
+	 										}
 
-	| T_FOR '('S1';'S1';'S1')' '{' M '}'  {$$ = (attr*)malloc(sizeof(attr));
+	| T_FOR    '('   S1   ';'   Marker_If    S1    ';'    Marker_If    S1   Marker_For  ')'    brac_open   Marker_If    M    brac_close  
+										{
+											$$ = new attr();
 											
-											$$->my_type = $10->my_type;
-											$$->dimension[0]= $10->dimension[0];										
+											if($6->my_type != Bool) yyerror("Condition not bool in For statement\n");
+
+											$$->my_type = $14->my_type;
+											$$->dimension[0]= $14->dimension[0];										
+											
+											$$->nextlist = $6->falselist;
+											((compiler *)c)->backpatch($14->nextlist, $8);
+											global_code[$10].result.int_val = $5;
+											((compiler *)c)->backpatch($6->truelist, $13);
+											code_element temp;
+											temp.data1 = Jump;
+											temp.result.int_val = $8;
+											global_code.push_back(temp);
+
 											free($3);
-											free($5);
-											free($7);
-											free($10);
-	}
+											free($6);
+											free($9);
+											free($12);
+											free($14);
+											free($15);
+										}
 
-	| T_WHILE '('S1')' '{' M '}'  {
-									$$ = (attr*)malloc(sizeof(attr));	
-									$$->my_type = $6->my_type;
-									$$->dimension[0]= $6->dimension[0];
-									free($3);
-									free($6);
+	| T_WHILE    Marker_If    '('   S1   ')'   brac_open    Marker_If     M     brac_close  {
+									$$ = new attr();
+
+									if($4->my_type != Bool) yyerror("Condition not bool in While statement\n");
+									
+									$$->my_type = $8->my_type;
+									$$->dimension[0]= $8->dimension[0];
+
+									((compiler *)c)->backpatch($8->nextlist, $2);
+									((compiler *)c)->backpatch($4->truelist, $7);
+									$$->nextlist = $4->falselist;
+#ifdef debug
+cout << "Marker if :" << $7 << endl;
+#endif
+									struct code_element temp;
+									temp.data1 = Jump;
+									temp.result.int_val = $2;
+
+									global_code.push_back(temp);
+
+									delete $6;
+									delete $9; 
+									free($4);
+									free($8);
 	}
 	;
-stmt: expr		{$$ = (attr*)malloc(sizeof(attr));free($1);}
-	/*Useless non-terminal. Too lazy to update.*/
-	;
+
 expr  : expr '+' expr 			{ 
 						$$ = new attr();
 						
@@ -77,28 +128,85 @@ expr  : expr '+' expr 			{
 	| func			{$$ = (attr*)malloc(sizeof(attr)); free($1);
 }
 	| expr T_EQUAL_TEST expr	{
-						$$ = (attr*)malloc(sizeof(attr));
+						
+						$$ = new attr;
+						$$->truelist = ((compiler *)c)->makelist(global_code.size());
+						$$->falselist = ((compiler *)c)->makelist(global_code.size()+1);
+						struct code_element temp;
+						temp.data1 = Jump;
+						temp.data2 = "==";
+						temp.arg1 = $1->place;
+						temp.arg2 = $3->place;
+
+						global_code.push_back(temp);
+
+						struct code_element temp2;
+						temp2.data1 = Jump;
+
+						global_code.push_back(temp2);
 
 						$$->my_type=Bool;
 						free($1);
 						free($3);
 					}
 	| expr '<' expr			{
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr;
+						$$->truelist = ((compiler *)c)->makelist(global_code.size());
+						$$->falselist = ((compiler *)c)->makelist(global_code.size()+1);
+						struct code_element temp;
+						temp.data1 = Jump;
+						temp.data2 = "<";
+						temp.arg1 = $1->place;
+						temp.arg2 = $3->place;
+
+						global_code.push_back(temp);
+
+						struct code_element temp2;
+						temp2.data1 = Jump;
+
+						global_code.push_back(temp2);
 
 						$$->my_type=Bool;
 						free($1);
 						free($3);
 					}
 	| expr '>' expr			{
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr;
+						$$->truelist = ((compiler *)c)->makelist(global_code.size());
+						$$->falselist = ((compiler *)c)->makelist(global_code.size()+1);
+						struct code_element temp;
+						temp.data1 = Jump;
+						temp.data2 = ">";
+						temp.arg1 = $1->place;
+						temp.arg2 = $3->place;
+
+						global_code.push_back(temp);
+
+						struct code_element temp2;
+						temp2.data1 = Jump;
+
+						global_code.push_back(temp2);
 
 						$$->my_type=Bool;
 						free($1);
 						free($3);
 					}
 	| expr T_LESS_THAN_EQUAL expr	{
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr;
+						$$->truelist = ((compiler *)c)->makelist(global_code.size());
+						$$->falselist = ((compiler *)c)->makelist(global_code.size()+1);
+						struct code_element temp;
+						temp.data1 = Jump;
+						temp.data2 = "<=";
+						temp.arg1 = $1->place;
+						temp.arg2 = $3->place;
+
+						global_code.push_back(temp);
+
+						struct code_element temp2;
+						temp2.data1 = Jump;
+
+						global_code.push_back(temp2);
 
 						$$->my_type=Bool;
 						free($1);
@@ -106,11 +214,11 @@ expr  : expr '+' expr 			{
 					}
 	| expr T_GREATER_THAN_EQUAL expr{
 						$$ = new attr;
-						$$->truelist = makelist(global_code.size());
-						$$->falselist = makelist(global_code.size()+1);
+						$$->truelist = ((compiler *)c)->makelist(global_code.size());
+						$$->falselist = ((compiler *)c)->makelist(global_code.size()+1);
 						struct code_element temp;
 						temp.data1 = Jump;
-						temp.data2 = $2;
+						temp.data2 = ">=";
 						temp.arg1 = $1->place;
 						temp.arg2 = $3->place;
 
@@ -126,7 +234,21 @@ expr  : expr '+' expr 			{
 						free($3);
 					}
 	| expr T_NOT_EQUAL expr		{
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr;
+						$$->truelist = ((compiler *)c)->makelist(global_code.size());
+						$$->falselist = ((compiler *)c)->makelist(global_code.size()+1);
+						struct code_element temp;
+						temp.data1 = Jump;
+						temp.data2 = "!=";
+						temp.arg1 = $1->place;
+						temp.arg2 = $3->place;
+
+						global_code.push_back(temp);
+
+						struct code_element temp2;
+						temp2.data1 = Jump;
+
+						global_code.push_back(temp2);
 
 						$$->my_type=Bool;
 						free($1);
@@ -290,13 +412,12 @@ expr  : expr '+' expr 			{
 						free($1);
 						free($3);
 					}
-	| expr T_AND Marker_e expr 		{
+	| expr T_AND Marker_If expr 		{
 						$$ = new attr();
-						//backpatch($1->falselist,$3);
-						//$$->truelist = merge($1->truelist.begin(),$1->truelist.end(),$4->truelist.begin(),$4->truelist.end());
-						for(int x=0; x<$4->falselist.size();x++) {
-								$$->falselist.push_back($4->falselist[x]);
-						}
+						((compiler *)c)->backpatch($1->truelist,$3);
+						$$->truelist = $4->truelist;
+						$$->falselist = ((compiler *)c)->merge_list($1->falselist,$4->falselist);
+
 
 						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
@@ -307,8 +428,8 @@ expr  : expr '+' expr 			{
 						free($1);
 						free($4);
 					}
-	| expr T_OR Marker_e expr 		{	
-						$$ = (attr*)malloc(sizeof(attr));
+	| expr T_OR Marker_If expr 		{	
+						$$ = new attr();
  
 						if(!($1->my_type==Bool || $1->my_type==Int || $1->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. left operand is \n");
@@ -316,11 +437,21 @@ expr  : expr '+' expr 			{
 							yyerror("error: OR supports only bool,int,long long. right operand is \n");
 						else 
 							$$->my_type=Bool;
+
+						((compiler *)c)->backpatch($1->falselist,$3);
+						$$->truelist = ((compiler *)c)->merge_list($1->truelist,$4->truelist);
+						$$->falselist = $4->falselist;
 						free($1);
 						free($4);
 					}
 	| '!' expr    {$$ = (attr*)malloc(sizeof(attr));
-$$->my_type = Bool; free($2);}
+					$$->my_type = Bool;
+
+					$$->truelist = $2->falselist;
+					$$->falselist = $2->truelist;
+
+					 free($2);
+					 }
 	| '('expr')'  {$$ = (attr*)malloc(sizeof(attr));
 $$->my_type = $2->my_type; free($2);}
 	| identifier  {
@@ -353,8 +484,11 @@ $$->my_type=$2->my_type; free($2);}
 	|number {
 				$$ = new attr();
 				$$->place = $1->place;
+
+
 				$$->place.args_type = $$->place.args_type;
 				$$->my_type = $1->my_type;
+				$$->dimension[0] = 0;
 			}
 	| '*' expr %prec DEREF {
 								$$ = (attr*)malloc(sizeof(attr));
@@ -362,13 +496,25 @@ $$->my_type=$2->my_type; free($2);}
 								$$->dimension[0] = $2->dimension[0]+1;
 								free($2);
 								}
+	| "true" 	{
+				$$ = new attr();
+				$$->truelist = ((compiler *)c)->makelist(global_code.size());
+
+				struct code_element temp_code;
+				temp_code.data1 = Jump;
+				global_code.push_back(temp_code);
+				$$->my_type = Bool;
+
+			}
+
+	| "false" {
+				$$ = new attr();
+				$$->falselist = ((compiler *)c)->makelist(global_code.size());
+
+				struct code_element temp_code;
+				temp_code.data1 = Jump;
+				global_code.push_back(temp_code);
+				$$->my_type = Bool;
+	}
 	;
 	
-
-
-
-
-
-
-
-

@@ -58,7 +58,7 @@ assign_stmt : identifier '=' expr {
 					yyerror("Warning: assigning long long to a float\n",KYEL);
 				else if (t==Long_long && tt == Double)
 					yyerror("Warning: assigning long long to a double\n",KYEL);
-				else if (t != tt || $$->dimension != $3->dimension )
+				else if (t != tt || $$->dimension[0] != $3->dimension[0] )
 					yyerror("Warning: Type mismatch\n",KYEL);
 
 				free($1);

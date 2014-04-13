@@ -1,8 +1,24 @@
 
 
-S1  : stmt','S1  {$$ = (attr*)malloc(sizeof(attr)); $$->my_type = $3->my_type; free($1);
-free($3);}	/*statements separated by comma or a declaration/initialization*/
-	|stmt  {$$ = (attr*)malloc(sizeof(attr));$$->my_type = Useless; free($1);}
+S1  : expr ',' Marker_If  S1  {
+					$$ = new attr(); 
+					$$->my_type = $4->my_type; 
+					((compiler *)c)->backpatch($1->truelist,$3);
+					((compiler *)c)->backpatch($1->falselist,$3);
+					$$->truelist = $4->truelist;
+					$$->falselist = $4->falselist;
+
+					free($1);
+					free($4);
+				}	/*statements separated by comma or a declaration/initialization*/
+	
+	|expr  {
+				$$ = new attr(); 
+				$$->my_type = Bool; 
+				$$->truelist = $1->truelist; 
+				$$->falselist = $1->falselist; 
+				free($1);
+			}
 	|type init {
 			#ifdef debug
 						 cout << "S1 -> type init\n";
