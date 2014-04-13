@@ -107,7 +107,7 @@ expr  : expr '+' expr 			{
 						cout << "expr -> assign_stmt\n";
 					#endif
 					$$ = (attr*)malloc(sizeof(attr)); free($1);
-}
+		}
     	| expr '-' expr 		{ 
     					$$ = new attr();
 						

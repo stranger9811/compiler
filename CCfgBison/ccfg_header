@@ -166,7 +166,6 @@ struct attr *attributes;
 %type<attributes> void
 %type<attributes> func
 %type<attributes> args
-%type<attributes> Rel
 %type<attributes> brac_open
 %type<attributes> brac_close
 %type<attributes> block

@@ -1,16 +1,16 @@
 
-block_stmt : T_IF '('stmt')' '{' M '}' 	{
+block_stmt : T_IF '('stmt')' '{' Marker_e M '}' 	{
 											#ifdef debug
 												cout << "block_stmt : T_IF '('stmt')' '{'M'}'";
 											#endif
 											$$ = (attr*)malloc(sizeof(attr));
-											$$->my_type = $6->my_type;
-											$$->dimension[0]= $6->dimension[0];
- 											free($3); free($6);
+											$$->my_type = $7->my_type;
+											$$->dimension[0]= $7->dimension[0];
+ 											free($3); free($7);
 }	/*without brace if statements not allowed!*/
-	| T_IF '('stmt')' '{' M '}' T_ELSE '{' M '}' {$$ = (attr*)malloc(sizeof(attr));
+	| T_IF '('stmt')' '{' Marker_e M '}' T_ELSE '{' Marker_e M '}' {$$ = (attr*)malloc(sizeof(attr));
 											
-	 											free($3); free($6); free($10);}
+	 											free($3); free($7); free($12);}
 
 	| T_FOR '('S1';'S1';'S1')' '{' M '}'  {$$ = (attr*)malloc(sizeof(attr));
 											

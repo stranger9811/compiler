@@ -1,8 +1,10 @@
 %%
-Marker_e :  {
+Marker_e : epsilon {
 				$$ = global_code.size()  + 1;
 			}
 		;
+
+epsilon : {;}   /*The epsilon rule*/
 
 code  : decl code	{$$ = (attr*)malloc(sizeof(attr));
 						free($1);
