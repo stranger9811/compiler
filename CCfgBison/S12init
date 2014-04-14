@@ -36,7 +36,11 @@ S1  : expr ',' Marker_If  S1  {
 				/*   ------------------------------------ */
 						else {
 							temp.dimension = $2->dimension[i];
-							current_symbol_table->table[string($2->var_name[i])]=(temp);
+							int j = check_keyword(string($2->var_name[i])); // 1 if error
+							if(j==1)
+								yyerror("error: variable name cannot be a keyword \n");
+							else if(j==0)
+								current_symbol_table->table[string($2->var_name[i])]=(temp);
 						}
 
 			}

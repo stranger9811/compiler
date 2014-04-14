@@ -1,3 +1,73 @@
+int check_keyword(string identifier)
+{
+	if(!identifier.compare("auto"))
+		return 1;
+	else if(!identifier.compare("break"))
+		return 1;
+	else if(!identifier.compare("case"))
+                return 1;
+	else if(!identifier.compare("char"))
+                return 1;
+	else if(!identifier.compare("const"))
+                return 1;
+	else if(!identifier.compare("continue"))
+                return 1;
+	 else if(!identifier.compare("default"))
+                return 1;
+	 else if(!identifier.compare("do"))
+                return 1;
+	 else if(!identifier.compare("double"))
+                return 1;
+	 else if(!identifier.compare("else"))
+                return 1;
+	 else if(!identifier.compare("enum"))
+                return 1;
+	 else if(!identifier.compare("extern"))
+                return 1;
+	 else if(!identifier.compare("float"))
+                return 1;
+	 else if(!identifier.compare("for"))
+                return 1;
+	 else if(!identifier.compare("goto"))
+                return 1;
+	 else if(!identifier.compare("if"))
+                return 1;
+	 else if(!identifier.compare("int"))
+                return 1;
+	 else if(!identifier.compare("long"))
+                return 1;
+	 else if(!identifier.compare("register"))
+                return 1;
+	 else if(!identifier.compare("return"))
+                return 1;
+	 else if(!identifier.compare("short"))
+                return 1;
+	 else if(!identifier.compare("signed"))
+                return 1;
+	 else if(!identifier.compare("sizeof"))
+                return 1;
+	 else if(!identifier.compare("static"))
+                return 1;
+	 else if(!identifier.compare("struct"))
+                return 1;
+	 else if(!identifier.compare("switch"))
+                return 1;
+	 else if(!identifier.compare("typedef"))
+                return 1;
+	 else if(!identifier.compare("union"))
+                return 1;
+	 else if(!identifier.compare("unsigned"))
+                return 1;
+	 else if(!identifier.compare("void"))
+                return 1;
+	 else if(!identifier.compare("volatile"))
+                return 1;
+	 else if(!identifier.compare("while"))
+                return 1;
+	else
+		return 0; 
+}
+
 void wrg(args a)
 {
 	switch (a.args_type)

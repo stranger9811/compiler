@@ -60,6 +60,7 @@ extern vector<code_element> global_code;
 struct attr
 {
 	enum type_enum my_type;
+	bool isreturn;
 	struct args place;
 	
 	vector <code_element> code;
@@ -69,7 +70,7 @@ struct attr
 	vector <int> falselist;
 	vector <int> nextlist;
 	int dimension[50];
-	attr() {}
+	attr() {isreturn = 0;}
 };
 
 /*

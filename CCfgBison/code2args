@@ -68,7 +68,13 @@ decl  : type identifier';' {$$ = new attr();
 
 										temp.my_type= $1->my_type; 
 										temp.dimension = $1->dimension[0];
-										current_symbol_table->table[string($2->var_name[0])]=(temp);									}
+										 int j = check_keyword(string($2->var_name[0])); // 1 if error
+                                                        			if(j==1)
+                                                                			yyerror("error: variable name cannot be a keyword \n");
+                                                        			else if(j==0)
+                                                                			current_symbol_table->table[string($2->var_name[0])]=(temp);
+									}
+		
 									else
 									{
 										yyerror("Dimension Mismatch\n");
@@ -93,7 +99,13 @@ decl  : type identifier';' {$$ = new attr();
 
 										temp.my_type= $1->my_type; 
 										temp.dimension = $1->dimension[0];
-										current_symbol_table->table[string($2->var_name[0])]=(temp);									}
+										 int j = check_keyword(string($2->var_name[0])); // 1 if error
+                                                        			if(j==1)
+                                                                			yyerror("error: variable name cannot be a keyword \n");
+                                                        			else if(j==0)
+                                                                			current_symbol_table->table[string($2->var_name[0])]=(temp);
+									}
+	
 									else
 									{
 										yyerror("Dimension Mismatch\n");

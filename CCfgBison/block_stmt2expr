@@ -24,7 +24,7 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 												vector <int> temp;
 												temp = ((compiler *)c)->merge_list($7->nextlist, $9->nextlist);
 												$$->nextlist = ((compiler *)c)->merge_list(temp, $13->nextlist);
-													
+												
 												delete $5;
 												delete $8,delete $11,delete $14;
 	 											free($3); free($7); free($13);

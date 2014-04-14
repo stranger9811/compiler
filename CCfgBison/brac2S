@@ -82,8 +82,10 @@ S  : S1';'	{
 				#ifdef debug
 						cout << "S -> S1\n";
 				#endif
-				$$ = (attr*)malloc(sizeof(attr));
-				$$->my_type = $1->my_type;
+				$$ = new attr();
+				if ($1->isreturn)
+					$$->my_type = $1->my_type;
+				else $$->my_type = Useless;
 				$$->dimension[0] = $1->dimension[0];
 
 				$$->nextlist = $1->nextlist;
@@ -94,8 +96,10 @@ S  : S1';'	{
 					#ifdef debug
 							cout << "S -> block_stmt\n";
 					#endif
-					$$ = (attr*)malloc(sizeof(attr));
-					$$->my_type = $1->my_type;
+					$$ = new attr();
+					if ($1->isreturn)
+						$$->my_type = $1->my_type;
+					else $$->my_type = Useless;
 					$$->nextlist = $1->nextlist;
 					$$->dimension[0] = $1->dimension[0];
 					free($1);

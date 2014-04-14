@@ -35,6 +35,7 @@ int newTemp() {
 	max_index++;
 	return max_index;		
 }
+int check_keyword(string identifier);
 void yyerror(const char *s,string color=KRED,string e="")
 {
 
