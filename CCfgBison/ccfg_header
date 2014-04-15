@@ -20,6 +20,7 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+
 using namespace std;
 int no_line;
 bool maindef;
@@ -58,6 +59,8 @@ void *c;
 long long integer;
 long double real;
 char lexeme[10000];
+struct lexemeNparam *lexemeNparamlist;
+struct funcparams *paramlist;
 struct attr *attributes;
 //Yet to include exponential numbers and hexadecimals.
 };
@@ -141,8 +144,8 @@ struct attr *attributes;
 %type<attributes> code
 %type<attributes> decl
 %type<attributes> void
-%type<attributes> func
-%type<attributes> args
+%type<lexemeNparamlist> func
+%type<paramlist> args
 %type<attributes> brac_open
 %type<attributes> brac_close
 %type<attributes> block
@@ -155,6 +158,7 @@ struct attr *attributes;
 %type<attributes> block_stmt
 %type<attributes> expr
 %type<attributes> number
+%type<paramlist> exprlist
 
 
 %start code1

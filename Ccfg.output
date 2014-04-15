@@ -18,15 +18,15 @@ Terminals unused in grammar
    T_IO_LONG_LONG
    T_IO_STRING
    T_IO_FLOAT
-   T_DIVIDE_SELF
    T_MULT_SELF
-   T_MINUS_SELF
+   T_DIVIDE_SELF
    T_PLUS_SELF
+   T_MINUS_SELF
    '|'
    '^'
    '&'
-   T_SUB_ONE
    T_ADD_ONE
+   T_SUB_ONE
    T_THIS_POINTER
    '.'
 
@@ -41,7 +41,7 @@ Grammar
 
     3 Marker_For: epsilon
 
-    4 epsilon: /* empty */
+    4 epsilon: %empty
 
     5 code1: code
 
@@ -50,142 +50,153 @@ Grammar
 
     8 decl: type identifier ';'
     9     | T_TYPEDEF type ID ';'
-   10     | type func block
-   11     | void func block
-   12     | T_STRUCT ID block ';'
-   13     | T_HEADER
 
-   14 type: type '*'
-   15     | basic
+   10 $@1: %empty
 
-   16 basic: T_LONG_LONG
-   17      | T_INT
-   18      | T_CHAR
-   19      | T_FLOAT
-   20      | T_DOUBLE
-   21      | T_BOOL
+   11 decl: type func $@1 block
 
-   22 void: void '*'
-   23     | T_VOID
+   12 $@2: %empty
 
-   24 func: ID '(' args ')'
-   25     | ID '(' ')'
-   26     | T_MAIN '(' args ')'
-   27     | T_MAIN '(' ')'
+   13 decl: void func $@2 block
+   14     | T_STRUCT ID block ';'
+   15     | T_HEADER
 
-   28 args: type identifier ',' args
-   29     | type identifier
+   16 type: type '*'
+   17     | basic
 
-   30 brac_open: '{'
+   18 basic: T_LONG_LONG
+   19      | T_INT
+   20      | T_CHAR
+   21      | T_FLOAT
+   22      | T_DOUBLE
+   23      | T_BOOL
 
-   31 brac_close: '}'
+   24 void: void '*'
+   25     | T_VOID
 
-   32 block: brac_open M brac_close
-   33      | S
+   26 func: ID '(' args ')'
+   27     | ID '(' ')'
+   28     | T_MAIN '(' args ')'
+   29     | T_MAIN '(' ')'
 
-   34 M: M Marker_If S
-   35  | S
+   30 args: args ',' type identifier
+   31     | type identifier
 
-   36 S: S1 ';'
-   37  | block_stmt
+   32 brac_open: '{'
 
-   38 S1: expr ',' Marker_If S1
-   39   | expr
-   40   | type init
-   41   | T_RETURN expr
-   42   | T_RETURN
+   33 brac_close: '}'
 
-   43 init: assign_stmt ',' init
-   44     | identifier ',' init
-   45     | assign_stmt
-   46     | identifier
+   34 block: brac_open M brac_close
+   35      | S
 
-   47 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close
-   48           | T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
-   49           | T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
-   50           | T_WHILE Marker_If '(' S1 ')' brac_open Marker_If M brac_close
+   36 M: M Marker_If S
+   37  | S
 
-   51 expr: expr '+' expr
-   52     | func
-   53     | expr T_EQUAL_TEST expr
-   54     | expr '<' expr
-   55     | expr '>' expr
-   56     | expr T_LESS_THAN_EQUAL expr
-   57     | expr T_GREATER_THAN_EQUAL expr
-   58     | expr T_NOT_EQUAL expr
-   59     | assign_stmt
-   60     | expr '-' expr
-   61     | expr '*' expr
-   62     | expr '/' expr
-   63     | expr '%' expr
-   64     | expr T_AND Marker_If expr
-   65     | expr T_OR Marker_If expr
-   66     | '!' expr
-   67     | '(' expr ')'
-   68     | identifier
-   69     | '+' expr
-   70     | '-' expr
-   71     | number
-   72     | '*' expr
-   73     | "true"
-   74     | "false"
+   38 S: S1 ';'
+   39  | block_stmt
+   40  | ';'
 
-   75 assign_stmt: identifier '=' expr
+   41 exprlist: exprlist ',' expr
+   42         | expr
+   43         | epsilon
 
-   76 number: T_DEC_INT
-   77       | T_DEC_FLOAT
+   44 S1: expr ',' Marker_If S1
+   45   | expr
+   46   | type init
+   47   | T_RETURN expr
+   48   | T_RETURN
 
-   78 identifier: ID
-   79           | ID array
+   49 init: assign_stmt ',' init
+   50     | identifier ',' init
+   51     | assign_stmt
+   52     | identifier
 
-   80 array: '[' ID ']' array
-   81      | '[' ID ']'
-   82      | '[' T_DEC_INT ']'
-   83      | '[' T_DEC_INT ']' array
+   53 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close
+   54           | T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+   55           | T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+   56           | T_WHILE Marker_If '(' S1 ')' brac_open Marker_If M brac_close
+
+   57 expr: expr '+' expr
+   58     | ID '(' exprlist ')'
+   59     | expr T_EQUAL_TEST expr
+   60     | expr '<' expr
+   61     | expr '>' expr
+   62     | expr T_LESS_THAN_EQUAL expr
+   63     | expr T_GREATER_THAN_EQUAL expr
+   64     | expr T_NOT_EQUAL expr
+   65     | assign_stmt
+   66     | expr '-' expr
+   67     | expr '*' expr
+   68     | expr '/' expr
+   69     | expr '%' expr
+   70     | expr T_AND Marker_If expr
+   71     | expr T_OR Marker_If expr
+   72     | '!' expr
+   73     | '(' expr ')'
+   74     | identifier
+   75     | '+' expr
+   76     | '-' expr
+   77     | number
+   78     | '*' expr
+   79     | "true"
+   80     | "false"
+
+   81 assign_stmt: identifier '=' expr
+
+   82 number: T_DEC_INT
+   83       | T_DEC_FLOAT
+
+   84 identifier: ID
+   85           | ID array
+
+   86 array: '[' ID ']' array
+   87      | '[' ID ']'
+   88      | '[' T_DEC_INT ']'
+   89      | '[' T_DEC_INT ']' array
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'!' (33) 66
-'%' (37) 63
+'!' (33) 72
+'%' (37) 69
 '&' (38)
-'(' (40) 24 25 26 27 47 48 49 50 67
-')' (41) 24 25 26 27 47 48 49 50 67
-'*' (42) 14 22 61 72
-'+' (43) 51 69
-',' (44) 28 38 43 44
-'-' (45) 60 70
+'(' (40) 26 27 28 29 53 54 55 56 58 73
+')' (41) 26 27 28 29 53 54 55 56 58 73
+'*' (42) 16 24 67 78
+'+' (43) 57 75
+',' (44) 30 41 44 49 50
+'-' (45) 66 76
 '.' (46)
-'/' (47) 62
-';' (59) 8 9 12 36 49
-'<' (60) 54
-'=' (61) 75
-'>' (62) 55
-'[' (91) 80 81 82 83
-']' (93) 80 81 82 83
+'/' (47) 68
+';' (59) 8 9 14 38 40 55
+'<' (60) 60
+'=' (61) 81
+'>' (62) 61
+'[' (91) 86 87 88 89
+']' (93) 86 87 88 89
 '^' (94)
-'{' (123) 30
+'{' (123) 32
 '|' (124)
-'}' (125) 31
+'}' (125) 33
 error (256)
-T_STRUCT (258) 12
+T_STRUCT (258) 14
 T_BREAK (259)
 T_CONTINUE (260)
 T_TYPEDEF (261) 9
-T_CHAR (262) 18
-T_DOUBLE (263) 20
-T_INT (264) 17
-T_FLOAT (265) 19
-T_LONG_LONG (266) 16
-T_FOR (267) 49
-T_IF (268) 47 48
-T_ELSE (269) 48
-T_WHILE (270) 50
+T_CHAR (262) 20
+T_DOUBLE (263) 22
+T_INT (264) 19
+T_FLOAT (265) 21
+T_LONG_LONG (266) 18
+T_FOR (267) 55
+T_IF (268) 53 54
+T_ELSE (269) 54
+T_WHILE (270) 56
 T_GOTO (271)
-T_RETURN (272) 41 42
+T_RETURN (272) 47 48
 T_PRINTF (273)
-T_VOID (274) 23
+T_VOID (274) 25
 T_SCANF (275)
 T_SIZEOF (276)
 T_UNSIGNED (277)
@@ -194,36 +205,36 @@ T_CONST (279)
 T_SHORT (280)
 T_EXTERN (281)
 T_LONG (282)
-T_BOOL (283) 21
+T_BOOL (283) 23
 T_APOS (284)
-T_DEC_FLOAT (285) 77
-T_DEC_INT (286) 76 82 83
+T_DEC_FLOAT (285) 83
+T_DEC_INT (286) 82 88 89
 T_STRING (287)
-T_HEADER (288) 13
-ID (289) 9 12 24 25 78 79 80 81
-T_MAIN (290) 26 27
+T_HEADER (288) 15
+ID (289) 9 14 26 27 58 84 85 86 87
+T_MAIN (290) 28 29
 T_IO_INT (291)
 T_IO_LONG_LONG (292)
 T_IO_STRING (293)
 T_IO_FLOAT (294)
-T_DIVIDE_SELF (295)
-T_MULT_SELF (296)
-T_MINUS_SELF (297)
-T_PLUS_SELF (298)
-T_OR (299) 65
-T_AND (300) 64
-T_NOT_EQUAL (301) 58
-T_EQUAL_TEST (302) 53
-T_GREATER_THAN_EQUAL (303) 57
-T_LESS_THAN_EQUAL (304) 56
+T_MULT_SELF (295)
+T_DIVIDE_SELF (296)
+T_PLUS_SELF (297)
+T_MINUS_SELF (298)
+T_OR (299) 71
+T_AND (300) 70
+T_EQUAL_TEST (301) 59
+T_NOT_EQUAL (302) 64
+T_GREATER_THAN_EQUAL (303) 63
+T_LESS_THAN_EQUAL (304) 62
 DEREF (305)
-UMINUS (306)
-UPLUS (307)
-T_SUB_ONE (308)
-T_ADD_ONE (309)
+UPLUS (306)
+UMINUS (307)
+T_ADD_ONE (308)
+T_SUB_ONE (309)
 T_THIS_POINTER (310)
-"true" (311) 73
-"false" (312) 74
+"true" (311) 79
+"false" (312) 80
 
 
 Nonterminals, with rules where they appear
@@ -231,57 +242,63 @@ Nonterminals, with rules where they appear
 $accept (79)
     on left: 0
 Marker_If (80)
-    on left: 1, on right: 6 34 38 47 48 49 50 64 65
+    on left: 1, on right: 6 36 44 53 54 55 56 70 71
 Marker_Else (81)
-    on left: 2, on right: 48
+    on left: 2, on right: 54
 Marker_For (82)
-    on left: 3, on right: 49
+    on left: 3, on right: 55
 epsilon (83)
-    on left: 4, on right: 1 2 3
+    on left: 4, on right: 1 2 3 43
 code1 (84)
     on left: 5, on right: 0
 code (85)
     on left: 6 7, on right: 5 6
 decl (86)
-    on left: 8 9 10 11 12 13, on right: 6 7
-type (87)
-    on left: 14 15, on right: 8 9 10 14 28 29 40
-basic (88)
-    on left: 16 17 18 19 20 21, on right: 15
-void (89)
-    on left: 22 23, on right: 11 22
-func (90)
-    on left: 24 25 26 27, on right: 10 11 52
-args (91)
-    on left: 28 29, on right: 24 26 28
-brac_open (92)
-    on left: 30, on right: 32 47 48 49 50
-brac_close (93)
-    on left: 31, on right: 32 47 48 49 50
-block (94)
-    on left: 32 33, on right: 10 11 12
-M (95)
-    on left: 34 35, on right: 32 34 47 48 49 50
-S (96)
-    on left: 36 37, on right: 33 34 35
-S1 (97)
-    on left: 38 39 40 41 42, on right: 36 38 49 50
-init (98)
-    on left: 43 44 45 46, on right: 40 43 44
-block_stmt (99)
-    on left: 47 48 49 50, on right: 37
-expr (100)
-    on left: 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68
-    69 70 71 72 73 74, on right: 38 39 41 47 48 51 53 54 55 56 57 58
-    60 61 62 63 64 65 66 67 69 70 72 75
-assign_stmt (101)
-    on left: 75, on right: 43 45 59
-number (102)
-    on left: 76 77, on right: 71
-identifier (103)
-    on left: 78 79, on right: 8 28 29 44 46 68 75
-array (104)
-    on left: 80 81 82 83, on right: 79 80 83
+    on left: 8 9 11 13 14 15, on right: 6 7
+$@1 (87)
+    on left: 10, on right: 11
+$@2 (88)
+    on left: 12, on right: 13
+type (89)
+    on left: 16 17, on right: 8 9 11 16 30 31 46
+basic (90)
+    on left: 18 19 20 21 22 23, on right: 17
+void (91)
+    on left: 24 25, on right: 13 24
+func (92)
+    on left: 26 27 28 29, on right: 11 13
+args (93)
+    on left: 30 31, on right: 26 28 30
+brac_open (94)
+    on left: 32, on right: 34 53 54 55 56
+brac_close (95)
+    on left: 33, on right: 34 53 54 55 56
+block (96)
+    on left: 34 35, on right: 11 13 14
+M (97)
+    on left: 36 37, on right: 34 36 53 54 55 56
+S (98)
+    on left: 38 39 40, on right: 35 36 37
+exprlist (99)
+    on left: 41 42 43, on right: 41 58
+S1 (100)
+    on left: 44 45 46 47 48, on right: 38 44 55 56
+init (101)
+    on left: 49 50 51 52, on right: 46 49 50
+block_stmt (102)
+    on left: 53 54 55 56, on right: 39
+expr (103)
+    on left: 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
+    75 76 77 78 79 80, on right: 41 42 44 45 47 53 54 57 59 60 61 62
+    63 64 66 67 68 69 70 71 72 73 75 76 78 81
+assign_stmt (104)
+    on left: 81, on right: 49 51 65
+number (105)
+    on left: 82 83, on right: 77
+identifier (106)
+    on left: 84 85, on right: 8 30 31 50 52 74 81
+array (107)
+    on left: 86 87 88 89, on right: 85 86 89
 
 
 State 0
@@ -309,7 +326,7 @@ State 0
 
 State 1
 
-   12 decl: T_STRUCT . ID block ';'
+   14 decl: T_STRUCT . ID block ';'
 
     ID  shift, and go to state 17
 
@@ -331,58 +348,58 @@ State 2
 
 State 3
 
-   18 basic: T_CHAR .
-
-    $default  reduce using rule 18 (basic)
-
-
-State 4
-
-   20 basic: T_DOUBLE .
+   20 basic: T_CHAR .
 
     $default  reduce using rule 20 (basic)
 
 
+State 4
+
+   22 basic: T_DOUBLE .
+
+    $default  reduce using rule 22 (basic)
+
+
 State 5
 
-   17 basic: T_INT .
-
-    $default  reduce using rule 17 (basic)
-
-
-State 6
-
-   19 basic: T_FLOAT .
+   19 basic: T_INT .
 
     $default  reduce using rule 19 (basic)
 
 
-State 7
+State 6
 
-   16 basic: T_LONG_LONG .
-
-    $default  reduce using rule 16 (basic)
-
-
-State 8
-
-   23 void: T_VOID .
-
-    $default  reduce using rule 23 (void)
-
-
-State 9
-
-   21 basic: T_BOOL .
+   21 basic: T_FLOAT .
 
     $default  reduce using rule 21 (basic)
 
 
+State 7
+
+   18 basic: T_LONG_LONG .
+
+    $default  reduce using rule 18 (basic)
+
+
+State 8
+
+   25 void: T_VOID .
+
+    $default  reduce using rule 25 (void)
+
+
+State 9
+
+   23 basic: T_BOOL .
+
+    $default  reduce using rule 23 (basic)
+
+
 State 10
 
-   13 decl: T_HEADER .
+   15 decl: T_HEADER .
 
-    $default  reduce using rule 13 (decl)
+    $default  reduce using rule 15 (decl)
 
 
 State 11
@@ -414,8 +431,8 @@ State 13
 State 14
 
     8 decl: type . identifier ';'
-   10     | type . func block
-   14 type: type . '*'
+   11     | type . func $@1 block
+   16 type: type . '*'
 
     ID      shift, and go to state 22
     T_MAIN  shift, and go to state 23
@@ -427,15 +444,15 @@ State 14
 
 State 15
 
-   15 type: basic .
+   17 type: basic .
 
-    $default  reduce using rule 15 (type)
+    $default  reduce using rule 17 (type)
 
 
 State 16
 
-   11 decl: void . func block
-   22 void: void . '*'
+   13 decl: void . func $@2 block
+   24 void: void . '*'
 
     ID      shift, and go to state 27
     T_MAIN  shift, and go to state 23
@@ -446,7 +463,7 @@ State 16
 
 State 17
 
-   12 decl: T_STRUCT ID . block ';'
+   14 decl: T_STRUCT ID . block ';'
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -460,37 +477,36 @@ State 17
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '{'          shift, and go to state 36
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '{'          shift, and go to state 37
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    brac_open    go to state 46
-    block        go to state 47
-    S            go to state 48
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    brac_open    go to state 47
+    block        go to state 48
+    S            go to state 49
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 18
 
     9 decl: T_TYPEDEF type . ID ';'
-   14 type: type . '*'
+   16 type: type . '*'
 
-    ID   shift, and go to state 55
+    ID   shift, and go to state 56
     '*'  shift, and go to state 24
 
 
@@ -516,7 +532,7 @@ State 20
     T_BOOL       shift, and go to state 9
     T_HEADER     shift, and go to state 10
 
-    code   go to state 56
+    code   go to state 57
     decl   go to state 13
     type   go to state 14
     basic  go to state 15
@@ -532,362 +548,300 @@ State 21
 
 State 22
 
-   24 func: ID . '(' args ')'
-   25     | ID . '(' ')'
-   78 identifier: ID .
-   79           | ID . array
+   26 func: ID . '(' args ')'
+   27     | ID . '(' ')'
+   84 identifier: ID .
+   85           | ID . array
 
-    '('  shift, and go to state 57
-    '['  shift, and go to state 58
+    '('  shift, and go to state 58
+    '['  shift, and go to state 59
 
-    $default  reduce using rule 78 (identifier)
+    $default  reduce using rule 84 (identifier)
 
-    array  go to state 59
+    array  go to state 60
 
 
 State 23
 
-   26 func: T_MAIN . '(' args ')'
-   27     | T_MAIN . '(' ')'
+   28 func: T_MAIN . '(' args ')'
+   29     | T_MAIN . '(' ')'
 
-    '('  shift, and go to state 60
+    '('  shift, and go to state 61
 
 
 State 24
 
-   14 type: type '*' .
+   16 type: type '*' .
 
-    $default  reduce using rule 14 (type)
+    $default  reduce using rule 16 (type)
 
 
 State 25
 
-   10 decl: type func . block
+   11 decl: type func . $@1 block
 
-    T_CHAR       shift, and go to state 3
-    T_DOUBLE     shift, and go to state 4
-    T_INT        shift, and go to state 5
-    T_FLOAT      shift, and go to state 6
-    T_LONG_LONG  shift, and go to state 7
-    T_FOR        shift, and go to state 30
-    T_IF         shift, and go to state 31
-    T_WHILE      shift, and go to state 32
-    T_RETURN     shift, and go to state 33
-    T_BOOL       shift, and go to state 9
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '{'          shift, and go to state 36
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    $default  reduce using rule 10 ($@1)
 
-    type         go to state 44
-    basic        go to state 15
-    func         go to state 45
-    brac_open    go to state 46
-    block        go to state 61
-    S            go to state 48
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    $@1  go to state 62
 
 
 State 26
 
     8 decl: type identifier . ';'
 
-    ';'  shift, and go to state 62
+    ';'  shift, and go to state 63
 
 
 State 27
 
-   24 func: ID . '(' args ')'
-   25     | ID . '(' ')'
+   26 func: ID . '(' args ')'
+   27     | ID . '(' ')'
 
-    '('  shift, and go to state 57
+    '('  shift, and go to state 58
 
 
 State 28
 
-   22 void: void '*' .
+   24 void: void '*' .
 
-    $default  reduce using rule 22 (void)
+    $default  reduce using rule 24 (void)
 
 
 State 29
 
-   11 decl: void func . block
+   13 decl: void func . $@2 block
 
-    T_CHAR       shift, and go to state 3
-    T_DOUBLE     shift, and go to state 4
-    T_INT        shift, and go to state 5
-    T_FLOAT      shift, and go to state 6
-    T_LONG_LONG  shift, and go to state 7
-    T_FOR        shift, and go to state 30
-    T_IF         shift, and go to state 31
-    T_WHILE      shift, and go to state 32
-    T_RETURN     shift, and go to state 33
-    T_BOOL       shift, and go to state 9
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '{'          shift, and go to state 36
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    $default  reduce using rule 12 ($@2)
 
-    type         go to state 44
-    basic        go to state 15
-    func         go to state 45
-    brac_open    go to state 46
-    block        go to state 63
-    S            go to state 48
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    $@2  go to state 64
 
 
 State 30
 
-   49 block_stmt: T_FOR . '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
-
-    '('  shift, and go to state 64
-
-
-State 31
-
-   47 block_stmt: T_IF . '(' expr ')' brac_open Marker_If M brac_close
-   48           | T_IF . '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+   55 block_stmt: T_FOR . '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
 
     '('  shift, and go to state 65
 
 
+State 31
+
+   53 block_stmt: T_IF . '(' expr ')' brac_open Marker_If M brac_close
+   54           | T_IF . '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+
+    '('  shift, and go to state 66
+
+
 State 32
 
-   50 block_stmt: T_WHILE . Marker_If '(' S1 ')' brac_open Marker_If M brac_close
+   56 block_stmt: T_WHILE . Marker_If '(' S1 ')' brac_open Marker_If M brac_close
 
     $default  reduce using rule 4 (epsilon)
 
-    Marker_If  go to state 66
+    Marker_If  go to state 67
     epsilon    go to state 21
 
 
 State 33
 
-   41 S1: T_RETURN . expr
-   42   | T_RETURN .
+   47 S1: T_RETURN . expr
+   48   | T_RETURN .
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    $default  reduce using rule 42 (S1)
+    $default  reduce using rule 48 (S1)
 
-    func         go to state 45
-    expr         go to state 67
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 68
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 34
 
-   77 number: T_DEC_FLOAT .
+   83 number: T_DEC_FLOAT .
 
-    $default  reduce using rule 77 (number)
+    $default  reduce using rule 83 (number)
 
 
 State 35
 
-   76 number: T_DEC_INT .
+   82 number: T_DEC_INT .
 
-    $default  reduce using rule 76 (number)
+    $default  reduce using rule 82 (number)
 
 
 State 36
 
-   30 brac_open: '{' .
+   58 expr: ID . '(' exprlist ')'
+   84 identifier: ID .
+   85           | ID . array
 
-    $default  reduce using rule 30 (brac_open)
+    '('  shift, and go to state 69
+    '['  shift, and go to state 59
+
+    $default  reduce using rule 84 (identifier)
+
+    array  go to state 60
 
 
 State 37
 
-   67 expr: '(' . expr ')'
+   32 brac_open: '{' .
 
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
-
-    func         go to state 45
-    expr         go to state 68
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    $default  reduce using rule 32 (brac_open)
 
 
 State 38
 
-   69 expr: '+' . expr
+   73 expr: '(' . expr ')'
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 69
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 70
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 39
 
-   70 expr: '-' . expr
+   75 expr: '+' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 70
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 71
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 40
 
-   72 expr: '*' . expr
+   76 expr: '-' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 71
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 72
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 41
 
-   66 expr: '!' . expr
+   78 expr: '*' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 72
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 73
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 42
 
-   73 expr: "true" .
+   72 expr: '!' . expr
 
-    $default  reduce using rule 73 (expr)
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    expr         go to state 74
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 43
 
-   74 expr: "false" .
+   40 S: ';' .
 
-    $default  reduce using rule 74 (expr)
+    $default  reduce using rule 40 (S)
 
 
 State 44
 
-   14 type: type . '*'
-   40 S1: type . init
+   79 expr: "true" .
 
-    ID   shift, and go to state 73
-    '*'  shift, and go to state 24
-
-    init         go to state 74
-    assign_stmt  go to state 75
-    identifier   go to state 76
+    $default  reduce using rule 79 (expr)
 
 
 State 45
 
-   52 expr: func .
+   80 expr: "false" .
 
-    $default  reduce using rule 52 (expr)
+    $default  reduce using rule 80 (expr)
 
 
 State 46
 
-   32 block: brac_open . M brac_close
+   16 type: type . '*'
+   46 S1: type . init
+
+    ID   shift, and go to state 75
+    '*'  shift, and go to state 24
+
+    init         go to state 76
+    assign_stmt  go to state 77
+    identifier   go to state 78
+
+
+State 47
+
+   34 block: brac_open . M brac_close
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -901,135 +855,134 @@ State 46
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    M            go to state 77
-    S            go to state 78
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 47
-
-   12 decl: T_STRUCT ID block . ';'
-
-    ';'  shift, and go to state 79
+    M            go to state 79
+    S            go to state 80
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 48
 
-   33 block: S .
+   14 decl: T_STRUCT ID block . ';'
 
-    $default  reduce using rule 33 (block)
+    ';'  shift, and go to state 81
 
 
 State 49
 
-   36 S: S1 . ';'
+   35 block: S .
 
-    ';'  shift, and go to state 80
+    $default  reduce using rule 35 (block)
 
 
 State 50
 
-   37 S: block_stmt .
+   38 S: S1 . ';'
 
-    $default  reduce using rule 37 (S)
+    ';'  shift, and go to state 82
 
 
 State 51
 
-   38 S1: expr . ',' Marker_If S1
-   39   | expr .
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   39 S: block_stmt .
 
-    ','                   shift, and go to state 81
-    T_OR                  shift, and go to state 82
-    T_AND                 shift, and go to state 83
-    T_NOT_EQUAL           shift, and go to state 84
-    T_EQUAL_TEST          shift, and go to state 85
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-
-    $default  reduce using rule 39 (S1)
+    $default  reduce using rule 39 (S)
 
 
 State 52
 
-   59 expr: assign_stmt .
+   44 S1: expr . ',' Marker_If S1
+   45   | expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    $default  reduce using rule 59 (expr)
+    ','                   shift, and go to state 83
+    T_OR                  shift, and go to state 84
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 45 (S1)
 
 
 State 53
 
-   71 expr: number .
+   65 expr: assign_stmt .
 
-    $default  reduce using rule 71 (expr)
+    $default  reduce using rule 65 (expr)
 
 
 State 54
 
-   68 expr: identifier .
-   75 assign_stmt: identifier . '=' expr
+   77 expr: number .
 
-    '='  shift, and go to state 95
-
-    $default  reduce using rule 68 (expr)
+    $default  reduce using rule 77 (expr)
 
 
 State 55
 
-    9 decl: T_TYPEDEF type ID . ';'
+   74 expr: identifier .
+   81 assign_stmt: identifier . '=' expr
 
-    ';'  shift, and go to state 96
+    '='  shift, and go to state 97
+
+    $default  reduce using rule 74 (expr)
 
 
 State 56
+
+    9 decl: T_TYPEDEF type ID . ';'
+
+    ';'  shift, and go to state 98
+
+
+State 57
 
     6 code: decl Marker_If code .
 
     $default  reduce using rule 6 (code)
 
 
-State 57
+State 58
 
-   24 func: ID '(' . args ')'
-   25     | ID '(' . ')'
+   26 func: ID '(' . args ')'
+   27     | ID '(' . ')'
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -1037,35 +990,35 @@ State 57
     T_FLOAT      shift, and go to state 6
     T_LONG_LONG  shift, and go to state 7
     T_BOOL       shift, and go to state 9
-    ')'          shift, and go to state 97
+    ')'          shift, and go to state 99
 
-    type   go to state 98
+    type   go to state 100
     basic  go to state 15
-    args   go to state 99
-
-
-State 58
-
-   80 array: '[' . ID ']' array
-   81      | '[' . ID ']'
-   82      | '[' . T_DEC_INT ']'
-   83      | '[' . T_DEC_INT ']' array
-
-    T_DEC_INT  shift, and go to state 100
-    ID         shift, and go to state 101
+    args   go to state 101
 
 
 State 59
 
-   79 identifier: ID array .
+   86 array: '[' . ID ']' array
+   87      | '[' . ID ']'
+   88      | '[' . T_DEC_INT ']'
+   89      | '[' . T_DEC_INT ']' array
 
-    $default  reduce using rule 79 (identifier)
+    T_DEC_INT  shift, and go to state 102
+    ID         shift, and go to state 103
 
 
 State 60
 
-   26 func: T_MAIN '(' . args ')'
-   27     | T_MAIN '(' . ')'
+   85 identifier: ID array .
+
+    $default  reduce using rule 85 (identifier)
+
+
+State 61
+
+   28 func: T_MAIN '(' . args ')'
+   29     | T_MAIN '(' . ')'
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -1073,37 +1026,103 @@ State 60
     T_FLOAT      shift, and go to state 6
     T_LONG_LONG  shift, and go to state 7
     T_BOOL       shift, and go to state 9
-    ')'          shift, and go to state 102
+    ')'          shift, and go to state 104
 
-    type   go to state 98
+    type   go to state 100
     basic  go to state 15
-    args   go to state 103
-
-
-State 61
-
-   10 decl: type func block .
-
-    $default  reduce using rule 10 (decl)
+    args   go to state 105
 
 
 State 62
+
+   11 decl: type func $@1 . block
+
+    T_CHAR       shift, and go to state 3
+    T_DOUBLE     shift, and go to state 4
+    T_INT        shift, and go to state 5
+    T_FLOAT      shift, and go to state 6
+    T_LONG_LONG  shift, and go to state 7
+    T_FOR        shift, and go to state 30
+    T_IF         shift, and go to state 31
+    T_WHILE      shift, and go to state 32
+    T_RETURN     shift, and go to state 33
+    T_BOOL       shift, and go to state 9
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '{'          shift, and go to state 37
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    type         go to state 46
+    basic        go to state 15
+    brac_open    go to state 47
+    block        go to state 106
+    S            go to state 49
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
+
+
+State 63
 
     8 decl: type identifier ';' .
 
     $default  reduce using rule 8 (decl)
 
 
-State 63
-
-   11 decl: void func block .
-
-    $default  reduce using rule 11 (decl)
-
-
 State 64
 
-   49 block_stmt: T_FOR '(' . S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+   13 decl: void func $@2 . block
+
+    T_CHAR       shift, and go to state 3
+    T_DOUBLE     shift, and go to state 4
+    T_INT        shift, and go to state 5
+    T_FLOAT      shift, and go to state 6
+    T_LONG_LONG  shift, and go to state 7
+    T_FOR        shift, and go to state 30
+    T_IF         shift, and go to state 31
+    T_WHILE      shift, and go to state 32
+    T_RETURN     shift, and go to state 33
+    T_BOOL       shift, and go to state 9
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '{'          shift, and go to state 37
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    type         go to state 46
+    basic        go to state 15
+    brac_open    go to state 47
+    block        go to state 107
+    S            go to state 49
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
+
+
+State 65
+
+   55 block_stmt: T_FOR '(' . S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -1114,693 +1133,707 @@ State 64
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    S1           go to state 104
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 65
-
-   47 block_stmt: T_IF '(' . expr ')' brac_open Marker_If M brac_close
-   48           | T_IF '(' . expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
-
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
-
-    func         go to state 45
-    expr         go to state 105
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    S1           go to state 108
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 66
 
-   50 block_stmt: T_WHILE Marker_If . '(' S1 ')' brac_open Marker_If M brac_close
+   53 block_stmt: T_IF '(' . expr ')' brac_open Marker_If M brac_close
+   54           | T_IF '(' . expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
 
-    '('  shift, and go to state 106
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    expr         go to state 109
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 67
 
-   41 S1: T_RETURN expr .
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   56 block_stmt: T_WHILE Marker_If . '(' S1 ')' brac_open Marker_If M brac_close
 
-    T_OR                  shift, and go to state 82
-    T_AND                 shift, and go to state 83
-    T_NOT_EQUAL           shift, and go to state 84
-    T_EQUAL_TEST          shift, and go to state 85
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-
-    $default  reduce using rule 41 (S1)
+    '('  shift, and go to state 110
 
 
 State 68
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-   67     | '(' expr . ')'
+   47 S1: T_RETURN expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    T_OR                  shift, and go to state 82
-    T_AND                 shift, and go to state 83
-    T_NOT_EQUAL           shift, and go to state 84
-    T_EQUAL_TEST          shift, and go to state 85
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-    ')'                   shift, and go to state 107
+    T_OR                  shift, and go to state 84
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 47 (S1)
 
 
 State 69
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-   69     | '+' expr .
+   58 expr: ID '(' . exprlist ')'
 
-    $default  reduce using rule 69 (expr)
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    $default  reduce using rule 4 (epsilon)
+
+    epsilon      go to state 111
+    exprlist     go to state 112
+    expr         go to state 113
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 70
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-   70     | '-' expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+   73     | '(' expr . ')'
 
-    $default  reduce using rule 70 (expr)
+    T_OR                  shift, and go to state 84
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+    ')'                   shift, and go to state 114
 
 
 State 71
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-   72     | '*' expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+   75     | '+' expr .
 
-    $default  reduce using rule 72 (expr)
+    $default  reduce using rule 75 (expr)
 
 
 State 72
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-   66     | '!' expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+   76     | '-' expr .
 
-    $default  reduce using rule 66 (expr)
+    $default  reduce using rule 76 (expr)
 
 
 State 73
 
-   78 identifier: ID .
-   79           | ID . array
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+   78     | '*' expr .
 
-    '['  shift, and go to state 58
-
-    $default  reduce using rule 78 (identifier)
-
-    array  go to state 59
+    $default  reduce using rule 78 (expr)
 
 
 State 74
 
-   40 S1: type init .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+   72     | '!' expr .
 
-    $default  reduce using rule 40 (S1)
+    $default  reduce using rule 72 (expr)
 
 
 State 75
 
-   43 init: assign_stmt . ',' init
-   45     | assign_stmt .
+   84 identifier: ID .
+   85           | ID . array
 
-    ','  shift, and go to state 108
+    '['  shift, and go to state 59
 
-    $default  reduce using rule 45 (init)
+    $default  reduce using rule 84 (identifier)
+
+    array  go to state 60
 
 
 State 76
 
-   44 init: identifier . ',' init
-   46     | identifier .
-   75 assign_stmt: identifier . '=' expr
+   46 S1: type init .
 
-    ','  shift, and go to state 109
-    '='  shift, and go to state 95
-
-    $default  reduce using rule 46 (init)
+    $default  reduce using rule 46 (S1)
 
 
 State 77
 
-   32 block: brac_open M . brac_close
-   34 M: M . Marker_If S
+   49 init: assign_stmt . ',' init
+   51     | assign_stmt .
 
-    '}'  shift, and go to state 110
+    ','  shift, and go to state 115
 
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If   go to state 111
-    epsilon     go to state 21
-    brac_close  go to state 112
+    $default  reduce using rule 51 (init)
 
 
 State 78
 
-   35 M: S .
+   50 init: identifier . ',' init
+   52     | identifier .
+   81 assign_stmt: identifier . '=' expr
 
-    $default  reduce using rule 35 (M)
+    ','  shift, and go to state 116
+    '='  shift, and go to state 97
+
+    $default  reduce using rule 52 (init)
 
 
 State 79
 
-   12 decl: T_STRUCT ID block ';' .
+   34 block: brac_open M . brac_close
+   36 M: M . Marker_If S
 
-    $default  reduce using rule 12 (decl)
+    '}'  shift, and go to state 117
+
+    $default  reduce using rule 4 (epsilon)
+
+    Marker_If   go to state 118
+    epsilon     go to state 21
+    brac_close  go to state 119
 
 
 State 80
 
-   36 S: S1 ';' .
+   37 M: S .
 
-    $default  reduce using rule 36 (S)
+    $default  reduce using rule 37 (M)
 
 
 State 81
 
-   38 S1: expr ',' . Marker_If S1
+   14 decl: T_STRUCT ID block ';' .
 
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If  go to state 113
-    epsilon    go to state 21
+    $default  reduce using rule 14 (decl)
 
 
 State 82
 
-   65 expr: expr T_OR . Marker_If expr
+   38 S: S1 ';' .
 
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If  go to state 114
-    epsilon    go to state 21
+    $default  reduce using rule 38 (S)
 
 
 State 83
 
-   64 expr: expr T_AND . Marker_If expr
+   44 S1: expr ',' . Marker_If S1
 
     $default  reduce using rule 4 (epsilon)
 
-    Marker_If  go to state 115
+    Marker_If  go to state 120
     epsilon    go to state 21
 
 
 State 84
 
-   58 expr: expr T_NOT_EQUAL . expr
+   71 expr: expr T_OR . Marker_If expr
 
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    $default  reduce using rule 4 (epsilon)
 
-    func         go to state 45
-    expr         go to state 116
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    Marker_If  go to state 121
+    epsilon    go to state 21
 
 
 State 85
 
-   53 expr: expr T_EQUAL_TEST . expr
+   70 expr: expr T_AND . Marker_If expr
 
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    $default  reduce using rule 4 (epsilon)
 
-    func         go to state 45
-    expr         go to state 117
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    Marker_If  go to state 122
+    epsilon    go to state 21
 
 
 State 86
 
-   55 expr: expr '>' . expr
+   59 expr: expr T_EQUAL_TEST . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 118
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 123
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 87
 
-   57 expr: expr T_GREATER_THAN_EQUAL . expr
+   64 expr: expr T_NOT_EQUAL . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 119
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 124
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 88
 
-   54 expr: expr '<' . expr
+   61 expr: expr '>' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 120
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 125
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 89
 
-   56 expr: expr T_LESS_THAN_EQUAL . expr
+   63 expr: expr T_GREATER_THAN_EQUAL . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 121
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 126
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 90
 
-   51 expr: expr '+' . expr
+   60 expr: expr '<' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 122
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 127
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 91
 
-   60 expr: expr '-' . expr
+   62 expr: expr T_LESS_THAN_EQUAL . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 123
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 128
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 92
 
-   61 expr: expr '*' . expr
+   57 expr: expr '+' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 124
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 129
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 93
 
-   62 expr: expr '/' . expr
+   66 expr: expr '-' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 125
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 130
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 94
 
-   63 expr: expr '%' . expr
+   67 expr: expr '*' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 126
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 131
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 95
 
-   75 assign_stmt: identifier '=' . expr
+   68 expr: expr '/' . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    func         go to state 45
-    expr         go to state 127
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    expr         go to state 132
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 96
+
+   69 expr: expr '%' . expr
+
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    expr         go to state 133
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
+
+
+State 97
+
+   81 assign_stmt: identifier '=' . expr
+
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    expr         go to state 134
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
+
+
+State 98
 
     9 decl: T_TYPEDEF type ID ';' .
 
     $default  reduce using rule 9 (decl)
 
 
-State 97
-
-   25 func: ID '(' ')' .
-
-    $default  reduce using rule 25 (func)
-
-
-State 98
-
-   14 type: type . '*'
-   28 args: type . identifier ',' args
-   29     | type . identifier
-
-    ID   shift, and go to state 73
-    '*'  shift, and go to state 24
-
-    identifier  go to state 128
-
-
 State 99
 
-   24 func: ID '(' args . ')'
-
-    ')'  shift, and go to state 129
-
-
-State 100
-
-   82 array: '[' T_DEC_INT . ']'
-   83      | '[' T_DEC_INT . ']' array
-
-    ']'  shift, and go to state 130
-
-
-State 101
-
-   80 array: '[' ID . ']' array
-   81      | '[' ID . ']'
-
-    ']'  shift, and go to state 131
-
-
-State 102
-
-   27 func: T_MAIN '(' ')' .
+   27 func: ID '(' ')' .
 
     $default  reduce using rule 27 (func)
 
 
+State 100
+
+   16 type: type . '*'
+   31 args: type . identifier
+
+    ID   shift, and go to state 75
+    '*'  shift, and go to state 24
+
+    identifier  go to state 135
+
+
+State 101
+
+   26 func: ID '(' args . ')'
+   30 args: args . ',' type identifier
+
+    ','  shift, and go to state 136
+    ')'  shift, and go to state 137
+
+
+State 102
+
+   88 array: '[' T_DEC_INT . ']'
+   89      | '[' T_DEC_INT . ']' array
+
+    ']'  shift, and go to state 138
+
+
 State 103
 
-   26 func: T_MAIN '(' args . ')'
+   86 array: '[' ID . ']' array
+   87      | '[' ID . ']'
 
-    ')'  shift, and go to state 132
+    ']'  shift, and go to state 139
 
 
 State 104
 
-   49 block_stmt: T_FOR '(' S1 . ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+   29 func: T_MAIN '(' ')' .
 
-    ';'  shift, and go to state 133
+    $default  reduce using rule 29 (func)
 
 
 State 105
 
-   47 block_stmt: T_IF '(' expr . ')' brac_open Marker_If M brac_close
-   48           | T_IF '(' expr . ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   28 func: T_MAIN '(' args . ')'
+   30 args: args . ',' type identifier
 
-    T_OR                  shift, and go to state 82
-    T_AND                 shift, and go to state 83
-    T_NOT_EQUAL           shift, and go to state 84
-    T_EQUAL_TEST          shift, and go to state 85
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-    ')'                   shift, and go to state 134
+    ','  shift, and go to state 136
+    ')'  shift, and go to state 140
 
 
 State 106
 
-   50 block_stmt: T_WHILE Marker_If '(' . S1 ')' brac_open Marker_If M brac_close
+   11 decl: type func $@1 block .
+
+    $default  reduce using rule 11 (decl)
+
+
+State 107
+
+   13 decl: void func $@2 block .
+
+    $default  reduce using rule 13 (decl)
+
+
+State 108
+
+   55 block_stmt: T_FOR '(' S1 . ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+
+    ';'  shift, and go to state 141
+
+
+State 109
+
+   53 block_stmt: T_IF '(' expr . ')' brac_open Marker_If M brac_close
+   54           | T_IF '(' expr . ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+
+    T_OR                  shift, and go to state 84
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+    ')'                   shift, and go to state 142
+
+
+State 110
+
+   56 block_stmt: T_WHILE Marker_If '(' . S1 ')' brac_open Marker_If M brac_close
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -1811,65 +1844,113 @@ State 106
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    S1           go to state 135
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 107
-
-   67 expr: '(' expr ')' .
-
-    $default  reduce using rule 67 (expr)
-
-
-State 108
-
-   43 init: assign_stmt ',' . init
-
-    ID  shift, and go to state 73
-
-    init         go to state 136
-    assign_stmt  go to state 75
-    identifier   go to state 76
-
-
-State 109
-
-   44 init: identifier ',' . init
-
-    ID  shift, and go to state 73
-
-    init         go to state 137
-    assign_stmt  go to state 75
-    identifier   go to state 76
-
-
-State 110
-
-   31 brac_close: '}' .
-
-    $default  reduce using rule 31 (brac_close)
+    S1           go to state 143
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 111
 
-   34 M: M Marker_If . S
+   43 exprlist: epsilon .
+
+    $default  reduce using rule 43 (exprlist)
+
+
+State 112
+
+   41 exprlist: exprlist . ',' expr
+   58 expr: ID '(' exprlist . ')'
+
+    ','  shift, and go to state 144
+    ')'  shift, and go to state 145
+
+
+State 113
+
+   42 exprlist: expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+
+    T_OR                  shift, and go to state 84
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 42 (exprlist)
+
+
+State 114
+
+   73 expr: '(' expr ')' .
+
+    $default  reduce using rule 73 (expr)
+
+
+State 115
+
+   49 init: assign_stmt ',' . init
+
+    ID  shift, and go to state 75
+
+    init         go to state 146
+    assign_stmt  go to state 77
+    identifier   go to state 78
+
+
+State 116
+
+   50 init: identifier ',' . init
+
+    ID  shift, and go to state 75
+
+    init         go to state 147
+    assign_stmt  go to state 77
+    identifier   go to state 78
+
+
+State 117
+
+   33 brac_close: '}' .
+
+    $default  reduce using rule 33 (brac_close)
+
+
+State 118
+
+   36 M: M Marker_If . S
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -1883,38 +1964,37 @@ State 111
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    S            go to state 138
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    S            go to state 148
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
-State 112
+State 119
 
-   32 block: brac_open M brac_close .
+   34 block: brac_open M brac_close .
 
-    $default  reduce using rule 32 (block)
+    $default  reduce using rule 34 (block)
 
 
-State 113
+State 120
 
-   38 S1: expr ',' Marker_If . S1
+   44 S1: expr ',' Marker_If . S1
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -1925,700 +2005,439 @@ State 113
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    S1           go to state 139
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 114
-
-   65 expr: expr T_OR Marker_If . expr
-
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
-
-    func         go to state 45
-    expr         go to state 140
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 115
-
-   64 expr: expr T_AND Marker_If . expr
-
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
-
-    func         go to state 45
-    expr         go to state 141
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 116
-
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   58     | expr T_NOT_EQUAL expr .
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-
-    $default  reduce using rule 58 (expr)
-
-
-State 117
-
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   53     | expr T_EQUAL_TEST expr .
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-
-    $default  reduce using rule 53 (expr)
-
-
-State 118
-
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   55     | expr '>' expr .
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-
-    '<'                shift, and go to state 88
-    T_LESS_THAN_EQUAL  shift, and go to state 89
-    '+'                shift, and go to state 90
-    '-'                shift, and go to state 91
-    '*'                shift, and go to state 92
-    '/'                shift, and go to state 93
-    '%'                shift, and go to state 94
-
-    $default  reduce using rule 55 (expr)
-
-
-State 119
-
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   57     | expr T_GREATER_THAN_EQUAL expr .
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-
-    '<'                shift, and go to state 88
-    T_LESS_THAN_EQUAL  shift, and go to state 89
-    '+'                shift, and go to state 90
-    '-'                shift, and go to state 91
-    '*'                shift, and go to state 92
-    '/'                shift, and go to state 93
-    '%'                shift, and go to state 94
-
-    $default  reduce using rule 57 (expr)
-
-
-State 120
-
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   54     | expr '<' expr .
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-
-    '+'  shift, and go to state 90
-    '-'  shift, and go to state 91
-    '*'  shift, and go to state 92
-    '/'  shift, and go to state 93
-    '%'  shift, and go to state 94
-
-    $default  reduce using rule 54 (expr)
+    S1           go to state 149
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 121
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   56     | expr T_LESS_THAN_EQUAL expr .
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   71 expr: expr T_OR Marker_If . expr
 
-    '+'  shift, and go to state 90
-    '-'  shift, and go to state 91
-    '*'  shift, and go to state 92
-    '/'  shift, and go to state 93
-    '%'  shift, and go to state 94
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    $default  reduce using rule 56 (expr)
+    expr         go to state 150
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 122
 
-   51 expr: expr . '+' expr
-   51     | expr '+' expr .
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   70 expr: expr T_AND Marker_If . expr
 
-    '*'  shift, and go to state 92
-    '/'  shift, and go to state 93
-    '%'  shift, and go to state 94
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    $default  reduce using rule 51 (expr)
+    expr         go to state 151
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
 State 123
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   60     | expr '-' expr .
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   59     | expr T_EQUAL_TEST expr .
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    '*'  shift, and go to state 92
-    '/'  shift, and go to state 93
-    '%'  shift, and go to state 94
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
 
-    $default  reduce using rule 60 (expr)
+    $default  reduce using rule 59 (expr)
 
 
 State 124
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   61     | expr '*' expr .
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   64     | expr T_NOT_EQUAL expr .
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    $default  reduce using rule 61 (expr)
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 64 (expr)
 
 
 State 125
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   62     | expr '/' expr .
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   61     | expr '>' expr .
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    $default  reduce using rule 62 (expr)
+    '<'                shift, and go to state 90
+    T_LESS_THAN_EQUAL  shift, and go to state 91
+    '+'                shift, and go to state 92
+    '-'                shift, and go to state 93
+    '*'                shift, and go to state 94
+    '/'                shift, and go to state 95
+    '%'                shift, and go to state 96
+
+    $default  reduce using rule 61 (expr)
 
 
 State 126
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   63     | expr '%' expr .
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   63     | expr T_GREATER_THAN_EQUAL expr .
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+
+    '<'                shift, and go to state 90
+    T_LESS_THAN_EQUAL  shift, and go to state 91
+    '+'                shift, and go to state 92
+    '-'                shift, and go to state 93
+    '*'                shift, and go to state 94
+    '/'                shift, and go to state 95
+    '%'                shift, and go to state 96
 
     $default  reduce using rule 63 (expr)
 
 
 State 127
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-   75 assign_stmt: identifier '=' expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   60     | expr '<' expr .
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    T_OR                  shift, and go to state 82
-    T_AND                 shift, and go to state 83
-    T_NOT_EQUAL           shift, and go to state 84
-    T_EQUAL_TEST          shift, and go to state 85
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
+    '+'  shift, and go to state 92
+    '-'  shift, and go to state 93
+    '*'  shift, and go to state 94
+    '/'  shift, and go to state 95
+    '%'  shift, and go to state 96
 
-    $default  reduce using rule 75 (assign_stmt)
+    $default  reduce using rule 60 (expr)
 
 
 State 128
 
-   28 args: type identifier . ',' args
-   29     | type identifier .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   62     | expr T_LESS_THAN_EQUAL expr .
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    ','  shift, and go to state 142
+    '+'  shift, and go to state 92
+    '-'  shift, and go to state 93
+    '*'  shift, and go to state 94
+    '/'  shift, and go to state 95
+    '%'  shift, and go to state 96
 
-    $default  reduce using rule 29 (args)
+    $default  reduce using rule 62 (expr)
 
 
 State 129
 
-   24 func: ID '(' args ')' .
+   57 expr: expr . '+' expr
+   57     | expr '+' expr .
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    $default  reduce using rule 24 (func)
+    '*'  shift, and go to state 94
+    '/'  shift, and go to state 95
+    '%'  shift, and go to state 96
+
+    $default  reduce using rule 57 (expr)
 
 
 State 130
 
-   82 array: '[' T_DEC_INT ']' .
-   83      | '[' T_DEC_INT ']' . array
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   66     | expr '-' expr .
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    '['  shift, and go to state 58
+    '*'  shift, and go to state 94
+    '/'  shift, and go to state 95
+    '%'  shift, and go to state 96
 
-    $default  reduce using rule 82 (array)
-
-    array  go to state 143
+    $default  reduce using rule 66 (expr)
 
 
 State 131
 
-   80 array: '[' ID ']' . array
-   81      | '[' ID ']' .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   67     | expr '*' expr .
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    '['  shift, and go to state 58
-
-    $default  reduce using rule 81 (array)
-
-    array  go to state 144
+    $default  reduce using rule 67 (expr)
 
 
 State 132
 
-   26 func: T_MAIN '(' args ')' .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   68     | expr '/' expr .
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    $default  reduce using rule 26 (func)
+    $default  reduce using rule 68 (expr)
 
 
 State 133
 
-   49 block_stmt: T_FOR '(' S1 ';' . Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   69     | expr '%' expr .
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
 
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If  go to state 145
-    epsilon    go to state 21
+    $default  reduce using rule 69 (expr)
 
 
 State 134
 
-   47 block_stmt: T_IF '(' expr ')' . brac_open Marker_If M brac_close
-   48           | T_IF '(' expr ')' . brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+   81 assign_stmt: identifier '=' expr .
 
-    '{'  shift, and go to state 36
+    T_OR                  shift, and go to state 84
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
 
-    brac_open  go to state 146
+    $default  reduce using rule 81 (assign_stmt)
 
 
 State 135
 
-   50 block_stmt: T_WHILE Marker_If '(' S1 . ')' brac_open Marker_If M brac_close
+   31 args: type identifier .
 
-    ')'  shift, and go to state 147
+    $default  reduce using rule 31 (args)
 
 
 State 136
 
-   43 init: assign_stmt ',' init .
+   30 args: args ',' . type identifier
 
-    $default  reduce using rule 43 (init)
+    T_CHAR       shift, and go to state 3
+    T_DOUBLE     shift, and go to state 4
+    T_INT        shift, and go to state 5
+    T_FLOAT      shift, and go to state 6
+    T_LONG_LONG  shift, and go to state 7
+    T_BOOL       shift, and go to state 9
+
+    type   go to state 152
+    basic  go to state 15
 
 
 State 137
 
-   44 init: identifier ',' init .
+   26 func: ID '(' args ')' .
 
-    $default  reduce using rule 44 (init)
+    $default  reduce using rule 26 (func)
 
 
 State 138
 
-   34 M: M Marker_If S .
+   88 array: '[' T_DEC_INT ']' .
+   89      | '[' T_DEC_INT ']' . array
 
-    $default  reduce using rule 34 (M)
+    '['  shift, and go to state 59
+
+    $default  reduce using rule 88 (array)
+
+    array  go to state 153
 
 
 State 139
 
-   38 S1: expr ',' Marker_If S1 .
+   86 array: '[' ID ']' . array
+   87      | '[' ID ']' .
 
-    $default  reduce using rule 38 (S1)
+    '['  shift, and go to state 59
+
+    $default  reduce using rule 87 (array)
+
+    array  go to state 154
 
 
 State 140
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   65     | expr . T_OR Marker_If expr
-   65     | expr T_OR Marker_If expr .
+   28 func: T_MAIN '(' args ')' .
 
-    T_AND                 shift, and go to state 83
-    T_NOT_EQUAL           shift, and go to state 84
-    T_EQUAL_TEST          shift, and go to state 85
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-
-    $default  reduce using rule 65 (expr)
+    $default  reduce using rule 28 (func)
 
 
 State 141
 
-   51 expr: expr . '+' expr
-   53     | expr . T_EQUAL_TEST expr
-   54     | expr . '<' expr
-   55     | expr . '>' expr
-   56     | expr . T_LESS_THAN_EQUAL expr
-   57     | expr . T_GREATER_THAN_EQUAL expr
-   58     | expr . T_NOT_EQUAL expr
-   60     | expr . '-' expr
-   61     | expr . '*' expr
-   62     | expr . '/' expr
-   63     | expr . '%' expr
-   64     | expr . T_AND Marker_If expr
-   64     | expr T_AND Marker_If expr .
-   65     | expr . T_OR Marker_If expr
-
-    T_NOT_EQUAL           shift, and go to state 84
-    T_EQUAL_TEST          shift, and go to state 85
-    '>'                   shift, and go to state 86
-    T_GREATER_THAN_EQUAL  shift, and go to state 87
-    '<'                   shift, and go to state 88
-    T_LESS_THAN_EQUAL     shift, and go to state 89
-    '+'                   shift, and go to state 90
-    '-'                   shift, and go to state 91
-    '*'                   shift, and go to state 92
-    '/'                   shift, and go to state 93
-    '%'                   shift, and go to state 94
-
-    $default  reduce using rule 64 (expr)
-
-
-State 142
-
-   28 args: type identifier ',' . args
-
-    T_CHAR       shift, and go to state 3
-    T_DOUBLE     shift, and go to state 4
-    T_INT        shift, and go to state 5
-    T_FLOAT      shift, and go to state 6
-    T_LONG_LONG  shift, and go to state 7
-    T_BOOL       shift, and go to state 9
-
-    type   go to state 98
-    basic  go to state 15
-    args   go to state 148
-
-
-State 143
-
-   83 array: '[' T_DEC_INT ']' array .
-
-    $default  reduce using rule 83 (array)
-
-
-State 144
-
-   80 array: '[' ID ']' array .
-
-    $default  reduce using rule 80 (array)
-
-
-State 145
-
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If . S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
-
-    T_CHAR       shift, and go to state 3
-    T_DOUBLE     shift, and go to state 4
-    T_INT        shift, and go to state 5
-    T_FLOAT      shift, and go to state 6
-    T_LONG_LONG  shift, and go to state 7
-    T_RETURN     shift, and go to state 33
-    T_BOOL       shift, and go to state 9
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
-
-    type         go to state 44
-    basic        go to state 15
-    func         go to state 45
-    S1           go to state 149
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 146
-
-   47 block_stmt: T_IF '(' expr ')' brac_open . Marker_If M brac_close
-   48           | T_IF '(' expr ')' brac_open . Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
-
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If  go to state 150
-    epsilon    go to state 21
-
-
-State 147
-
-   50 block_stmt: T_WHILE Marker_If '(' S1 ')' . brac_open Marker_If M brac_close
-
-    '{'  shift, and go to state 36
-
-    brac_open  go to state 151
-
-
-State 148
-
-   28 args: type identifier ',' args .
-
-    $default  reduce using rule 28 (args)
-
-
-State 149
-
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 . ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
-
-    ';'  shift, and go to state 152
-
-
-State 150
-
-   47 block_stmt: T_IF '(' expr ')' brac_open Marker_If . M brac_close
-   48           | T_IF '(' expr ')' brac_open Marker_If . M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
-
-    T_CHAR       shift, and go to state 3
-    T_DOUBLE     shift, and go to state 4
-    T_INT        shift, and go to state 5
-    T_FLOAT      shift, and go to state 6
-    T_LONG_LONG  shift, and go to state 7
-    T_FOR        shift, and go to state 30
-    T_IF         shift, and go to state 31
-    T_WHILE      shift, and go to state 32
-    T_RETURN     shift, and go to state 33
-    T_BOOL       shift, and go to state 9
-    T_DEC_FLOAT  shift, and go to state 34
-    T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
-
-    type         go to state 44
-    basic        go to state 15
-    func         go to state 45
-    M            go to state 153
-    S            go to state 78
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
-
-
-State 151
-
-   50 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open . Marker_If M brac_close
-
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If  go to state 154
-    epsilon    go to state 21
-
-
-State 152
-
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' . Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+   55 block_stmt: T_FOR '(' S1 ';' . Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
 
     $default  reduce using rule 4 (epsilon)
 
@@ -2626,24 +2445,272 @@ State 152
     epsilon    go to state 21
 
 
+State 142
+
+   53 block_stmt: T_IF '(' expr ')' . brac_open Marker_If M brac_close
+   54           | T_IF '(' expr ')' . brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+
+    '{'  shift, and go to state 37
+
+    brac_open  go to state 156
+
+
+State 143
+
+   56 block_stmt: T_WHILE Marker_If '(' S1 . ')' brac_open Marker_If M brac_close
+
+    ')'  shift, and go to state 157
+
+
+State 144
+
+   41 exprlist: exprlist ',' . expr
+
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    expr         go to state 158
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
+
+
+State 145
+
+   58 expr: ID '(' exprlist ')' .
+
+    $default  reduce using rule 58 (expr)
+
+
+State 146
+
+   49 init: assign_stmt ',' init .
+
+    $default  reduce using rule 49 (init)
+
+
+State 147
+
+   50 init: identifier ',' init .
+
+    $default  reduce using rule 50 (init)
+
+
+State 148
+
+   36 M: M Marker_If S .
+
+    $default  reduce using rule 36 (M)
+
+
+State 149
+
+   44 S1: expr ',' Marker_If S1 .
+
+    $default  reduce using rule 44 (S1)
+
+
+State 150
+
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+   71     | expr T_OR Marker_If expr .
+
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 71 (expr)
+
+
+State 151
+
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   70     | expr T_AND Marker_If expr .
+   71     | expr . T_OR Marker_If expr
+
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 70 (expr)
+
+
+State 152
+
+   16 type: type . '*'
+   30 args: args ',' type . identifier
+
+    ID   shift, and go to state 75
+    '*'  shift, and go to state 24
+
+    identifier  go to state 159
+
+
 State 153
 
-   34 M: M . Marker_If S
-   47 block_stmt: T_IF '(' expr ')' brac_open Marker_If M . brac_close
-   48           | T_IF '(' expr ')' brac_open Marker_If M . brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+   89 array: '[' T_DEC_INT ']' array .
 
-    '}'  shift, and go to state 110
-
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If   go to state 111
-    epsilon     go to state 21
-    brac_close  go to state 156
+    $default  reduce using rule 89 (array)
 
 
 State 154
 
-   50 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open Marker_If . M brac_close
+   86 array: '[' ID ']' array .
+
+    $default  reduce using rule 86 (array)
+
+
+State 155
+
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If . S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+
+    T_CHAR       shift, and go to state 3
+    T_DOUBLE     shift, and go to state 4
+    T_INT        shift, and go to state 5
+    T_FLOAT      shift, and go to state 6
+    T_LONG_LONG  shift, and go to state 7
+    T_RETURN     shift, and go to state 33
+    T_BOOL       shift, and go to state 9
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    type         go to state 46
+    basic        go to state 15
+    S1           go to state 160
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
+
+
+State 156
+
+   53 block_stmt: T_IF '(' expr ')' brac_open . Marker_If M brac_close
+   54           | T_IF '(' expr ')' brac_open . Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+
+    $default  reduce using rule 4 (epsilon)
+
+    Marker_If  go to state 161
+    epsilon    go to state 21
+
+
+State 157
+
+   56 block_stmt: T_WHILE Marker_If '(' S1 ')' . brac_open Marker_If M brac_close
+
+    '{'  shift, and go to state 37
+
+    brac_open  go to state 162
+
+
+State 158
+
+   41 exprlist: exprlist ',' expr .
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+
+    T_OR                  shift, and go to state 84
+    T_AND                 shift, and go to state 85
+    T_EQUAL_TEST          shift, and go to state 86
+    T_NOT_EQUAL           shift, and go to state 87
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 41 (exprlist)
+
+
+State 159
+
+   30 args: args ',' type identifier .
+
+    $default  reduce using rule 30 (args)
+
+
+State 160
+
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 . ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+
+    ';'  shift, and go to state 163
+
+
+State 161
+
+   53 block_stmt: T_IF '(' expr ')' brac_open Marker_If . M brac_close
+   54           | T_IF '(' expr ')' brac_open Marker_If . M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -2657,32 +2724,104 @@ State 154
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    M            go to state 157
-    S            go to state 78
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    M            go to state 164
+    S            go to state 80
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
-State 155
+State 162
 
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If . S1 Marker_For ')' brac_open Marker_If M brac_close
+   56 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open . Marker_If M brac_close
+
+    $default  reduce using rule 4 (epsilon)
+
+    Marker_If  go to state 165
+    epsilon    go to state 21
+
+
+State 163
+
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' . Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close
+
+    $default  reduce using rule 4 (epsilon)
+
+    Marker_If  go to state 166
+    epsilon    go to state 21
+
+
+State 164
+
+   36 M: M . Marker_If S
+   53 block_stmt: T_IF '(' expr ')' brac_open Marker_If M . brac_close
+   54           | T_IF '(' expr ')' brac_open Marker_If M . brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close
+
+    '}'  shift, and go to state 117
+
+    $default  reduce using rule 4 (epsilon)
+
+    Marker_If   go to state 118
+    epsilon     go to state 21
+    brac_close  go to state 167
+
+
+State 165
+
+   56 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open Marker_If . M brac_close
+
+    T_CHAR       shift, and go to state 3
+    T_DOUBLE     shift, and go to state 4
+    T_INT        shift, and go to state 5
+    T_FLOAT      shift, and go to state 6
+    T_LONG_LONG  shift, and go to state 7
+    T_FOR        shift, and go to state 30
+    T_IF         shift, and go to state 31
+    T_WHILE      shift, and go to state 32
+    T_RETURN     shift, and go to state 33
+    T_BOOL       shift, and go to state 9
+    T_DEC_FLOAT  shift, and go to state 34
+    T_DEC_INT    shift, and go to state 35
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
+
+    type         go to state 46
+    basic        go to state 15
+    M            go to state 168
+    S            go to state 80
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
+
+
+State 166
+
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If . S1 Marker_For ')' brac_open Marker_If M brac_close
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -2693,138 +2832,136 @@ State 155
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    S1           go to state 158
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    S1           go to state 169
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
-State 156
+State 167
 
-   47 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close .
-   48           | T_IF '(' expr ')' brac_open Marker_If M brac_close . Marker_Else T_ELSE brac_open Marker_If M brac_close
+   53 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close .
+   54           | T_IF '(' expr ')' brac_open Marker_If M brac_close . Marker_Else T_ELSE brac_open Marker_If M brac_close
 
     T_ELSE    reduce using rule 4 (epsilon)
-    $default  reduce using rule 47 (block_stmt)
+    $default  reduce using rule 53 (block_stmt)
 
-    Marker_Else  go to state 159
-    epsilon      go to state 160
+    Marker_Else  go to state 170
+    epsilon      go to state 171
 
 
-State 157
+State 168
 
-   34 M: M . Marker_If S
-   50 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open Marker_If M . brac_close
+   36 M: M . Marker_If S
+   56 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open Marker_If M . brac_close
 
-    '}'  shift, and go to state 110
+    '}'  shift, and go to state 117
 
     $default  reduce using rule 4 (epsilon)
 
-    Marker_If   go to state 111
+    Marker_If   go to state 118
     epsilon     go to state 21
-    brac_close  go to state 161
+    brac_close  go to state 172
 
 
-State 158
+State 169
 
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 . Marker_For ')' brac_open Marker_If M brac_close
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 . Marker_For ')' brac_open Marker_If M brac_close
 
     $default  reduce using rule 4 (epsilon)
 
-    Marker_For  go to state 162
-    epsilon     go to state 163
+    Marker_For  go to state 173
+    epsilon     go to state 174
 
 
-State 159
+State 170
 
-   48 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else . T_ELSE brac_open Marker_If M brac_close
+   54 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else . T_ELSE brac_open Marker_If M brac_close
 
-    T_ELSE  shift, and go to state 164
+    T_ELSE  shift, and go to state 175
 
 
-State 160
+State 171
 
     2 Marker_Else: epsilon .
 
     $default  reduce using rule 2 (Marker_Else)
 
 
-State 161
+State 172
 
-   50 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open Marker_If M brac_close .
+   56 block_stmt: T_WHILE Marker_If '(' S1 ')' brac_open Marker_If M brac_close .
 
-    $default  reduce using rule 50 (block_stmt)
-
-
-State 162
-
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For . ')' brac_open Marker_If M brac_close
-
-    ')'  shift, and go to state 165
+    $default  reduce using rule 56 (block_stmt)
 
 
-State 163
+State 173
+
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For . ')' brac_open Marker_If M brac_close
+
+    ')'  shift, and go to state 176
+
+
+State 174
 
     3 Marker_For: epsilon .
 
     $default  reduce using rule 3 (Marker_For)
 
 
-State 164
+State 175
 
-   48 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE . brac_open Marker_If M brac_close
+   54 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE . brac_open Marker_If M brac_close
 
-    '{'  shift, and go to state 36
+    '{'  shift, and go to state 37
 
-    brac_open  go to state 166
-
-
-State 165
-
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' . brac_open Marker_If M brac_close
-
-    '{'  shift, and go to state 36
-
-    brac_open  go to state 167
+    brac_open  go to state 177
 
 
-State 166
+State 176
 
-   48 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open . Marker_If M brac_close
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' . brac_open Marker_If M brac_close
 
-    $default  reduce using rule 4 (epsilon)
+    '{'  shift, and go to state 37
 
-    Marker_If  go to state 168
-    epsilon    go to state 21
+    brac_open  go to state 178
 
 
-State 167
+State 177
 
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open . Marker_If M brac_close
+   54 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open . Marker_If M brac_close
 
     $default  reduce using rule 4 (epsilon)
 
-    Marker_If  go to state 169
+    Marker_If  go to state 179
     epsilon    go to state 21
 
 
-State 168
+State 178
 
-   48 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If . M brac_close
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open . Marker_If M brac_close
+
+    $default  reduce using rule 4 (epsilon)
+
+    Marker_If  go to state 180
+    epsilon    go to state 21
+
+
+State 179
+
+   54 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If . M brac_close
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -2838,32 +2975,31 @@ State 168
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    M            go to state 170
-    S            go to state 78
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    M            go to state 181
+    S            go to state 80
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
-State 169
+State 180
 
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If . M brac_close
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If . M brac_close
 
     T_CHAR       shift, and go to state 3
     T_DOUBLE     shift, and go to state 4
@@ -2877,66 +3013,65 @@ State 169
     T_BOOL       shift, and go to state 9
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
-    ID           shift, and go to state 22
-    T_MAIN       shift, and go to state 23
-    '('          shift, and go to state 37
-    '+'          shift, and go to state 38
-    '-'          shift, and go to state 39
-    '*'          shift, and go to state 40
-    '!'          shift, and go to state 41
-    "true"       shift, and go to state 42
-    "false"      shift, and go to state 43
+    ID           shift, and go to state 36
+    '('          shift, and go to state 38
+    '+'          shift, and go to state 39
+    '-'          shift, and go to state 40
+    '*'          shift, and go to state 41
+    '!'          shift, and go to state 42
+    ';'          shift, and go to state 43
+    "true"       shift, and go to state 44
+    "false"      shift, and go to state 45
 
-    type         go to state 44
+    type         go to state 46
     basic        go to state 15
-    func         go to state 45
-    M            go to state 171
-    S            go to state 78
-    S1           go to state 49
-    block_stmt   go to state 50
-    expr         go to state 51
-    assign_stmt  go to state 52
-    number       go to state 53
-    identifier   go to state 54
+    M            go to state 182
+    S            go to state 80
+    S1           go to state 50
+    block_stmt   go to state 51
+    expr         go to state 52
+    assign_stmt  go to state 53
+    number       go to state 54
+    identifier   go to state 55
 
 
-State 170
+State 181
 
-   34 M: M . Marker_If S
-   48 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M . brac_close
+   36 M: M . Marker_If S
+   54 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M . brac_close
 
-    '}'  shift, and go to state 110
-
-    $default  reduce using rule 4 (epsilon)
-
-    Marker_If   go to state 111
-    epsilon     go to state 21
-    brac_close  go to state 172
-
-
-State 171
-
-   34 M: M . Marker_If S
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M . brac_close
-
-    '}'  shift, and go to state 110
+    '}'  shift, and go to state 117
 
     $default  reduce using rule 4 (epsilon)
 
-    Marker_If   go to state 111
+    Marker_If   go to state 118
     epsilon     go to state 21
-    brac_close  go to state 173
+    brac_close  go to state 183
 
 
-State 172
+State 182
 
-   48 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close .
+   36 M: M . Marker_If S
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M . brac_close
 
-    $default  reduce using rule 48 (block_stmt)
+    '}'  shift, and go to state 117
+
+    $default  reduce using rule 4 (epsilon)
+
+    Marker_If   go to state 118
+    epsilon     go to state 21
+    brac_close  go to state 184
 
 
-State 173
+State 183
 
-   49 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close .
+   54 block_stmt: T_IF '(' expr ')' brac_open Marker_If M brac_close Marker_Else T_ELSE brac_open Marker_If M brac_close .
 
-    $default  reduce using rule 49 (block_stmt)
+    $default  reduce using rule 54 (block_stmt)
+
+
+State 184
+
+   55 block_stmt: T_FOR '(' S1 ';' Marker_If S1 ';' Marker_If S1 Marker_For ')' brac_open Marker_If M brac_close .
+
+    $default  reduce using rule 55 (block_stmt)

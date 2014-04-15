@@ -43,12 +43,14 @@ code  : decl Marker_If code	{$$ = new attr();
 			 	free($1);
 			}
 	;
-decl  : type identifier';' {$$ = new attr();
+decl  : type identifier';' {
+							$$ = new attr();
 							if(current_symbol_table->table.find(string( $2->var_name[0])) != current_symbol_table->table.end())
 								yyerror("error: redeclaration \n");
-							else{
-							$2->my_type = $1->my_type;
-							$2->dimension[0]= $1->dimension[0];
+							else
+							{
+								$2->my_type = $1->my_type;
+								$2->dimension[0]= $1->dimension[0];
 							} 
 							
 
@@ -58,23 +60,33 @@ decl  : type identifier';' {$$ = new attr();
 	| T_TYPEDEF type ID';'  {$$ = new attr();
 
 								free($2);}
-	| type func block   {
-								$$ = new attr();
-								if ($1->my_type == $3->my_type)
-								{
-									if ($1->dimension[0] == $3->dimension[0])
-									{	/* Everything is fine. Enter in symbol table */
-										struct llm temp;
+	| type func 
 
-										temp.my_type= $1->my_type; 
-										temp.dimension = $1->dimension[0];
-										 int j = check_keyword(string($2->var_name[0])); // 1 if error
-                                                        			if(j==1)
-                                                                			yyerror("error: variable name cannot be a keyword \n");
-                                                        			else if(j==0)
-                                                                			current_symbol_table->table[string($2->var_name[0])]=(temp);
+	{
+		struct llm temp;
+
+		temp.my_type= $1->my_type; 
+		temp.dimension = $1->dimension[0];
+		int total = temp.paramlist.total = $2->my_params.total;
+
+		for (int i=0;i<total;i++)
+		{
+			temp.paramlist.dimension[i] = $2->my_params.dimension[i];
+			temp.paramlist.my_type[i] = $2->my_params.my_type[i];
+			temp.paramlist.my_args[i] = $2->my_params.my_args[i];
+
+		}
+
+		current_symbol_table->table[$2->lexeme]=(temp);
+	}
+
+	 block   {
+								$$ = new attr();
+								if ($1->my_type == $4->my_type)
+								{
+									if ($1->dimension[0] == $4->dimension[0])
+									{	/* Everything is fine. Enter in symbol table */
 									}
-		
 									else
 									{
 										yyerror("Dimension Mismatch\n");
@@ -82,30 +94,39 @@ decl  : type identifier';' {$$ = new attr();
 								}
 								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
-								$$->nextlist = $3->nextlist;
+								$$->nextlist = $4->nextlist;
 
 								//printf("type is %d. block is %d\n",$1->my_type,$3->my_type);
 								free($1);
 								free($2);
-								free($3);
+								free($4);
 								}	/*This is for function definition only. No rule yet for function declation.*/
-	| void func block {
-								$$ = new attr();
-								if ($1->my_type == $3->my_type)
-								{
-									if ($1->dimension[0] == $3->dimension[0])
-									{	/* Everything is fine. Enter in symbol table */
-										struct llm temp;
+	| void func
+	{
+		struct llm temp;
 
-										temp.my_type= $1->my_type; 
-										temp.dimension = $1->dimension[0];
-										 int j = check_keyword(string($2->var_name[0])); // 1 if error
-                                                        			if(j==1)
-                                                                			yyerror("error: variable name cannot be a keyword \n");
-                                                        			else if(j==0)
-                                                                			current_symbol_table->table[string($2->var_name[0])]=(temp);
+		temp.my_type= $1->my_type; 
+		temp.dimension = $1->dimension[0];
+		int total = temp.paramlist.total = $2->my_params.total;
+
+		for (int i=0;i<total;i++)
+		{
+			temp.paramlist.dimension[i] = $2->my_params.dimension[i];
+			temp.paramlist.my_type[i] = $2->my_params.my_type[i];
+			temp.paramlist.my_args[i] = $2->my_params.my_args[i];
+
+		}
+
+		current_symbol_table->table[$2->lexeme]=(temp);
+	}
+
+	 block {
+								$$ = new attr();
+								if ($1->my_type == $4->my_type)
+								{
+									if ($1->dimension[0] == $4->dimension[0])
+									{	/* Everything is fine. Enter in symbol table */
 									}
-	
 									else
 									{
 										yyerror("Dimension Mismatch\n");
@@ -113,12 +134,12 @@ decl  : type identifier';' {$$ = new attr();
 								}
 								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
-								$$->nextlist = $3->nextlist;
+								$$->nextlist = $4->nextlist;
 
 
 								free($1);
 								free($2);
-								free($3);
+								free($4);
 								}	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
 	| T_STRUCT ID block';'  {$$ = (attr*)malloc(sizeof(attr));
 								free($3);
@@ -159,30 +180,70 @@ void  : void '*' %prec DEREF   {
 				}
 	;
 func  : ID'('args')'   {
-						$$ = (attr*)malloc(sizeof(attr));
-						strcpy($$->var_name[0],$1);
-						 free($3);
+						$$ = new lexemeNparam();
+						$$->lexeme = string($1);
+						int total = $$->my_params.total = $3->total;
+
+						for (int i=0;i<total;i++)
+						{
+							$$->my_params.dimension[i] = $3->dimension[i];
+							$$->my_params.my_type[i] = $3->my_type[i];
+							$$->my_params.my_args[i] = $3->my_args[i];
+
+						}
+
+						free($3);
 						}
 	| ID'('')'   {
-							$$ = (attr*)malloc(sizeof(attr));
-							strcpy($$->var_name[0],$1);
+							$$ = new lexemeNparam();
+							$$->lexeme = string($1);
+							$$->my_params.total = 0;
 
 							}
+
 	| T_MAIN'('args')'   {
-							$$ = (attr*)malloc(sizeof(attr));
+							$$ = new lexemeNparam();
+							$$->lexeme = "main";
 							if (!maindef)
 								maindef = 1;
 							else yyerror("Conflicting declaration of function main");
 							 free($3);
 							}
 	| T_MAIN'('')'  {
-							$$ = (attr*)malloc(sizeof(attr));
+							$$ = new lexemeNparam();
+							$$->lexeme = "main";
 							if (!maindef)
 								maindef = 1;
 							else yyerror("Conflicting declaration of function main");
 
 							}
 	;
-args  : type identifier',' args    {$$ = (attr*)malloc(sizeof(attr));   free($1); free($2);}
-	| type identifier  {$$ = (attr*)malloc(sizeof(attr));   free($1); free($2);}
+args  : args ',' type identifier    {
+									$$ = new funcparams();
+
+									for (int i=0;i < $1->total;i++)
+									{
+										$$->my_args[i] = $1->my_args[i];
+										$$ -> my_type[i]  =    $1-> my_type[i];
+										$$->dimension[i] = $1->dimension[i];
+									}
+									int total = $$->total = $1->total+1;
+									total--;
+									$$->my_args[total] = $4->place;
+									$$->my_type[total] = $3->my_type;
+									$$->dimension[total] = $3->dimension[0] + $4->dimension[0];
+									free($1); 
+									free($3);
+									delete $4;
+								}
+	| type identifier  {
+							$$ = new funcparams();
+							int total = 0;
+							$$->my_args[total] = $2->place;
+							$$->my_type[total] = $1->my_type;
+							$$->dimension[total] = $1->dimension[0] + $2->dimension[0];
+							$$->total = 1;
+							free($1); 
+							free($2);
+							}
 	;

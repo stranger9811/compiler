@@ -8,7 +8,7 @@
 
 using namespace std;
 extern int no_line;
-
+#define MAXPARAM 50
 
 enum type_enum{
 Bool,
@@ -28,10 +28,6 @@ Jump,
 Assignment
 };
 
-struct llm {
-        enum type_enum my_type;
-        int dimension;
-};
 
 struct args {
 	string var;
@@ -40,6 +36,25 @@ struct args {
 	float float_val;
 	int args_type;		// can be from 1 to 4
 };
+
+struct funcparams {
+	args my_args[MAXPARAM];
+	enum type_enum my_type[MAXPARAM];
+	int dimension[MAXPARAM];
+	int total;
+};
+
+struct lexemeNparam {
+	funcparams my_params;
+	string lexeme;
+};
+
+struct llm {
+        enum type_enum my_type;
+        int dimension;
+        funcparams paramlist;
+};
+
 
 struct code_element {
 	enum type_instr data1; 	//Type of the instruction
@@ -74,6 +89,18 @@ struct attr
 };
 
 /*
+
+*/
+
+struct symbol_table {
+        vector <struct symbol_table *> children;
+        struct symbol_table *parent;
+        map <string, struct llm> table;
+        symbol_table() {}
+};
+
+struct compiler {
+
 string enumtostring(enum type_enum type)
 {
 
@@ -86,16 +113,7 @@ string enumtostring(enum type_enum type)
         if(Void==type) return "void";
         if(Pointer==type) return "Pointer";
 }
-*/
 
-struct symbol_table {
-        vector <struct symbol_table *> children;
-        struct symbol_table *parent;
-        map <string, struct llm> table;
-        symbol_table() {}
-};
-
-struct compiler {
 void backpatch(vector <int> lines, int label) {
 	int i;
 

@@ -104,4 +104,38 @@ S  : S1';'	{
 					$$->dimension[0] = $1->dimension[0];
 					free($1);
 					}
+	| ';' {
+				$$ = new attr();
+	}
 	;
+
+exprlist : exprlist ',' expr    {
+				$$ = new funcparams();
+				for (int i=0;i < $1->total;i++)
+				{
+					$$->my_args[i] = $1->my_args[i];
+					$$ -> my_type[i]  =    $1-> my_type[i];
+					$$->dimension[i] = $1->dimension[i];
+				}
+				int total = $$->total = $1->total+1;
+				total--;
+				$$->my_args[total] = $3->place;
+				$$->my_type[total] = $3->my_type;
+				$$->dimension[total] = $3->dimension[0];
+				delete $1;
+				delete $3;
+	}
+
+		| expr {
+				$$ = new funcparams();
+				int total = 0;
+				$$->my_args[total] = $1->place;
+				$$->my_type[total] = $1->my_type;
+				$$->dimension[total] = $1->dimension[0];
+				$$->total = 1;
+				delete $1;
+	}
+
+		| epsilon   {
+				$$ = new funcparams();
+	}

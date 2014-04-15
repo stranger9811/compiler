@@ -1,19 +1,19 @@
-/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
-   
-      Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
-   
+
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -26,7 +26,7 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.7.12-4996"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -62,8 +62,7 @@
 
 
 /* Copy the first part of user declarations.  */
-/* Line 371 of yacc.c  */
-#line 1 "Ccfg.ypp"
+#line 1 "Ccfg.ypp" /* yacc.c:339  */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -86,6 +85,7 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+
 using namespace std;
 int no_line;
 bool maindef;
@@ -101,6 +101,7 @@ int newTemp() {
 	max_index++;
 	return max_index;		
 }
+int check_keyword(string identifier);
 void yyerror(const char *s,string color=KRED,string e="")
 {
 
@@ -113,14 +114,13 @@ void *c;
 
 
 
-/* Line 371 of yacc.c  */
-#line 118 "Ccfg.tab.cpp"
+#line 118 "Ccfg.tab.cpp" /* yacc.c:339  */
 
-# ifndef YY_NULL
+# ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
-#   define YY_NULL nullptr
+#   define YY_NULLPTR nullptr
 #  else
-#   define YY_NULL 0
+#   define YY_NULLPTR 0
 #  endif
 # endif
 
@@ -136,7 +136,7 @@ void *c;
    by #include "Ccfg.tab.hpp".  */
 #ifndef YY_YY_CCFG_TAB_HPP_INCLUDED
 # define YY_YY_CCFG_TAB_HPP_INCLUDED
-/* Enabling traces.  */
+/* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
 #endif
@@ -144,121 +144,104 @@ void *c;
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-/* Line 387 of yacc.c  */
-#line 52 "Ccfg.ypp"
+#line 54 "Ccfg.ypp" /* yacc.c:355  */
 
 	#include "resources.h"
 
+#line 152 "Ccfg.tab.cpp" /* yacc.c:355  */
 
-/* Line 387 of yacc.c  */
-#line 155 "Ccfg.tab.cpp"
-
-/* Tokens.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     T_STRUCT = 258,
-     T_BREAK = 259,
-     T_CONTINUE = 260,
-     T_TYPEDEF = 261,
-     T_CHAR = 262,
-     T_DOUBLE = 263,
-     T_INT = 264,
-     T_FLOAT = 265,
-     T_LONG_LONG = 266,
-     T_FOR = 267,
-     T_IF = 268,
-     T_ELSE = 269,
-     T_WHILE = 270,
-     T_GOTO = 271,
-     T_RETURN = 272,
-     T_PRINTF = 273,
-     T_VOID = 274,
-     T_SCANF = 275,
-     T_SIZEOF = 276,
-     T_UNSIGNED = 277,
-     T_SIGNED = 278,
-     T_CONST = 279,
-     T_SHORT = 280,
-     T_EXTERN = 281,
-     T_LONG = 282,
-     T_BOOL = 283,
-     T_APOS = 284,
-     T_DEC_FLOAT = 285,
-     T_DEC_INT = 286,
-     T_STRING = 287,
-     T_HEADER = 288,
-     ID = 289,
-     T_MAIN = 290,
-     T_IO_INT = 291,
-     T_IO_LONG_LONG = 292,
-     T_IO_STRING = 293,
-     T_IO_FLOAT = 294,
-     T_DIVIDE_SELF = 295,
-     T_MULT_SELF = 296,
-     T_MINUS_SELF = 297,
-     T_PLUS_SELF = 298,
-     T_OR = 299,
-     T_AND = 300,
-     T_NOT_EQUAL = 301,
-     T_EQUAL_TEST = 302,
-     T_GREATER_THAN_EQUAL = 303,
-     T_LESS_THAN_EQUAL = 304,
-     DEREF = 305,
-     UMINUS = 306,
-     UPLUS = 307,
-     T_SUB_ONE = 308,
-     T_ADD_ONE = 309,
-     T_THIS_POINTER = 310
-   };
+  enum yytokentype
+  {
+    T_STRUCT = 258,
+    T_BREAK = 259,
+    T_CONTINUE = 260,
+    T_TYPEDEF = 261,
+    T_CHAR = 262,
+    T_DOUBLE = 263,
+    T_INT = 264,
+    T_FLOAT = 265,
+    T_LONG_LONG = 266,
+    T_FOR = 267,
+    T_IF = 268,
+    T_ELSE = 269,
+    T_WHILE = 270,
+    T_GOTO = 271,
+    T_RETURN = 272,
+    T_PRINTF = 273,
+    T_VOID = 274,
+    T_SCANF = 275,
+    T_SIZEOF = 276,
+    T_UNSIGNED = 277,
+    T_SIGNED = 278,
+    T_CONST = 279,
+    T_SHORT = 280,
+    T_EXTERN = 281,
+    T_LONG = 282,
+    T_BOOL = 283,
+    T_APOS = 284,
+    T_DEC_FLOAT = 285,
+    T_DEC_INT = 286,
+    T_STRING = 287,
+    T_HEADER = 288,
+    ID = 289,
+    T_MAIN = 290,
+    T_IO_INT = 291,
+    T_IO_LONG_LONG = 292,
+    T_IO_STRING = 293,
+    T_IO_FLOAT = 294,
+    T_MULT_SELF = 295,
+    T_DIVIDE_SELF = 296,
+    T_PLUS_SELF = 297,
+    T_MINUS_SELF = 298,
+    T_OR = 299,
+    T_AND = 300,
+    T_EQUAL_TEST = 301,
+    T_NOT_EQUAL = 302,
+    T_GREATER_THAN_EQUAL = 303,
+    T_LESS_THAN_EQUAL = 304,
+    DEREF = 305,
+    UPLUS = 306,
+    UMINUS = 307,
+    T_ADD_ONE = 308,
+    T_SUB_ONE = 309,
+    T_THIS_POINTER = 310
+  };
 #endif
 
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
+typedef union YYSTYPE YYSTYPE;
+union YYSTYPE
 {
-/* Line 387 of yacc.c  */
-#line 56 "Ccfg.ypp"
+#line 58 "Ccfg.ypp" /* yacc.c:355  */
 
 long long integer;
 long double real;
 char lexeme[10000];
+struct lexemeNparam *lexemeNparamlist;
+struct funcparams *paramlist;
 struct attr *attributes;
 //Yet to include exponential numbers and hexadecimals.
 
-
-/* Line 387 of yacc.c  */
-#line 234 "Ccfg.tab.cpp"
-} YYSTYPE;
+#line 230 "Ccfg.tab.cpp" /* yacc.c:355  */
+};
 # define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+
 extern YYSTYPE yylval;
 
-#ifdef YYPARSE_PARAM
-#if defined __STDC__ || defined __cplusplus
-int yyparse (void *YYPARSE_PARAM);
-#else
-int yyparse ();
-#endif
-#else /* ! YYPARSE_PARAM */
-#if defined __STDC__ || defined __cplusplus
 int yyparse (void);
-#else
-int yyparse ();
-#endif
-#endif /* ! YYPARSE_PARAM */
 
 #endif /* !YY_YY_CCFG_TAB_HPP_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-/* Line 390 of yacc.c  */
-#line 262 "Ccfg.tab.cpp"
+#line 245 "Ccfg.tab.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -272,11 +255,8 @@ typedef unsigned char yytype_uint8;
 
 #ifdef YYTYPE_INT8
 typedef YYTYPE_INT8 yytype_int8;
-#elif (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
-typedef signed char yytype_int8;
 #else
-typedef short int yytype_int8;
+typedef signed char yytype_int8;
 #endif
 
 #ifdef YYTYPE_UINT16
@@ -296,8 +276,7 @@ typedef short int yytype_int16;
 #  define YYSIZE_T __SIZE_TYPE__
 # elif defined size_t
 #  define YYSIZE_T size_t
-# elif ! defined YYSIZE_T && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+# elif ! defined YYSIZE_T
 #  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYSIZE_T size_t
 # else
@@ -319,11 +298,30 @@ typedef short int yytype_int16;
 # endif
 #endif
 
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if (! defined __GNUC__ || __GNUC__ < 2 \
-      || (__GNUC__ == 2 && __GNUC_MINOR__ < 5))
-#  define __attribute__(Spec) /* empty */
+#ifndef YY_ATTRIBUTE
+# if (defined __GNUC__                                               \
+      && (2 < __GNUC__ || (__GNUC__ == 2 && 96 <= __GNUC_MINOR__)))  \
+     || defined __SUNPRO_C && 0x5110 <= __SUNPRO_C
+#  define YY_ATTRIBUTE(Spec) __attribute__(Spec)
+# else
+#  define YY_ATTRIBUTE(Spec) /* empty */
+# endif
+#endif
+
+#ifndef YY_ATTRIBUTE_PURE
+# define YY_ATTRIBUTE_PURE   YY_ATTRIBUTE ((__pure__))
+#endif
+
+#ifndef YY_ATTRIBUTE_UNUSED
+# define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
+#endif
+
+#if !defined _Noreturn \
+     && (!defined __STDC_VERSION__ || __STDC_VERSION__ < 201112)
+# if defined _MSC_VER && 1200 <= _MSC_VER
+#  define _Noreturn __declspec (noreturn)
+# else
+#  define _Noreturn YY_ATTRIBUTE ((__noreturn__))
 # endif
 #endif
 
@@ -334,24 +332,25 @@ typedef short int yytype_int16;
 # define YYUSE(E) /* empty */
 #endif
 
+#if defined __GNUC__ && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
+/* Suppress an incorrect diagnostic about yylval being uninitialized.  */
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
+    _Pragma ("GCC diagnostic push") \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")\
+    _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END \
+    _Pragma ("GCC diagnostic pop")
+#else
+# define YY_INITIAL_VALUE(Value) Value
+#endif
+#ifndef YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END
+#endif
+#ifndef YY_INITIAL_VALUE
+# define YY_INITIAL_VALUE(Value) /* Nothing. */
+#endif
 
-/* Identity function, used to suppress warnings about constant conditions.  */
-#ifndef lint
-# define YYID(N) (N)
-#else
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
-static int
-YYID (int yyi)
-#else
-static int
-YYID (yyi)
-    int yyi;
-#endif
-{
-  return yyi;
-}
-#endif
 
 #if ! defined yyoverflow || YYERROR_VERBOSE
 
@@ -370,8 +369,7 @@ YYID (yyi)
 #    define alloca _alloca
 #   else
 #    define YYSTACK_ALLOC alloca
-#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS
 #     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
       /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
 #     ifndef EXIT_SUCCESS
@@ -383,8 +381,8 @@ YYID (yyi)
 # endif
 
 # ifdef YYSTACK_ALLOC
-   /* Pacify GCC's `empty if-body' warning.  */
-#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (YYID (0))
+   /* Pacify GCC's 'empty if-body' warning.  */
+#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
 #  ifndef YYSTACK_ALLOC_MAXIMUM
     /* The OS might guarantee only one guard page at the bottom of the stack,
        and a page size can be as small as 4096 bytes.  So we cannot safely
@@ -400,7 +398,7 @@ YYID (yyi)
 #  endif
 #  if (defined __cplusplus && ! defined EXIT_SUCCESS \
        && ! ((defined YYMALLOC || defined malloc) \
-	     && (defined YYFREE || defined free)))
+             && (defined YYFREE || defined free)))
 #   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
 #   ifndef EXIT_SUCCESS
 #    define EXIT_SUCCESS 0
@@ -408,15 +406,13 @@ YYID (yyi)
 #  endif
 #  ifndef YYMALLOC
 #   define YYMALLOC malloc
-#   if ! defined malloc && ! defined EXIT_SUCCESS && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+#   if ! defined malloc && ! defined EXIT_SUCCESS
 void *malloc (YYSIZE_T); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 #  ifndef YYFREE
 #   define YYFREE free
-#   if ! defined free && ! defined EXIT_SUCCESS && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+#   if ! defined free && ! defined EXIT_SUCCESS
 void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
@@ -426,7 +422,7 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-	 || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+         || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
@@ -451,16 +447,16 @@ union yyalloc
    elements in the stack, and YYPTR gives the new location of the
    stack.  Advance YYPTR to a properly aligned location for the next
    stack.  */
-# define YYSTACK_RELOCATE(Stack_alloc, Stack)				\
-    do									\
-      {									\
-	YYSIZE_T yynewbytes;						\
-	YYCOPY (&yyptr->Stack_alloc, Stack, yysize);			\
-	Stack = &yyptr->Stack_alloc;					\
-	yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
-	yyptr += yynewbytes / sizeof (*yyptr);				\
-      }									\
-    while (YYID (0))
+# define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
+    do                                                                  \
+      {                                                                 \
+        YYSIZE_T yynewbytes;                                            \
+        YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
+        Stack = &yyptr->Stack_alloc;                                    \
+        yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
+        yyptr += yynewbytes / sizeof (*yyptr);                          \
+      }                                                                 \
+    while (0)
 
 #endif
 
@@ -479,7 +475,7 @@ union yyalloc
           for (yyi = 0; yyi < (Count); yyi++)   \
             (Dst)[yyi] = (Src)[yyi];            \
         }                                       \
-      while (YYID (0))
+      while (0)
 #  endif
 # endif
 #endif /* !YYCOPY_NEEDED */
@@ -487,25 +483,27 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  19
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   404
+#define YYLAST   408
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  79
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  26
+#define YYNNTS  29
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  84
-/* YYNRULES -- Number of states.  */
-#define YYNSTATES  174
+#define YYNRULES  90
+/* YYNSTATES -- Number of states.  */
+#define YYNSTATES  185
 
-/* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
+/* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
+   by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   312
 
-#define YYTRANSLATE(YYX)						\
+#define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
-/* YYTRANSLATE[YYLEX] -- Bison symbol number corresponding to YYLEX.  */
+/* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
+   as returned by yylex, without out-of-bounds checking.  */
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -543,69 +541,19 @@ static const yytype_uint8 yytranslate[] =
 };
 
 #if YYDEBUG
-/* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
-   YYRHS.  */
-static const yytype_uint16 yyprhs[] =
-{
-       0,     0,     3,     5,     7,     9,    10,    12,    16,    18,
-      22,    27,    31,    35,    40,    42,    45,    47,    49,    51,
-      53,    55,    57,    59,    62,    64,    69,    73,    78,    82,
-      87,    90,    92,    94,    98,   100,   104,   106,   109,   111,
-     116,   118,   121,   124,   126,   130,   134,   136,   138,   147,
-     162,   178,   188,   192,   194,   198,   202,   206,   210,   214,
-     218,   220,   224,   228,   232,   236,   241,   246,   249,   253,
-     255,   258,   261,   263,   266,   268,   270,   274,   276,   278,
-     280,   283,   288,   292,   296
-};
-
-/* YYRHS -- A `-1'-separated list of the rules' RHS.  */
-static const yytype_int8 yyrhs[] =
-{
-      84,     0,    -1,    83,    -1,    83,    -1,    83,    -1,    -1,
-      85,    -1,    86,    80,    85,    -1,    86,    -1,    87,   103,
-      76,    -1,     6,    87,    34,    76,    -1,    87,    90,    94,
-      -1,    89,    90,    94,    -1,     3,    34,    94,    76,    -1,
-      33,    -1,    87,    62,    -1,    88,    -1,    11,    -1,     9,
-      -1,     7,    -1,    10,    -1,     8,    -1,    28,    -1,    89,
-      62,    -1,    19,    -1,    34,    41,    91,    74,    -1,    34,
-      41,    74,    -1,    35,    41,    91,    74,    -1,    35,    41,
-      74,    -1,    87,   103,    43,    91,    -1,    87,   103,    -1,
-      40,    -1,    75,    -1,    92,    95,    93,    -1,    96,    -1,
-      95,    80,    96,    -1,    96,    -1,    97,    76,    -1,    99,
-      -1,   100,    43,    80,    97,    -1,   100,    -1,    87,    98,
-      -1,    17,   100,    -1,    17,    -1,   101,    43,    98,    -1,
-     103,    43,    98,    -1,   101,    -1,   103,    -1,    13,    41,
-     100,    74,    92,    80,    95,    93,    -1,    13,    41,   100,
-      74,    92,    80,    95,    93,    81,    14,    92,    80,    95,
-      93,    -1,    12,    41,    97,    76,    80,    97,    76,    80,
-      97,    82,    74,    92,    80,    95,    93,    -1,    15,    80,
-      41,    97,    74,    92,    80,    95,    93,    -1,   100,    60,
-     100,    -1,    90,    -1,   100,    55,   100,    -1,   100,    58,
-     100,    -1,   100,    56,   100,    -1,   100,    59,   100,    -1,
-     100,    57,   100,    -1,   100,    54,   100,    -1,   101,    -1,
-     100,    61,   100,    -1,   100,    62,   100,    -1,   100,    63,
-     100,    -1,   100,    64,   100,    -1,   100,    50,    80,   100,
-      -1,   100,    49,    80,   100,    -1,    66,   100,    -1,    41,
-     100,    74,    -1,   103,    -1,    60,   100,    -1,    61,   100,
-      -1,   102,    -1,    62,   100,    -1,    77,    -1,    78,    -1,
-     103,    48,   100,    -1,    31,    -1,    30,    -1,    34,    -1,
-      34,   104,    -1,    42,    34,    73,   104,    -1,    42,    34,
-      73,    -1,    42,    31,    73,    -1,    42,    31,    73,   104,
-      -1
-};
-
-/* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
+  /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   161,   161,   169,   178,   186,   188,   193,   199,   205,
-     217,   220,   245,   270,   273,   276,   282,   289,   290,   291,
-     292,   293,   294,   296,   302,   308,   313,   318,   325,   333,
-     334,   336,   350,   361,   374,   378,   401,   415,   427,   440,
-     452,   459,   490,   497,   505,   522,   535,   545,   554,   570,
-     586,   612,   639,   680,   682,   704,   725,   746,   767,   788,
-     809,   811,   853,   894,   935,   967,   983,   999,  1007,  1009,
-    1032,  1034,  1036,  1045,  1051,  1062,  1073,  1140,  1149,  1157,
-    1164,  1171,  1172,  1173,  1174
+       0,   166,   166,   174,   183,   191,   193,   198,   204,   210,
+     224,   229,   227,   269,   268,   308,   311,   314,   320,   327,
+     328,   329,   330,   331,   332,   334,   340,   346,   361,   368,
+     376,   385,   403,   414,   428,   439,   452,   456,   479,   493,
+     507,   519,   524,   541,   551,   556,   568,   575,   610,   617,
+     625,   642,   655,   665,   674,   690,   706,   732,   759,   800,
+     831,   853,   874,   895,   916,   937,   958,   964,  1006,  1047,
+    1088,  1120,  1136,  1152,  1160,  1165,  1188,  1190,  1192,  1201,
+    1207,  1218,  1229,  1296,  1305,  1313,  1320,  1327,  1328,  1329,
+    1330
 };
 #endif
 
@@ -621,22 +569,22 @@ static const char *const yytname[] =
   "T_SHORT", "T_EXTERN", "T_LONG", "T_BOOL", "T_APOS", "T_DEC_FLOAT",
   "T_DEC_INT", "T_STRING", "T_HEADER", "ID", "T_MAIN", "T_IO_INT",
   "T_IO_LONG_LONG", "T_IO_STRING", "T_IO_FLOAT", "'{'", "'('", "'['",
-  "','", "T_DIVIDE_SELF", "T_MULT_SELF", "T_MINUS_SELF", "T_PLUS_SELF",
-  "'='", "T_OR", "T_AND", "'|'", "'^'", "'&'", "T_NOT_EQUAL",
-  "T_EQUAL_TEST", "'>'", "T_GREATER_THAN_EQUAL", "'<'",
-  "T_LESS_THAN_EQUAL", "'+'", "'-'", "'*'", "'/'", "'%'", "DEREF", "'!'",
-  "UMINUS", "UPLUS", "T_SUB_ONE", "T_ADD_ONE", "T_THIS_POINTER", "'.'",
-  "']'", "')'", "'}'", "';'", "\"true\"", "\"false\"", "$accept",
-  "Marker_If", "Marker_Else", "Marker_For", "epsilon", "code1", "code",
-  "decl", "type", "basic", "void", "func", "args", "brac_open",
-  "brac_close", "block", "M", "S", "S1", "init", "block_stmt", "expr",
-  "assign_stmt", "number", "identifier", "array", YY_NULL
+  "','", "T_MULT_SELF", "T_DIVIDE_SELF", "T_PLUS_SELF", "T_MINUS_SELF",
+  "'='", "T_OR", "T_AND", "'|'", "'^'", "'&'", "T_EQUAL_TEST",
+  "T_NOT_EQUAL", "'>'", "T_GREATER_THAN_EQUAL", "'<'", "T_LESS_THAN_EQUAL",
+  "'+'", "'-'", "'*'", "'/'", "'%'", "DEREF", "'!'", "UPLUS", "UMINUS",
+  "T_ADD_ONE", "T_SUB_ONE", "T_THIS_POINTER", "'.'", "']'", "')'", "'}'",
+  "';'", "\"true\"", "\"false\"", "$accept", "Marker_If", "Marker_Else",
+  "Marker_For", "epsilon", "code1", "code", "decl", "$@1", "$@2", "type",
+  "basic", "void", "func", "args", "brac_open", "brac_close", "block", "M",
+  "S", "exprlist", "S1", "init", "block_stmt", "expr", "assign_stmt",
+  "number", "identifier", "array", YY_NULLPTR
 };
 #endif
 
 # ifdef YYPRINT
-/* YYTOKNUM[YYLEX-NUM] -- Internal token number corresponding to
-   token YYLEX-NUM.  */
+/* YYTOKNUM[NUM] -- (External) token number corresponding to the
+   (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
@@ -650,248 +598,241 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-/* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
-static const yytype_uint8 yyr1[] =
-{
-       0,    79,    80,    81,    82,    83,    84,    85,    85,    86,
-      86,    86,    86,    86,    86,    87,    87,    88,    88,    88,
-      88,    88,    88,    89,    89,    90,    90,    90,    90,    91,
-      91,    92,    93,    94,    94,    95,    95,    96,    96,    97,
-      97,    97,    97,    97,    98,    98,    98,    98,    99,    99,
-      99,    99,   100,   100,   100,   100,   100,   100,   100,   100,
-     100,   100,   100,   100,   100,   100,   100,   100,   100,   100,
-     100,   100,   100,   100,   100,   100,   101,   102,   102,   103,
-     103,   104,   104,   104,   104
-};
-
-/* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
-static const yytype_uint8 yyr2[] =
-{
-       0,     2,     1,     1,     1,     0,     1,     3,     1,     3,
-       4,     3,     3,     4,     1,     2,     1,     1,     1,     1,
-       1,     1,     1,     2,     1,     4,     3,     4,     3,     4,
-       2,     1,     1,     3,     1,     3,     1,     2,     1,     4,
-       1,     2,     2,     1,     3,     3,     1,     1,     8,    14,
-      15,     9,     3,     1,     3,     3,     3,     3,     3,     3,
-       1,     3,     3,     3,     3,     4,     4,     2,     3,     1,
-       2,     2,     1,     2,     1,     1,     3,     1,     1,     1,
-       2,     4,     3,     3,     4
-};
-
-/* YYDEFACT[STATE-NAME] -- Default reduction number in state STATE-NUM.
-   Performed when YYTABLE doesn't specify something else to do.  Zero
-   means the default is an error.  */
-static const yytype_uint8 yydefact[] =
-{
-       0,     0,     0,    19,    21,    18,    20,    17,    24,    22,
-      14,     0,     6,     5,     0,    16,     0,     0,     0,     1,
-       0,     2,    79,     0,    15,     0,     0,     0,    23,     0,
-       0,     0,     5,    43,    78,    77,    31,     0,     0,     0,
-       0,     0,    74,    75,     0,    53,     0,     0,    34,     0,
-      38,    40,    60,    72,    69,     0,     7,     0,     0,    80,
-       0,    11,     9,    12,     0,     0,     0,    42,     0,    70,
-      71,    73,    67,    79,    41,    46,    47,     5,    36,    13,
-      37,     5,     5,     5,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    10,    26,     0,     0,
-       0,     0,    28,     0,     0,     0,     0,    68,     0,     0,
-      32,     0,    33,     0,     0,     0,    59,    54,    56,    58,
-      55,    57,    52,    61,    62,    63,    64,    76,    30,    25,
-      83,    82,    27,     5,     0,     0,    44,    45,    35,    39,
-      66,    65,     0,    84,    81,     0,     5,     0,    29,     0,
-       0,     5,     5,     5,     0,     0,    48,     5,     5,     0,
-       3,    51,     0,     4,     0,     0,     5,     5,     0,     0,
-       5,     5,    49,    50
-};
-
-/* YYDEFGOTO[NTERM-NUM].  */
-static const yytype_int16 yydefgoto[] =
-{
-      -1,   111,   159,   162,    21,    11,    12,    13,    44,    15,
-      16,    45,    99,    46,   112,    47,    77,    78,    49,    74,
-      50,    51,    52,    53,    54,    59
-};
-
-/* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-   STATE-NUM.  */
-#define YYPACT_NINF -118
-static const yytype_int16 yypact[] =
-{
-      31,    -1,    73,  -118,  -118,  -118,  -118,  -118,  -118,  -118,
-    -118,    36,  -118,    63,    10,  -118,    17,   160,    -7,  -118,
-      31,  -118,    49,     8,  -118,   160,    -3,    30,  -118,   160,
-      34,    37,  -118,   251,  -118,  -118,  -118,   251,   251,   251,
-     251,   251,  -118,  -118,    -5,  -118,   199,    22,  -118,    23,
-    -118,   298,  -118,  -118,    54,    27,  -118,     0,   -18,  -118,
-      15,  -118,  -118,  -118,   238,   251,    64,   314,    67,  -118,
-    -118,  -118,  -118,    76,  -118,    72,   -28,    44,  -118,  -118,
-    -118,  -118,  -118,  -118,   251,   251,   251,   251,   251,   251,
-     251,   251,   251,   251,   251,   251,  -118,  -118,    -5,    58,
-      61,    62,  -118,    66,    98,   276,   238,  -118,   103,   103,
-    -118,   199,  -118,   238,   251,   251,    88,    88,   260,   260,
-     190,   190,     3,     3,  -118,  -118,  -118,   314,    99,  -118,
-      76,    76,  -118,  -118,   136,   104,  -118,  -118,  -118,  -118,
-     329,   340,    73,  -118,  -118,   238,  -118,   136,  -118,   105,
-     199,  -118,  -118,    44,   199,   238,   166,    44,  -118,   168,
-    -118,  -118,   110,  -118,   136,   136,  -118,  -118,   199,   199,
-      44,    44,  -118,  -118
-};
-
-/* YYPGOTO[NTERM-NUM].  */
-static const yytype_int16 yypgoto[] =
-{
-    -118,   -13,  -118,  -118,  -102,  -118,   167,  -118,     1,  -118,
-    -118,    46,   -55,  -117,    26,     6,   -62,   -11,   -60,   -15,
-    -118,    71,   -32,  -118,   -12,   -17
-};
-
-/* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
-   positive, shift that token.  If negative, reduce the rule which
-   number is the opposite.  If YYTABLE_NINF, syntax error.  */
-#define YYTABLE_NINF -9
-static const yytype_int16 yytable[] =
-{
-      20,    14,    26,    18,   104,   103,    48,     3,     4,     5,
-       6,     7,    75,   100,    48,   109,   101,   146,    48,    66,
-      95,    14,     3,     4,     5,     6,     7,    55,     9,    73,
-     151,    61,    76,    17,     1,    63,    19,     2,     3,     4,
-       5,     6,     7,     9,    22,    23,   135,   166,   167,    60,
-       8,    27,    23,   139,   160,    24,   163,    24,    98,     9,
-      25,    98,    29,    -8,    10,    92,    93,    94,   113,   114,
-     115,    57,    24,    62,    97,    64,    75,    75,    65,    28,
-       3,     4,     5,     6,     7,   149,   128,   148,   153,   102,
-      57,    58,   157,   136,   137,   158,    76,    76,    79,    80,
-     138,     9,    95,    96,    67,   106,   170,   171,    68,    69,
-      70,    71,    72,   143,   144,   108,    82,    83,    58,   110,
-     145,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,   129,   150,   130,   131,   105,    73,   154,   155,
-     132,   107,   142,    98,    86,    87,    88,    89,    90,    91,
-      92,    93,    94,   168,   169,   116,   117,   118,   119,   120,
-     121,   122,   123,   124,   125,   126,   127,     3,     4,     5,
-       6,     7,    30,    31,   133,    32,    36,    33,   147,   156,
-      -5,   152,   164,   161,   165,   140,   141,    56,     9,     0,
-      34,    35,     0,     0,    22,    23,   172,   173,     0,     0,
-      36,    37,     0,     0,     0,     0,     3,     4,     5,     6,
-       7,    30,    31,     0,    32,     0,    33,     0,     0,     0,
-      38,    39,    40,     0,     0,     0,    41,     9,     0,    34,
-      35,     0,     0,    22,    23,     0,     0,    42,    43,     0,
-      37,     0,     0,     0,     0,     3,     4,     5,     6,     7,
-      90,    91,    92,    93,    94,    33,     0,     0,     0,    38,
-      39,    40,     0,     0,     0,    41,     9,     0,    34,    35,
-       0,     0,    22,    23,     0,     0,    42,    43,     0,    37,
-       0,    34,    35,     0,     0,    22,    23,     0,     0,     0,
-       0,     0,    37,     0,     0,     0,     0,     0,    38,    39,
-      40,     0,     0,     0,    41,     0,     0,     0,     0,     0,
-       0,    38,    39,    40,     0,    42,    43,    41,    88,    89,
-      90,    91,    92,    93,    94,    82,    83,     0,    42,    43,
-      84,    85,    86,    87,    88,    89,    90,    91,    92,    93,
-      94,    81,     0,     0,     0,     0,     0,    82,    83,     0,
-     134,     0,    84,    85,    86,    87,    88,    89,    90,    91,
-      92,    93,    94,    82,    83,     0,     0,     0,    84,    85,
-      86,    87,    88,    89,    90,    91,    92,    93,    94,    83,
-       0,     0,     0,    84,    85,    86,    87,    88,    89,    90,
-      91,    92,    93,    94,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94
-};
+#define YYPACT_NINF -159
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-118)))
+  (!!((Yystate) == (-159)))
+
+#define YYTABLE_NINF -9
 
 #define yytable_value_is_error(Yytable_value) \
-  YYID (0)
+  0
+
+  /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
+     STATE-NUM.  */
+static const yytype_int16 yypact[] =
+{
+     262,   -23,   108,  -159,  -159,  -159,  -159,  -159,  -159,  -159,
+    -159,    16,  -159,    20,    -9,  -159,    29,   114,    34,  -159,
+     262,  -159,    57,    -8,  -159,  -159,   -31,    10,  -159,  -159,
+      26,    49,  -159,   147,  -159,  -159,    59,  -159,   147,   147,
+     147,   147,   147,  -159,  -159,  -159,    35,   186,   -19,  -159,
+      37,  -159,   293,  -159,  -159,    61,    54,  -159,    28,   -22,
+    -159,    33,   114,  -159,   114,   225,   147,    64,   309,   147,
+     250,  -159,  -159,  -159,  -159,    78,  -159,    89,   -35,    60,
+    -159,  -159,  -159,  -159,  -159,  -159,   147,   147,   147,   147,
+     147,   147,   147,   147,   147,   147,   147,   147,  -159,  -159,
+      35,   -28,    66,    68,  -159,   -26,  -159,  -159,    75,   271,
+     225,  -159,   -25,   309,  -159,   129,   129,  -159,   186,  -159,
+     225,   147,   147,   344,   344,    98,    98,   106,   106,    30,
+      30,  -159,  -159,  -159,   309,  -159,   108,  -159,    78,    78,
+    -159,  -159,   131,    99,   147,  -159,  -159,  -159,  -159,  -159,
+     324,   335,    35,  -159,  -159,   225,  -159,   131,   309,  -159,
+      96,   186,  -159,  -159,    60,   186,   225,   165,    60,  -159,
+     170,  -159,  -159,   111,  -159,   131,   131,  -159,  -159,   186,
+     186,    60,    60,  -159,  -159
+};
+
+  /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
+     Performed when YYTABLE does not specify something else to do.  Zero
+     means the default is an error.  */
+static const yytype_uint8 yydefact[] =
+{
+       0,     0,     0,    21,    23,    20,    22,    19,    26,    24,
+      16,     0,     6,     5,     0,    18,     0,     0,     0,     1,
+       0,     2,    85,     0,    17,    11,     0,     0,    25,    13,
+       0,     0,     5,    49,    84,    83,    85,    33,     0,     0,
+       0,     0,     0,    41,    80,    81,     0,     0,     0,    36,
+       0,    40,    46,    66,    78,    75,     0,     7,     0,     0,
+      86,     0,     0,     9,     0,     0,     0,     0,    48,     5,
+       0,    76,    77,    79,    73,    85,    47,    52,    53,     5,
+      38,    15,    39,     5,     5,     5,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,    10,    28,
+       0,     0,     0,     0,    30,     0,    12,    14,     0,     0,
+       0,    44,     0,    43,    74,     0,     0,    34,     0,    35,
+       0,     0,     0,    60,    65,    62,    64,    61,    63,    58,
+      67,    68,    69,    70,    82,    32,     0,    27,    89,    88,
+      29,     5,     0,     0,     0,    59,    50,    51,    37,    45,
+      72,    71,     0,    90,    87,     0,     5,     0,    42,    31,
+       0,     0,     5,     5,     5,     0,     0,    54,     5,     5,
+       0,     3,    57,     0,     4,     0,     0,     5,     5,     0,
+       0,     5,     5,    55,    56
+};
+
+  /* YYPGOTO[NTERM-NUM].  */
+static const yytype_int16 yypgoto[] =
+{
+    -159,   -13,  -159,  -159,   -55,  -159,   166,  -159,  -159,  -159,
+       1,  -159,  -159,   171,   128,  -110,  -158,    25,   -27,   -10,
+    -159,   -60,    31,  -159,   -11,   -42,  -159,   -12,    44
+};
+
+  /* YYDEFGOTO[NTERM-NUM].  */
+static const yytype_int16 yydefgoto[] =
+{
+      -1,   118,   170,   173,    21,    11,    12,    13,    62,    64,
+      46,    15,    16,    25,   101,    47,   119,    48,    79,    80,
+     112,    50,    76,    51,    52,    53,    54,    55,    60
+};
+
+  /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
+     positive, shift that token.  If negative, reduce the rule whose
+     number is the opposite.  If YYTABLE_NINF, syntax error.  */
+static const yytype_int16 yytable[] =
+{
+      20,    14,    26,    18,    77,   108,   167,    49,   116,   102,
+     172,    17,   103,    97,   111,   136,    19,   136,   144,    67,
+      -8,    14,    68,   183,   184,    22,    23,    70,    71,    72,
+      73,    74,   156,    61,    78,     3,     4,     5,     6,     7,
+       3,     4,     5,     6,     7,    63,   137,   162,   140,   145,
+     143,    58,    49,    24,    49,   109,     9,    81,   113,   100,
+     149,     9,   100,    27,    23,   177,   178,    65,    56,    75,
+     120,   121,   122,    77,    77,   123,   124,   125,   126,   127,
+     128,   129,   130,   131,   132,   133,   134,   106,   135,   107,
+      66,    28,    94,    95,    96,   160,    24,    24,    58,    59,
+      69,    59,    99,    78,    78,   110,   169,   104,   148,    97,
+     150,   151,   171,    82,   174,     3,     4,     5,     6,     7,
+      59,     3,     4,     5,     6,     7,    30,    31,   155,    32,
+      98,    33,   115,   158,   164,   117,     9,   152,   168,   138,
+     159,   139,     9,   161,    34,    35,   146,   147,    36,   165,
+     166,   141,   181,   182,    37,    38,    90,    91,    92,    93,
+      94,    95,    96,    75,   179,   180,    92,    93,    94,    95,
+      96,    37,   163,   157,    39,    40,    41,    34,    35,    -5,
+      42,    36,   153,   154,   175,   176,    57,    29,    38,   105,
+      43,    44,    45,     3,     4,     5,     6,     7,    30,    31,
+       0,    32,     0,    33,     0,     0,     0,    39,    40,    41,
+       0,     0,     0,    42,     9,     0,    34,    35,     0,     0,
+      36,     0,     0,     0,    44,    45,     0,    38,     0,     0,
+       0,     0,     3,     4,     5,     6,     7,     0,     0,     0,
+       0,     0,    33,     0,     0,     0,    39,    40,    41,     0,
+       0,     0,    42,     9,     0,    34,    35,     0,     0,    36,
+       0,     0,    43,    44,    45,     1,    38,     0,     2,     3,
+       4,     5,     6,     7,     0,     0,     0,     0,     0,     0,
+       0,     8,     0,     0,     0,    39,    40,    41,     0,     0,
+       9,    42,     0,     0,     0,    10,     0,     0,     0,    84,
+      85,     0,    44,    45,    86,    87,    88,    89,    90,    91,
+      92,    93,    94,    95,    96,     0,     0,     0,     0,     0,
+      84,    85,     0,     0,   114,    86,    87,    88,    89,    90,
+      91,    92,    93,    94,    95,    96,    83,     0,     0,     0,
+       0,     0,    84,    85,     0,   142,     0,    86,    87,    88,
+      89,    90,    91,    92,    93,    94,    95,    96,    84,    85,
+       0,     0,     0,    86,    87,    88,    89,    90,    91,    92,
+      93,    94,    95,    96,    85,     0,     0,     0,    86,    87,
+      88,    89,    90,    91,    92,    93,    94,    95,    96,    86,
+      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
+      88,    89,    90,    91,    92,    93,    94,    95,    96
+};
 
 static const yytype_int16 yycheck[] =
 {
-      13,     0,    14,     2,    64,    60,    17,     7,     8,     9,
-      10,    11,    44,    31,    25,    43,    34,   134,    29,    32,
-      48,    20,     7,     8,     9,    10,    11,    34,    28,    34,
-     147,    25,    44,    34,     3,    29,     0,     6,     7,     8,
-       9,    10,    11,    28,    34,    35,   106,   164,   165,    41,
-      19,    34,    35,   113,   156,    62,   158,    62,    57,    28,
-      14,    60,    16,     0,    33,    62,    63,    64,    81,    82,
-      83,    41,    62,    76,    74,    41,   108,   109,    41,    62,
-       7,     8,     9,    10,    11,   145,    98,   142,   150,    74,
-      41,    42,   154,   108,   109,   155,   108,   109,    76,    76,
-     111,    28,    48,    76,    33,    41,   168,   169,    37,    38,
-      39,    40,    41,   130,   131,    43,    49,    50,    42,    75,
-     133,    54,    55,    56,    57,    58,    59,    60,    61,    62,
-      63,    64,    74,   146,    73,    73,    65,    34,   151,   152,
-      74,    74,    43,   142,    56,    57,    58,    59,    60,    61,
-      62,    63,    64,   166,   167,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,     7,     8,     9,
-      10,    11,    12,    13,    76,    15,    40,    17,    74,   153,
-      14,    76,    14,   157,    74,   114,   115,    20,    28,    -1,
-      30,    31,    -1,    -1,    34,    35,   170,   171,    -1,    -1,
-      40,    41,    -1,    -1,    -1,    -1,     7,     8,     9,    10,
-      11,    12,    13,    -1,    15,    -1,    17,    -1,    -1,    -1,
-      60,    61,    62,    -1,    -1,    -1,    66,    28,    -1,    30,
-      31,    -1,    -1,    34,    35,    -1,    -1,    77,    78,    -1,
-      41,    -1,    -1,    -1,    -1,     7,     8,     9,    10,    11,
-      60,    61,    62,    63,    64,    17,    -1,    -1,    -1,    60,
-      61,    62,    -1,    -1,    -1,    66,    28,    -1,    30,    31,
-      -1,    -1,    34,    35,    -1,    -1,    77,    78,    -1,    41,
-      -1,    30,    31,    -1,    -1,    34,    35,    -1,    -1,    -1,
-      -1,    -1,    41,    -1,    -1,    -1,    -1,    -1,    60,    61,
-      62,    -1,    -1,    -1,    66,    -1,    -1,    -1,    -1,    -1,
-      -1,    60,    61,    62,    -1,    77,    78,    66,    58,    59,
-      60,    61,    62,    63,    64,    49,    50,    -1,    77,    78,
-      54,    55,    56,    57,    58,    59,    60,    61,    62,    63,
-      64,    43,    -1,    -1,    -1,    -1,    -1,    49,    50,    -1,
-      74,    -1,    54,    55,    56,    57,    58,    59,    60,    61,
-      62,    63,    64,    49,    50,    -1,    -1,    -1,    54,    55,
-      56,    57,    58,    59,    60,    61,    62,    63,    64,    50,
+      13,     0,    14,     2,    46,    65,   164,    17,    43,    31,
+     168,    34,    34,    48,    69,    43,     0,    43,    43,    32,
+       0,    20,    33,   181,   182,    34,    35,    38,    39,    40,
+      41,    42,   142,    41,    46,     7,     8,     9,    10,    11,
+       7,     8,     9,    10,    11,    76,    74,   157,    74,    74,
+     110,    41,    62,    62,    64,    66,    28,    76,    69,    58,
+     120,    28,    61,    34,    35,   175,   176,    41,    34,    34,
+      83,    84,    85,   115,   116,    86,    87,    88,    89,    90,
+      91,    92,    93,    94,    95,    96,    97,    62,   100,    64,
+      41,    62,    62,    63,    64,   155,    62,    62,    41,    42,
+      41,    42,    74,   115,   116,    41,   166,    74,   118,    48,
+     121,   122,   167,    76,   169,     7,     8,     9,    10,    11,
+      42,     7,     8,     9,    10,    11,    12,    13,   141,    15,
+      76,    17,    43,   144,   161,    75,    28,   136,   165,    73,
+     152,    73,    28,   156,    30,    31,   115,   116,    34,   162,
+     163,    76,   179,   180,    40,    41,    58,    59,    60,    61,
+      62,    63,    64,    34,   177,   178,    60,    61,    62,    63,
+      64,    40,    76,    74,    60,    61,    62,    30,    31,    14,
+      66,    34,   138,   139,    14,    74,    20,    16,    41,    61,
+      76,    77,    78,     7,     8,     9,    10,    11,    12,    13,
+      -1,    15,    -1,    17,    -1,    -1,    -1,    60,    61,    62,
+      -1,    -1,    -1,    66,    28,    -1,    30,    31,    -1,    -1,
+      34,    -1,    -1,    -1,    77,    78,    -1,    41,    -1,    -1,
+      -1,    -1,     7,     8,     9,    10,    11,    -1,    -1,    -1,
+      -1,    -1,    17,    -1,    -1,    -1,    60,    61,    62,    -1,
+      -1,    -1,    66,    28,    -1,    30,    31,    -1,    -1,    34,
+      -1,    -1,    76,    77,    78,     3,    41,    -1,     6,     7,
+       8,     9,    10,    11,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    19,    -1,    -1,    -1,    60,    61,    62,    -1,    -1,
+      28,    66,    -1,    -1,    -1,    33,    -1,    -1,    -1,    49,
+      50,    -1,    77,    78,    54,    55,    56,    57,    58,    59,
+      60,    61,    62,    63,    64,    -1,    -1,    -1,    -1,    -1,
+      49,    50,    -1,    -1,    74,    54,    55,    56,    57,    58,
+      59,    60,    61,    62,    63,    64,    43,    -1,    -1,    -1,
+      -1,    -1,    49,    50,    -1,    74,    -1,    54,    55,    56,
+      57,    58,    59,    60,    61,    62,    63,    64,    49,    50,
       -1,    -1,    -1,    54,    55,    56,    57,    58,    59,    60,
-      61,    62,    63,    64,    54,    55,    56,    57,    58,    59,
-      60,    61,    62,    63,    64
+      61,    62,    63,    64,    50,    -1,    -1,    -1,    54,    55,
+      56,    57,    58,    59,    60,    61,    62,    63,    64,    54,
+      55,    56,    57,    58,    59,    60,    61,    62,    63,    64,
+      56,    57,    58,    59,    60,    61,    62,    63,    64
 };
 
-/* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-   symbol of state STATE-NUM.  */
+  /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
+     symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
        0,     3,     6,     7,     8,     9,    10,    11,    19,    28,
-      33,    84,    85,    86,    87,    88,    89,    34,    87,     0,
-      80,    83,    34,    35,    62,    90,   103,    34,    62,    90,
-      12,    13,    15,    17,    30,    31,    40,    41,    60,    61,
-      62,    66,    77,    78,    87,    90,    92,    94,    96,    97,
-      99,   100,   101,   102,   103,    34,    85,    41,    42,   104,
-      41,    94,    76,    94,    41,    41,    80,   100,   100,   100,
-     100,   100,   100,    34,    98,   101,   103,    95,    96,    76,
-      76,    43,    49,    50,    54,    55,    56,    57,    58,    59,
-      60,    61,    62,    63,    64,    48,    76,    74,    87,    91,
-      31,    34,    74,    91,    97,   100,    41,    74,    43,    43,
-      75,    80,    93,    80,    80,    80,   100,   100,   100,   100,
-     100,   100,   100,   100,   100,   100,   100,   100,   103,    74,
-      73,    73,    74,    76,    74,    97,    98,    98,    96,    97,
-     100,   100,    43,   104,   104,    80,    92,    74,    91,    97,
-      80,    92,    76,    95,    80,    80,    93,    95,    97,    81,
-      83,    93,    82,    83,    14,    74,    92,    92,    80,    80,
-      95,    95,    93,    93
+      33,    84,    85,    86,    89,    90,    91,    34,    89,     0,
+      80,    83,    34,    35,    62,    92,   106,    34,    62,    92,
+      12,    13,    15,    17,    30,    31,    34,    40,    41,    60,
+      61,    62,    66,    76,    77,    78,    89,    94,    96,    98,
+     100,   102,   103,   104,   105,   106,    34,    85,    41,    42,
+     107,    41,    87,    76,    88,    41,    41,    80,   103,    41,
+     103,   103,   103,   103,   103,    34,   101,   104,   106,    97,
+      98,    76,    76,    43,    49,    50,    54,    55,    56,    57,
+      58,    59,    60,    61,    62,    63,    64,    48,    76,    74,
+      89,    93,    31,    34,    74,    93,    96,    96,   100,   103,
+      41,    83,    99,   103,    74,    43,    43,    75,    80,    95,
+      80,    80,    80,   103,   103,   103,   103,   103,   103,   103,
+     103,   103,   103,   103,   103,   106,    43,    74,    73,    73,
+      74,    76,    74,   100,    43,    74,   101,   101,    98,   100,
+     103,   103,    89,   107,   107,    80,    94,    74,   103,   106,
+     100,    80,    94,    76,    97,    80,    80,    95,    97,   100,
+      81,    83,    95,    82,    83,    14,    74,    94,    94,    80,
+      80,    97,    97,    95,    95
 };
 
-#define yyerrok		(yyerrstatus = 0)
-#define yyclearin	(yychar = YYEMPTY)
-#define YYEMPTY		(-2)
-#define YYEOF		0
+  /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
+static const yytype_uint8 yyr1[] =
+{
+       0,    79,    80,    81,    82,    83,    84,    85,    85,    86,
+      86,    87,    86,    88,    86,    86,    86,    89,    89,    90,
+      90,    90,    90,    90,    90,    91,    91,    92,    92,    92,
+      92,    93,    93,    94,    95,    96,    96,    97,    97,    98,
+      98,    98,    99,    99,    99,   100,   100,   100,   100,   100,
+     101,   101,   101,   101,   102,   102,   102,   102,   103,   103,
+     103,   103,   103,   103,   103,   103,   103,   103,   103,   103,
+     103,   103,   103,   103,   103,   103,   103,   103,   103,   103,
+     103,   103,   104,   105,   105,   106,   106,   107,   107,   107,
+     107
+};
 
-#define YYACCEPT	goto yyacceptlab
-#define YYABORT		goto yyabortlab
-#define YYERROR		goto yyerrorlab
+  /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
+static const yytype_uint8 yyr2[] =
+{
+       0,     2,     1,     1,     1,     0,     1,     3,     1,     3,
+       4,     0,     4,     0,     4,     4,     1,     2,     1,     1,
+       1,     1,     1,     1,     1,     2,     1,     4,     3,     4,
+       3,     4,     2,     1,     1,     3,     1,     3,     1,     2,
+       1,     1,     3,     1,     1,     4,     1,     2,     2,     1,
+       3,     3,     1,     1,     8,    14,    15,     9,     3,     4,
+       3,     3,     3,     3,     3,     3,     1,     3,     3,     3,
+       3,     4,     4,     2,     3,     1,     2,     2,     1,     2,
+       1,     1,     3,     1,     1,     1,     2,     4,     3,     3,
+       4
+};
 
 
-/* Like YYERROR except do call yyerror.  This remains here temporarily
-   to ease the transition to the new meaning of YYERROR, for GCC.
-   Once GCC version 2 has supplanted version 1, this can go.  However,
-   YYFAIL appears to be in use.  Nevertheless, it is formally deprecated
-   in Bison 2.4.2's NEWS entry, where a plan to phase it out is
-   discussed.  */
+#define yyerrok         (yyerrstatus = 0)
+#define yyclearin       (yychar = YYEMPTY)
+#define YYEMPTY         (-2)
+#define YYEOF           0
 
-#define YYFAIL		goto yyerrlab
-#if defined YYFAIL
-  /* This is here to suppress warnings from the GCC cpp's
-     -Wunused-macros.  Normally we don't worry about that warning, but
-     some users do, and we want to make it easy for users to remove
-     YYFAIL uses, which will produce warnings from Bison 2.5.  */
-#endif
+#define YYACCEPT        goto yyacceptlab
+#define YYABORT         goto yyabortlab
+#define YYERROR         goto yyerrorlab
+
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
@@ -908,27 +849,15 @@ do                                                              \
   else                                                          \
     {                                                           \
       yyerror (YY_("syntax error: cannot back up")); \
-      YYERROR;							\
-    }								\
-while (YYID (0))
+      YYERROR;                                                  \
+    }                                                           \
+while (0)
 
 /* Error token number */
-#define YYTERROR	1
-#define YYERRCODE	256
+#define YYTERROR        1
+#define YYERRCODE       256
 
 
-/* This macro is provided for backward compatibility. */
-#ifndef YY_LOCATION_PRINT
-# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-#endif
-
-
-/* YYLEX -- calling `yylex' with the right arguments.  */
-#ifdef YYLEX_PARAM
-# define YYLEX yylex (YYLEX_PARAM)
-#else
-# define YYLEX yylex ()
-#endif
 
 /* Enable debugging if requested.  */
 #if YYDEBUG
@@ -938,40 +867,36 @@ while (YYID (0))
 #  define YYFPRINTF fprintf
 # endif
 
-# define YYDPRINTF(Args)			\
-do {						\
-  if (yydebug)					\
-    YYFPRINTF Args;				\
-} while (YYID (0))
+# define YYDPRINTF(Args)                        \
+do {                                            \
+  if (yydebug)                                  \
+    YYFPRINTF Args;                             \
+} while (0)
 
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)			  \
-do {									  \
-  if (yydebug)								  \
-    {									  \
-      YYFPRINTF (stderr, "%s ", Title);					  \
-      yy_symbol_print (stderr,						  \
-		  Type, Value); \
-      YYFPRINTF (stderr, "\n");						  \
-    }									  \
-} while (YYID (0))
+/* This macro is provided for backward compatibility. */
+#ifndef YY_LOCATION_PRINT
+# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+#endif
 
 
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)                    \
+do {                                                                      \
+  if (yydebug)                                                            \
+    {                                                                     \
+      YYFPRINTF (stderr, "%s ", Title);                                   \
+      yy_symbol_print (stderr,                                            \
+                  Type, Value); \
+      YYFPRINTF (stderr, "\n");                                           \
+    }                                                                     \
+} while (0)
 
-/*ARGSUSED*/
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+
+/*----------------------------------------.
+| Print this symbol's value on YYOUTPUT.  |
+`----------------------------------------*/
+
 static void
 yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
-#else
-static void
-yy_symbol_value_print (yyoutput, yytype, yyvaluep)
-    FILE *yyoutput;
-    int yytype;
-    YYSTYPE const * const yyvaluep;
-#endif
 {
   FILE *yyo = yyoutput;
   YYUSE (yyo);
@@ -980,8 +905,6 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
     YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
-# else
-  YYUSE (yyoutput);
 # endif
   YYUSE (yytype);
 }
@@ -991,22 +914,11 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 | Print this symbol on YYOUTPUT.  |
 `--------------------------------*/
 
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
 yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
-#else
-static void
-yy_symbol_print (yyoutput, yytype, yyvaluep)
-    FILE *yyoutput;
-    int yytype;
-    YYSTYPE const * const yyvaluep;
-#endif
 {
-  if (yytype < YYNTOKENS)
-    YYFPRINTF (yyoutput, "token %s (", yytname[yytype]);
-  else
-    YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
+  YYFPRINTF (yyoutput, "%s %s (",
+             yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
   yy_symbol_value_print (yyoutput, yytype, yyvaluep);
   YYFPRINTF (yyoutput, ")");
@@ -1017,16 +929,8 @@ yy_symbol_print (yyoutput, yytype, yyvaluep)
 | TOP (included).                                                   |
 `------------------------------------------------------------------*/
 
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
 yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
-#else
-static void
-yy_stack_print (yybottom, yytop)
-    yytype_int16 *yybottom;
-    yytype_int16 *yytop;
-#endif
 {
   YYFPRINTF (stderr, "Stack now");
   for (; yybottom <= yytop; yybottom++)
@@ -1037,49 +941,42 @@ yy_stack_print (yybottom, yytop)
   YYFPRINTF (stderr, "\n");
 }
 
-# define YY_STACK_PRINT(Bottom, Top)				\
-do {								\
-  if (yydebug)							\
-    yy_stack_print ((Bottom), (Top));				\
-} while (YYID (0))
+# define YY_STACK_PRINT(Bottom, Top)                            \
+do {                                                            \
+  if (yydebug)                                                  \
+    yy_stack_print ((Bottom), (Top));                           \
+} while (0)
 
 
 /*------------------------------------------------.
 | Report that the YYRULE is going to be reduced.  |
 `------------------------------------------------*/
 
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (YYSTYPE *yyvsp, int yyrule)
-#else
-static void
-yy_reduce_print (yyvsp, yyrule)
-    YYSTYPE *yyvsp;
-    int yyrule;
-#endif
+yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
 {
+  unsigned long int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
-  unsigned long int yylno = yyrline[yyrule];
   YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
-	     yyrule - 1, yylno);
+             yyrule - 1, yylno);
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
-      yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
-		       &(yyvsp[(yyi + 1) - (yynrhs)])
-		       		       );
+      yy_symbol_print (stderr,
+                       yystos[yyssp[yyi + 1 - yynrhs]],
+                       &(yyvsp[(yyi + 1) - (yynrhs)])
+                                              );
       YYFPRINTF (stderr, "\n");
     }
 }
 
-# define YY_REDUCE_PRINT(Rule)		\
-do {					\
-  if (yydebug)				\
-    yy_reduce_print (yyvsp, Rule); \
-} while (YYID (0))
+# define YY_REDUCE_PRINT(Rule)          \
+do {                                    \
+  if (yydebug)                          \
+    yy_reduce_print (yyssp, yyvsp, Rule); \
+} while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
@@ -1093,7 +990,7 @@ int yydebug;
 
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
-#ifndef	YYINITDEPTH
+#ifndef YYINITDEPTH
 # define YYINITDEPTH 200
 #endif
 
@@ -1116,15 +1013,8 @@ int yydebug;
 #   define yystrlen strlen
 #  else
 /* Return the length of YYSTR.  */
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static YYSIZE_T
 yystrlen (const char *yystr)
-#else
-static YYSIZE_T
-yystrlen (yystr)
-    const char *yystr;
-#endif
 {
   YYSIZE_T yylen;
   for (yylen = 0; yystr[yylen]; yylen++)
@@ -1140,16 +1030,8 @@ yystrlen (yystr)
 #  else
 /* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
    YYDEST.  */
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static char *
 yystpcpy (char *yydest, const char *yysrc)
-#else
-static char *
-yystpcpy (yydest, yysrc)
-    char *yydest;
-    const char *yysrc;
-#endif
 {
   char *yyd = yydest;
   const char *yys = yysrc;
@@ -1179,27 +1061,27 @@ yytnamerr (char *yyres, const char *yystr)
       char const *yyp = yystr;
 
       for (;;)
-	switch (*++yyp)
-	  {
-	  case '\'':
-	  case ',':
-	    goto do_not_strip_quotes;
+        switch (*++yyp)
+          {
+          case '\'':
+          case ',':
+            goto do_not_strip_quotes;
 
-	  case '\\':
-	    if (*++yyp != '\\')
-	      goto do_not_strip_quotes;
-	    /* Fall through.  */
-	  default:
-	    if (yyres)
-	      yyres[yyn] = *yyp;
-	    yyn++;
-	    break;
+          case '\\':
+            if (*++yyp != '\\')
+              goto do_not_strip_quotes;
+            /* Fall through.  */
+          default:
+            if (yyres)
+              yyres[yyn] = *yyp;
+            yyn++;
+            break;
 
-	  case '"':
-	    if (yyres)
-	      yyres[yyn] = '\0';
-	    return yyn;
-	  }
+          case '"':
+            if (yyres)
+              yyres[yyn] = '\0';
+            return yyn;
+          }
     do_not_strip_quotes: ;
     }
 
@@ -1222,11 +1104,11 @@ static int
 yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                 yytype_int16 *yyssp, int yytoken)
 {
-  YYSIZE_T yysize0 = yytnamerr (YY_NULL, yytname[yytoken]);
+  YYSIZE_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
   YYSIZE_T yysize = yysize0;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
   /* Internationalized format string. */
-  const char *yyformat = YY_NULL;
+  const char *yyformat = YY_NULLPTR;
   /* Arguments of yyformat. */
   char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
   /* Number of reported tokens (one for the "unexpected", one per
@@ -1234,10 +1116,6 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
   int yycount = 0;
 
   /* There are many possibilities here to consider:
-     - Assume YYFAIL is not used.  It's too flawed to consider.  See
-       <http://lists.gnu.org/archive/html/bison-patches/2009-12/msg00024.html>
-       for details.  YYERROR is fine as it does not invoke this
-       function.
      - If this state is a consistent state with a default action, then
        the only way this function was invoked is if the default action
        is an error action.  In that case, don't check for expected
@@ -1287,7 +1165,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                   }
                 yyarg[yycount++] = yytname[yyx];
                 {
-                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULL, yytname[yyx]);
+                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
                   if (! (yysize <= yysize1
                          && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
                     return 2;
@@ -1354,26 +1232,17 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
-/*ARGSUSED*/
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 static void
 yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
-#else
-static void
-yydestruct (yymsg, yytype, yyvaluep)
-    const char *yymsg;
-    int yytype;
-    YYSTYPE *yyvaluep;
-#endif
 {
   YYUSE (yyvaluep);
-
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
+  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   YYUSE (yytype);
+  YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
@@ -1382,18 +1251,8 @@ yydestruct (yymsg, yytype, yyvaluep)
 /* The lookahead symbol.  */
 int yychar;
 
-
-#ifndef YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END
-#endif
-#ifndef YY_INITIAL_VALUE
-# define YY_INITIAL_VALUE(Value) /* Nothing. */
-#endif
-
 /* The semantic value of the lookahead symbol.  */
-YYSTYPE yylval YY_INITIAL_VALUE(yyval_default);
-
+YYSTYPE yylval;
 /* Number of syntax errors so far.  */
 int yynerrs;
 
@@ -1402,35 +1261,16 @@ int yynerrs;
 | yyparse.  |
 `----------*/
 
-#ifdef YYPARSE_PARAM
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
-int
-yyparse (void *YYPARSE_PARAM)
-#else
-int
-yyparse (YYPARSE_PARAM)
-    void *YYPARSE_PARAM;
-#endif
-#else /* ! YYPARSE_PARAM */
-#if (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
 int
 yyparse (void)
-#else
-int
-yyparse ()
-
-#endif
-#endif
 {
     int yystate;
     /* Number of tokens to shift before error messages enabled.  */
     int yyerrstatus;
 
     /* The stacks and their tools:
-       `yyss': related to states.
-       `yyvs': related to semantic values.
+       'yyss': related to states.
+       'yyvs': related to semantic values.
 
        Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
@@ -1498,23 +1338,23 @@ yyparse ()
 
 #ifdef yyoverflow
       {
-	/* Give user a chance to reallocate the stack.  Use copies of
-	   these so that the &'s don't force the real ones into
-	   memory.  */
-	YYSTYPE *yyvs1 = yyvs;
-	yytype_int16 *yyss1 = yyss;
+        /* Give user a chance to reallocate the stack.  Use copies of
+           these so that the &'s don't force the real ones into
+           memory.  */
+        YYSTYPE *yyvs1 = yyvs;
+        yytype_int16 *yyss1 = yyss;
 
-	/* Each stack pointer address is followed by the size of the
-	   data in use in that stack, in bytes.  This used to be a
-	   conditional around just the two extra args, but that might
-	   be undefined if yyoverflow is a macro.  */
-	yyoverflow (YY_("memory exhausted"),
-		    &yyss1, yysize * sizeof (*yyssp),
-		    &yyvs1, yysize * sizeof (*yyvsp),
-		    &yystacksize);
+        /* Each stack pointer address is followed by the size of the
+           data in use in that stack, in bytes.  This used to be a
+           conditional around just the two extra args, but that might
+           be undefined if yyoverflow is a macro.  */
+        yyoverflow (YY_("memory exhausted"),
+                    &yyss1, yysize * sizeof (*yyssp),
+                    &yyvs1, yysize * sizeof (*yyvsp),
+                    &yystacksize);
 
-	yyss = yyss1;
-	yyvs = yyvs1;
+        yyss = yyss1;
+        yyvs = yyvs1;
       }
 #else /* no yyoverflow */
 # ifndef YYSTACK_RELOCATE
@@ -1522,22 +1362,22 @@ yyparse ()
 # else
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
-	goto yyexhaustedlab;
+        goto yyexhaustedlab;
       yystacksize *= 2;
       if (YYMAXDEPTH < yystacksize)
-	yystacksize = YYMAXDEPTH;
+        yystacksize = YYMAXDEPTH;
 
       {
-	yytype_int16 *yyss1 = yyss;
-	union yyalloc *yyptr =
-	  (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
-	if (! yyptr)
-	  goto yyexhaustedlab;
-	YYSTACK_RELOCATE (yyss_alloc, yyss);
-	YYSTACK_RELOCATE (yyvs_alloc, yyvs);
+        yytype_int16 *yyss1 = yyss;
+        union yyalloc *yyptr =
+          (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
+        if (! yyptr)
+          goto yyexhaustedlab;
+        YYSTACK_RELOCATE (yyss_alloc, yyss);
+        YYSTACK_RELOCATE (yyvs_alloc, yyvs);
 #  undef YYSTACK_RELOCATE
-	if (yyss1 != yyssa)
-	  YYSTACK_FREE (yyss1);
+        if (yyss1 != yyssa)
+          YYSTACK_FREE (yyss1);
       }
 # endif
 #endif /* no yyoverflow */
@@ -1546,10 +1386,10 @@ yyparse ()
       yyvsp = yyvs + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-		  (unsigned long int) yystacksize));
+                  (unsigned long int) yystacksize));
 
       if (yyss + yystacksize - 1 <= yyssp)
-	YYABORT;
+        YYABORT;
     }
 
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
@@ -1578,7 +1418,7 @@ yybackup:
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token: "));
-      yychar = YYLEX;
+      yychar = yylex ();
     }
 
   if (yychar <= YYEOF)
@@ -1643,7 +1483,7 @@ yyreduce:
   yylen = yyr2[yyn];
 
   /* If YYLEN is nonzero, implement the default value of the action:
-     `$$ = $1'.
+     '$$ = $1'.
 
      Otherwise, the following line sets YYVAL to garbage.
      This behavior is undocumented and Bison
@@ -1657,8 +1497,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-/* Line 1787 of yacc.c  */
-#line 161 "Ccfg.ypp"
+#line 166 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.integer) = global_code.size();
 #ifdef debug
@@ -1666,11 +1505,11 @@ cout << "Marker if :" << (yyval.integer) << endl;
 #endif
 
 			}
+#line 1509 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 3:
-/* Line 1787 of yacc.c  */
-#line 169 "Ccfg.ypp"
+#line 174 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = new attr();
 				(yyval.attributes)->nextlist = ((compiler *)c)->makelist(global_code.size());
@@ -1679,11 +1518,11 @@ cout << "Marker if :" << (yyval.integer) << endl;
 
 				global_code.push_back(temp);
 			}
+#line 1522 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 4:
-/* Line 1787 of yacc.c  */
-#line 178 "Ccfg.ypp"
+#line 183 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.integer) = global_code.size();
 				code_element temp;
@@ -1691,112 +1530,102 @@ cout << "Marker if :" << (yyval.integer) << endl;
 
 				global_code.push_back(temp);
 }
+#line 1534 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 5:
-/* Line 1787 of yacc.c  */
-#line 186 "Ccfg.ypp"
+#line 191 "Ccfg.ypp" /* yacc.c:1661  */
     {;}
+#line 1540 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 6:
-/* Line 1787 of yacc.c  */
-#line 189 "Ccfg.ypp"
+#line 194 "Ccfg.ypp" /* yacc.c:1661  */
     {
-				((compiler *)c)->backpatch((yyvsp[(1) - (1)].attributes)->nextlist,global_code.size());
+				((compiler *)c)->backpatch((yyvsp[0].attributes)->nextlist,global_code.size());
 			}
+#line 1548 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 7:
-/* Line 1787 of yacc.c  */
-#line 193 "Ccfg.ypp"
+#line 198 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = new attr();
-						(yyval.attributes)->nextlist = (yyvsp[(3) - (3)].attributes)->nextlist;
-						((compiler *)c)->backpatch((yyvsp[(1) - (3)].attributes)->nextlist,(yyvsp[(2) - (3)].integer));
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						(yyval.attributes)->nextlist = (yyvsp[0].attributes)->nextlist;
+						((compiler *)c)->backpatch((yyvsp[-2].attributes)->nextlist,(yyvsp[-1].integer));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 						}
+#line 1559 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 8:
-/* Line 1787 of yacc.c  */
-#line 199 "Ccfg.ypp"
+#line 204 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = (attr*)malloc(sizeof(attr));
-				(yyval.attributes)->nextlist = (yyvsp[(1) - (1)].attributes)->nextlist;
-			 	free((yyvsp[(1) - (1)].attributes));
+				(yyval.attributes)->nextlist = (yyvsp[0].attributes)->nextlist;
+			 	free((yyvsp[0].attributes));
 			}
+#line 1569 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 9:
-/* Line 1787 of yacc.c  */
-#line 205 "Ccfg.ypp"
-    {(yyval.attributes) = new attr();
-							if(current_symbol_table->table.find(string( (yyvsp[(2) - (3)].attributes)->var_name[0])) != current_symbol_table->table.end())
+#line 210 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+							(yyval.attributes) = new attr();
+							if(current_symbol_table->table.find(string( (yyvsp[-1].attributes)->var_name[0])) != current_symbol_table->table.end())
 								yyerror("error: redeclaration \n");
-							else{
-							(yyvsp[(2) - (3)].attributes)->my_type = (yyvsp[(1) - (3)].attributes)->my_type;
-							(yyvsp[(2) - (3)].attributes)->dimension[0]= (yyvsp[(1) - (3)].attributes)->dimension[0];
+							else
+							{
+								(yyvsp[-1].attributes)->my_type = (yyvsp[-2].attributes)->my_type;
+								(yyvsp[-1].attributes)->dimension[0]= (yyvsp[-2].attributes)->dimension[0];
 							} 
 							
 
-							free((yyvsp[(1) - (3)].attributes));
-							free((yyvsp[(2) - (3)].attributes));
+							free((yyvsp[-2].attributes));
+							free((yyvsp[-1].attributes));
 							}
+#line 1588 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 10:
-/* Line 1787 of yacc.c  */
-#line 217 "Ccfg.ypp"
+#line 224 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = new attr();
 
-								free((yyvsp[(2) - (4)].attributes));}
+								free((yyvsp[-2].attributes));}
+#line 1596 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 11:
-/* Line 1787 of yacc.c  */
-#line 220 "Ccfg.ypp"
+#line 229 "Ccfg.ypp" /* yacc.c:1661  */
     {
-								(yyval.attributes) = new attr();
-								if ((yyvsp[(1) - (3)].attributes)->my_type == (yyvsp[(3) - (3)].attributes)->my_type)
-								{
-									if ((yyvsp[(1) - (3)].attributes)->dimension[0] == (yyvsp[(3) - (3)].attributes)->dimension[0])
-									{	/* Everything is fine. Enter in symbol table */
-										struct llm temp;
+		struct llm temp;
 
-										temp.my_type= (yyvsp[(1) - (3)].attributes)->my_type; 
-										temp.dimension = (yyvsp[(1) - (3)].attributes)->dimension[0];
-										current_symbol_table->table[string((yyvsp[(2) - (3)].attributes)->var_name[0])]=(temp);									}
-									else
-									{
-										yyerror("Dimension Mismatch\n");
-									}
-								}
-								else yyerror("Type mismatch: Return type doesn't match declared type\n");
+		temp.my_type= (yyvsp[-1].attributes)->my_type; 
+		temp.dimension = (yyvsp[-1].attributes)->dimension[0];
+		int total = temp.paramlist.total = (yyvsp[0].lexemeNparamlist)->my_params.total;
 
-								(yyval.attributes)->nextlist = (yyvsp[(3) - (3)].attributes)->nextlist;
+		for (int i=0;i<total;i++)
+		{
+			temp.paramlist.dimension[i] = (yyvsp[0].lexemeNparamlist)->my_params.dimension[i];
+			temp.paramlist.my_type[i] = (yyvsp[0].lexemeNparamlist)->my_params.my_type[i];
+			temp.paramlist.my_args[i] = (yyvsp[0].lexemeNparamlist)->my_params.my_args[i];
 
-								//printf("type is %d. block is %d\n",$1->my_type,$3->my_type);
-								free((yyvsp[(1) - (3)].attributes));
-								free((yyvsp[(2) - (3)].attributes));
-								free((yyvsp[(3) - (3)].attributes));
-								}
+		}
+
+		current_symbol_table->table[(yyvsp[0].lexemeNparamlist)->lexeme]=(temp);
+	}
+#line 1618 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 12:
-/* Line 1787 of yacc.c  */
-#line 245 "Ccfg.ypp"
+#line 247 "Ccfg.ypp" /* yacc.c:1661  */
     {
 								(yyval.attributes) = new attr();
-								if ((yyvsp[(1) - (3)].attributes)->my_type == (yyvsp[(3) - (3)].attributes)->my_type)
+								if ((yyvsp[-3].attributes)->my_type == (yyvsp[0].attributes)->my_type)
 								{
-									if ((yyvsp[(1) - (3)].attributes)->dimension[0] == (yyvsp[(3) - (3)].attributes)->dimension[0])
+									if ((yyvsp[-3].attributes)->dimension[0] == (yyvsp[0].attributes)->dimension[0])
 									{	/* Everything is fine. Enter in symbol table */
-										struct llm temp;
-
-										temp.my_type= (yyvsp[(1) - (3)].attributes)->my_type; 
-										temp.dimension = (yyvsp[(1) - (3)].attributes)->dimension[0];
-										current_symbol_table->table[string((yyvsp[(2) - (3)].attributes)->var_name[0])]=(temp);									}
+									}
 									else
 									{
 										yyerror("Dimension Mismatch\n");
@@ -1804,167 +1633,254 @@ cout << "Marker if :" << (yyval.integer) << endl;
 								}
 								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
-								(yyval.attributes)->nextlist = (yyvsp[(3) - (3)].attributes)->nextlist;
+								(yyval.attributes)->nextlist = (yyvsp[0].attributes)->nextlist;
 
-
-								free((yyvsp[(1) - (3)].attributes));
-								free((yyvsp[(2) - (3)].attributes));
-								free((yyvsp[(3) - (3)].attributes));
+								//printf("type is %d. block is %d\n",$1->my_type,$3->my_type);
+								free((yyvsp[-3].attributes));
+								free((yyvsp[-2].lexemeNparamlist));
+								free((yyvsp[0].attributes));
 								}
+#line 1644 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 13:
-/* Line 1787 of yacc.c  */
-#line 270 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));
-								free((yyvsp[(3) - (4)].attributes));
-								}
+#line 269 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+		struct llm temp;
+
+		temp.my_type= (yyvsp[-1].attributes)->my_type; 
+		temp.dimension = (yyvsp[-1].attributes)->dimension[0];
+		int total = temp.paramlist.total = (yyvsp[0].lexemeNparamlist)->my_params.total;
+
+		for (int i=0;i<total;i++)
+		{
+			temp.paramlist.dimension[i] = (yyvsp[0].lexemeNparamlist)->my_params.dimension[i];
+			temp.paramlist.my_type[i] = (yyvsp[0].lexemeNparamlist)->my_params.my_type[i];
+			temp.paramlist.my_args[i] = (yyvsp[0].lexemeNparamlist)->my_params.my_args[i];
+
+		}
+
+		current_symbol_table->table[(yyvsp[0].lexemeNparamlist)->lexeme]=(temp);
+	}
+#line 1666 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 14:
-/* Line 1787 of yacc.c  */
-#line 273 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)	malloc(sizeof(attr));}
+#line 287 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+								(yyval.attributes) = new attr();
+								if ((yyvsp[-3].attributes)->my_type == (yyvsp[0].attributes)->my_type)
+								{
+									if ((yyvsp[-3].attributes)->dimension[0] == (yyvsp[0].attributes)->dimension[0])
+									{	/* Everything is fine. Enter in symbol table */
+									}
+									else
+									{
+										yyerror("Dimension Mismatch\n");
+									}
+								}
+								else yyerror("Type mismatch: Return type doesn't match declared type\n");
+
+								(yyval.attributes)->nextlist = (yyvsp[0].attributes)->nextlist;
+
+
+								free((yyvsp[-3].attributes));
+								free((yyvsp[-2].lexemeNparamlist));
+								free((yyvsp[0].attributes));
+								}
+#line 1692 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 15:
-/* Line 1787 of yacc.c  */
-#line 276 "Ccfg.ypp"
-    {
-								(yyval.attributes) = (attr*)malloc(sizeof(attr));
-								(yyval.attributes)->my_type = (yyvsp[(1) - (2)].attributes)->my_type;
-								(yyval.attributes)->dimension[0] = (yyvsp[(1) - (2)].attributes)->dimension[0]+1;
-								free((yyvsp[(1) - (2)].attributes));
+#line 308 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));
+								free((yyvsp[-1].attributes));
 								}
+#line 1700 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 16:
-/* Line 1787 of yacc.c  */
-#line 282 "Ccfg.ypp"
-    {
-				(yyval.attributes) = (attr*)malloc(sizeof(attr)); 
-				(yyval.attributes)->my_type=(yyvsp[(1) - (1)].attributes)->my_type; 
-				(yyval.attributes)->dimension[0] = (yyvsp[(1) - (1)].attributes)->dimension[0];
-				free((yyvsp[(1) - (1)].attributes));
-				}
+#line 311 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)	malloc(sizeof(attr));}
+#line 1706 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 17:
-/* Line 1787 of yacc.c  */
-#line 289 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Long_long; (yyval.attributes)->dimension[0] = 0; }
+#line 314 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+								(yyval.attributes) = (attr*)malloc(sizeof(attr));
+								(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type;
+								(yyval.attributes)->dimension[0] = (yyvsp[-1].attributes)->dimension[0]+1;
+								free((yyvsp[-1].attributes));
+								}
+#line 1717 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 18:
-/* Line 1787 of yacc.c  */
-#line 290 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Int; (yyval.attributes)->dimension[0] = 0; }
+#line 320 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+				(yyval.attributes) = (attr*)malloc(sizeof(attr)); 
+				(yyval.attributes)->my_type=(yyvsp[0].attributes)->my_type; 
+				(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];
+				free((yyvsp[0].attributes));
+				}
+#line 1728 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 19:
-/* Line 1787 of yacc.c  */
-#line 291 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Char; (yyval.attributes)->dimension[0] = 0; }
+#line 327 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Long_long; (yyval.attributes)->dimension[0] = 0; }
+#line 1734 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 20:
-/* Line 1787 of yacc.c  */
-#line 292 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Float; (yyval.attributes)->dimension[0] = 0; }
+#line 328 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Int; (yyval.attributes)->dimension[0] = 0; }
+#line 1740 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 21:
-/* Line 1787 of yacc.c  */
-#line 293 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Double; (yyval.attributes)->dimension[0] = 0; }
+#line 329 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Char; (yyval.attributes)->dimension[0] = 0; }
+#line 1746 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 22:
-/* Line 1787 of yacc.c  */
-#line 294 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Bool; (yyval.attributes)->dimension[0] = 0; }
+#line 330 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Float; (yyval.attributes)->dimension[0] = 0; }
+#line 1752 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 23:
-/* Line 1787 of yacc.c  */
-#line 296 "Ccfg.ypp"
-    {
-				(yyval.attributes) = (attr*)malloc(sizeof(attr));
-				(yyval.attributes)->my_type = (yyvsp[(1) - (2)].attributes)->my_type;
-				(yyval.attributes)->dimension[0] = (yyvsp[(1) - (2)].attributes)->dimension[0]+1;
-				free((yyvsp[(1) - (2)].attributes));
-				}
+#line 331 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Double; (yyval.attributes)->dimension[0] = 0; }
+#line 1758 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 24:
-/* Line 1787 of yacc.c  */
-#line 302 "Ccfg.ypp"
+#line 332 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));(yyval.attributes)->my_type=Bool; (yyval.attributes)->dimension[0] = 0; }
+#line 1764 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 25:
+#line 334 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+				(yyval.attributes) = (attr*)malloc(sizeof(attr));
+				(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type;
+				(yyval.attributes)->dimension[0] = (yyvsp[-1].attributes)->dimension[0]+1;
+				free((yyvsp[-1].attributes));
+				}
+#line 1775 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 26:
+#line 340 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = (attr*)malloc(sizeof(attr));
 				(yyval.attributes)->my_type = Void;
 				(yyval.attributes)->dimension[0] = 0;
 				}
-    break;
-
-  case 25:
-/* Line 1787 of yacc.c  */
-#line 308 "Ccfg.ypp"
-    {
-						(yyval.attributes) = (attr*)malloc(sizeof(attr));
-						strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (4)].lexeme));
-						 free((yyvsp[(3) - (4)].attributes));
-						}
-    break;
-
-  case 26:
-/* Line 1787 of yacc.c  */
-#line 313 "Ccfg.ypp"
-    {
-							(yyval.attributes) = (attr*)malloc(sizeof(attr));
-							strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (3)].lexeme));
-
-							}
+#line 1785 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 27:
-/* Line 1787 of yacc.c  */
-#line 318 "Ccfg.ypp"
+#line 346 "Ccfg.ypp" /* yacc.c:1661  */
     {
-							(yyval.attributes) = (attr*)malloc(sizeof(attr));
-							if (!maindef)
-								maindef = 1;
-							else yyerror("Conflicting declaration of function main");
-							 free((yyvsp[(3) - (4)].attributes));
-							}
+						(yyval.lexemeNparamlist) = new lexemeNparam();
+						(yyval.lexemeNparamlist)->lexeme = string((yyvsp[-3].lexeme));
+						int total = (yyval.lexemeNparamlist)->my_params.total = (yyvsp[-1].paramlist)->total;
+
+						for (int i=0;i<total;i++)
+						{
+							(yyval.lexemeNparamlist)->my_params.dimension[i] = (yyvsp[-1].paramlist)->dimension[i];
+							(yyval.lexemeNparamlist)->my_params.my_type[i] = (yyvsp[-1].paramlist)->my_type[i];
+							(yyval.lexemeNparamlist)->my_params.my_args[i] = (yyvsp[-1].paramlist)->my_args[i];
+
+						}
+
+						free((yyvsp[-1].paramlist));
+						}
+#line 1805 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 28:
-/* Line 1787 of yacc.c  */
-#line 325 "Ccfg.ypp"
+#line 361 "Ccfg.ypp" /* yacc.c:1661  */
     {
-							(yyval.attributes) = (attr*)malloc(sizeof(attr));
+							(yyval.lexemeNparamlist) = new lexemeNparam();
+							(yyval.lexemeNparamlist)->lexeme = string((yyvsp[-2].lexeme));
+							(yyval.lexemeNparamlist)->my_params.total = 0;
+
+							}
+#line 1816 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 29:
+#line 368 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+							(yyval.lexemeNparamlist) = new lexemeNparam();
+							(yyval.lexemeNparamlist)->lexeme = "main";
+							if (!maindef)
+								maindef = 1;
+							else yyerror("Conflicting declaration of function main");
+							 free((yyvsp[-1].paramlist));
+							}
+#line 1829 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 30:
+#line 376 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+							(yyval.lexemeNparamlist) = new lexemeNparam();
+							(yyval.lexemeNparamlist)->lexeme = "main";
 							if (!maindef)
 								maindef = 1;
 							else yyerror("Conflicting declaration of function main");
 
 							}
-    break;
-
-  case 29:
-/* Line 1787 of yacc.c  */
-#line 333 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));   free((yyvsp[(1) - (4)].attributes)); free((yyvsp[(2) - (4)].attributes));}
-    break;
-
-  case 30:
-/* Line 1787 of yacc.c  */
-#line 334 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));   free((yyvsp[(1) - (2)].attributes)); free((yyvsp[(2) - (2)].attributes));}
+#line 1842 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 31:
-/* Line 1787 of yacc.c  */
-#line 336 "Ccfg.ypp"
+#line 385 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+									(yyval.paramlist) = new funcparams();
+
+									for (int i=0;i < (yyvsp[-3].paramlist)->total;i++)
+									{
+										(yyval.paramlist)->my_args[i] = (yyvsp[-3].paramlist)->my_args[i];
+										(yyval.paramlist) -> my_type[i]  =    (yyvsp[-3].paramlist)-> my_type[i];
+										(yyval.paramlist)->dimension[i] = (yyvsp[-3].paramlist)->dimension[i];
+									}
+									int total = (yyval.paramlist)->total = (yyvsp[-3].paramlist)->total+1;
+									total--;
+									(yyval.paramlist)->my_args[total] = (yyvsp[0].attributes)->place;
+									(yyval.paramlist)->my_type[total] = (yyvsp[-1].attributes)->my_type;
+									(yyval.paramlist)->dimension[total] = (yyvsp[-1].attributes)->dimension[0] + (yyvsp[0].attributes)->dimension[0];
+									free((yyvsp[-3].paramlist)); 
+									free((yyvsp[-1].attributes));
+									delete (yyvsp[0].attributes);
+								}
+#line 1865 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 32:
+#line 403 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+							(yyval.paramlist) = new funcparams();
+							int total = 0;
+							(yyval.paramlist)->my_args[total] = (yyvsp[0].attributes)->place;
+							(yyval.paramlist)->my_type[total] = (yyvsp[-1].attributes)->my_type;
+							(yyval.paramlist)->dimension[total] = (yyvsp[-1].attributes)->dimension[0] + (yyvsp[0].attributes)->dimension[0];
+							(yyval.paramlist)->total = 1;
+							free((yyvsp[-1].attributes)); 
+							free((yyvsp[0].attributes));
+							}
+#line 1880 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 33:
+#line 414 "Ccfg.ypp" /* yacc.c:1661  */
     { 
 					(yyval.attributes) = new attr();
 
@@ -1978,11 +1894,11 @@ cout << "Marker if :" << (yyval.integer) << endl;
 				  current_symbol_table = temp;
 				 
 		 }
+#line 1898 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 32:
-/* Line 1787 of yacc.c  */
-#line 350 "Ccfg.ypp"
+  case 34:
+#line 428 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = new attr();
 
@@ -1993,35 +1909,35 @@ cout << "Marker if :" << (yyval.integer) << endl;
 				  current_symbol_table = temp->parent;
 				  delete temp;
 		 }
+#line 1913 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 33:
-/* Line 1787 of yacc.c  */
-#line 361 "Ccfg.ypp"
+  case 35:
+#line 439 "Ccfg.ypp" /* yacc.c:1661  */
     {	
 									#ifdef debug
 						 				cout << "block -> brac_open M brac_close \n";
 						 			#endif
 									(yyval.attributes) = (attr*)malloc(sizeof(attr)); 
-									(yyval.attributes)->my_type = (yyvsp[(2) - (3)].attributes)->my_type;
-									(yyval.attributes)->dimension[0] = (yyvsp[(2) - (3)].attributes)->dimension[0];
+									(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type;
+									(yyval.attributes)->dimension[0] = (yyvsp[-1].attributes)->dimension[0];
 
-									(yyval.attributes)->nextlist = (yyvsp[(2) - (3)].attributes)->nextlist;
+									(yyval.attributes)->nextlist = (yyvsp[-1].attributes)->nextlist;
 
-									free((yyvsp[(2) - (3)].attributes));
+									free((yyvsp[-1].attributes));
 									}
+#line 1930 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 34:
-/* Line 1787 of yacc.c  */
-#line 374 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); free((yyvsp[(1) - (1)].attributes));
+  case 36:
+#line 452 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); free((yyvsp[0].attributes));
 }
+#line 1937 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 35:
-/* Line 1787 of yacc.c  */
-#line 379 "Ccfg.ypp"
+  case 37:
+#line 457 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = (attr*)malloc(sizeof(attr));
 				#ifdef debug
@@ -2039,93 +1955,148 @@ cout << "Marker if :" << (yyval.integer) << endl;
 				}
 				if ($$->my_type!=$2->my_type) yyerror("Different return types for same function\n");
 */				
-				((compiler *)c)->backpatch((yyvsp[(1) - (3)].attributes)->nextlist,(yyvsp[(2) - (3)].integer));
-				(yyval.attributes)->nextlist = (yyvsp[(3) - (3)].attributes)->nextlist;
-				free((yyvsp[(1) - (3)].attributes));
-				free((yyvsp[(3) - (3)].attributes));
+				((compiler *)c)->backpatch((yyvsp[-2].attributes)->nextlist,(yyvsp[-1].integer));
+				(yyval.attributes)->nextlist = (yyvsp[0].attributes)->nextlist;
+				free((yyvsp[-2].attributes));
+				free((yyvsp[0].attributes));
 			}
+#line 1964 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 36:
-/* Line 1787 of yacc.c  */
-#line 401 "Ccfg.ypp"
+  case 38:
+#line 479 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				#ifdef debug
 						cout << "M -> S\n";
 				#endif
 				(yyval.attributes) = (attr*)malloc(sizeof(attr));
-				(yyval.attributes)->my_type = (yyvsp[(1) - (1)].attributes)->my_type;
-				(yyval.attributes)->dimension[0] = (yyvsp[(1) - (1)].attributes)->dimension[0];	
+				(yyval.attributes)->my_type = (yyvsp[0].attributes)->my_type;
+				(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];	
 
-				(yyval.attributes)->nextlist = (yyvsp[(1) - (1)].attributes)->nextlist;
+				(yyval.attributes)->nextlist = (yyvsp[0].attributes)->nextlist;
 
-				free((yyvsp[(1) - (1)].attributes));
+				free((yyvsp[0].attributes));
 				}
+#line 1981 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 37:
-/* Line 1787 of yacc.c  */
-#line 415 "Ccfg.ypp"
+  case 39:
+#line 493 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				#ifdef debug
 						cout << "S -> S1\n";
 				#endif
-				(yyval.attributes) = (attr*)malloc(sizeof(attr));
-				(yyval.attributes)->my_type = (yyvsp[(1) - (2)].attributes)->my_type;
-				(yyval.attributes)->dimension[0] = (yyvsp[(1) - (2)].attributes)->dimension[0];
+				(yyval.attributes) = new attr();
+				if ((yyvsp[-1].attributes)->isreturn)
+					(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type;
+				else (yyval.attributes)->my_type = Useless;
+				(yyval.attributes)->dimension[0] = (yyvsp[-1].attributes)->dimension[0];
 
-				(yyval.attributes)->nextlist = (yyvsp[(1) - (2)].attributes)->nextlist;
+				(yyval.attributes)->nextlist = (yyvsp[-1].attributes)->nextlist;
 
-				free((yyvsp[(1) - (2)].attributes));
+				free((yyvsp[-1].attributes));
 			}
+#line 2000 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 38:
-/* Line 1787 of yacc.c  */
-#line 427 "Ccfg.ypp"
+  case 40:
+#line 507 "Ccfg.ypp" /* yacc.c:1661  */
     {
 					#ifdef debug
 							cout << "S -> block_stmt\n";
 					#endif
-					(yyval.attributes) = (attr*)malloc(sizeof(attr));
-					(yyval.attributes)->my_type = (yyvsp[(1) - (1)].attributes)->my_type;
-					(yyval.attributes)->nextlist = (yyvsp[(1) - (1)].attributes)->nextlist;
-					(yyval.attributes)->dimension[0] = (yyvsp[(1) - (1)].attributes)->dimension[0];
-					free((yyvsp[(1) - (1)].attributes));
+					(yyval.attributes) = new attr();
+					if ((yyvsp[0].attributes)->isreturn)
+						(yyval.attributes)->my_type = (yyvsp[0].attributes)->my_type;
+					else (yyval.attributes)->my_type = Useless;
+					(yyval.attributes)->nextlist = (yyvsp[0].attributes)->nextlist;
+					(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];
+					free((yyvsp[0].attributes));
 					}
-    break;
-
-  case 39:
-/* Line 1787 of yacc.c  */
-#line 440 "Ccfg.ypp"
-    {
-					(yyval.attributes) = new attr(); 
-					(yyval.attributes)->my_type = (yyvsp[(4) - (4)].attributes)->my_type; 
-					((compiler *)c)->backpatch((yyvsp[(1) - (4)].attributes)->truelist,(yyvsp[(3) - (4)].integer));
-					((compiler *)c)->backpatch((yyvsp[(1) - (4)].attributes)->falselist,(yyvsp[(3) - (4)].integer));
-					(yyval.attributes)->truelist = (yyvsp[(4) - (4)].attributes)->truelist;
-					(yyval.attributes)->falselist = (yyvsp[(4) - (4)].attributes)->falselist;
-
-					free((yyvsp[(1) - (4)].attributes));
-					free((yyvsp[(4) - (4)].attributes));
-				}
-    break;
-
-  case 40:
-/* Line 1787 of yacc.c  */
-#line 452 "Ccfg.ypp"
-    {
-				(yyval.attributes) = new attr(); 
-				(yyval.attributes)->my_type = Bool; 
-				(yyval.attributes)->truelist = (yyvsp[(1) - (1)].attributes)->truelist; 
-				(yyval.attributes)->falselist = (yyvsp[(1) - (1)].attributes)->falselist; 
-				free((yyvsp[(1) - (1)].attributes));
-			}
+#line 2017 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 41:
-/* Line 1787 of yacc.c  */
-#line 459 "Ccfg.ypp"
+#line 519 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+				(yyval.attributes) = new attr();
+	}
+#line 2025 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 42:
+#line 524 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+				(yyval.paramlist) = new funcparams();
+				for (int i=0;i < (yyvsp[-2].paramlist)->total;i++)
+				{
+					(yyval.paramlist)->my_args[i] = (yyvsp[-2].paramlist)->my_args[i];
+					(yyval.paramlist) -> my_type[i]  =    (yyvsp[-2].paramlist)-> my_type[i];
+					(yyval.paramlist)->dimension[i] = (yyvsp[-2].paramlist)->dimension[i];
+				}
+				int total = (yyval.paramlist)->total = (yyvsp[-2].paramlist)->total+1;
+				total--;
+				(yyval.paramlist)->my_args[total] = (yyvsp[0].attributes)->place;
+				(yyval.paramlist)->my_type[total] = (yyvsp[0].attributes)->my_type;
+				(yyval.paramlist)->dimension[total] = (yyvsp[0].attributes)->dimension[0];
+				delete (yyvsp[-2].paramlist);
+				delete (yyvsp[0].attributes);
+	}
+#line 2046 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 43:
+#line 541 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+				(yyval.paramlist) = new funcparams();
+				int total = 0;
+				(yyval.paramlist)->my_args[total] = (yyvsp[0].attributes)->place;
+				(yyval.paramlist)->my_type[total] = (yyvsp[0].attributes)->my_type;
+				(yyval.paramlist)->dimension[total] = (yyvsp[0].attributes)->dimension[0];
+				(yyval.paramlist)->total = 1;
+				delete (yyvsp[0].attributes);
+	}
+#line 2060 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 44:
+#line 551 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+				(yyval.paramlist) = new funcparams();
+	}
+#line 2068 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 45:
+#line 556 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+					(yyval.attributes) = new attr(); 
+					(yyval.attributes)->my_type = (yyvsp[0].attributes)->my_type; 
+					((compiler *)c)->backpatch((yyvsp[-3].attributes)->truelist,(yyvsp[-1].integer));
+					((compiler *)c)->backpatch((yyvsp[-3].attributes)->falselist,(yyvsp[-1].integer));
+					(yyval.attributes)->truelist = (yyvsp[0].attributes)->truelist;
+					(yyval.attributes)->falselist = (yyvsp[0].attributes)->falselist;
+
+					free((yyvsp[-3].attributes));
+					free((yyvsp[0].attributes));
+				}
+#line 2084 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 46:
+#line 568 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+				(yyval.attributes) = new attr(); 
+				(yyval.attributes)->my_type = Bool; 
+				(yyval.attributes)->truelist = (yyvsp[0].attributes)->truelist; 
+				(yyval.attributes)->falselist = (yyvsp[0].attributes)->falselist; 
+				free((yyvsp[0].attributes));
+			}
+#line 2096 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 47:
+#line 575 "Ccfg.ypp" /* yacc.c:1661  */
     {
 			#ifdef debug
 						 cout << "S1 -> type init\n";
@@ -2133,237 +2104,241 @@ cout << "Marker if :" << (yyval.integer) << endl;
 			(yyval.attributes) = (attr*)malloc(sizeof(attr));
 			struct llm temp;
 
-			temp.my_type= (yyvsp[(1) - (2)].attributes)->my_type; 
-			for(int i=0;i<(yyvsp[(2) - (2)].attributes)->index;i++) {
+			temp.my_type= (yyvsp[-1].attributes)->my_type; 
+			for(int i=0;i<(yyvsp[0].attributes)->index;i++) {
 				/* checking if variable is already declared */
 
-						if(current_symbol_table->table.find(string( (yyvsp[(2) - (2)].attributes)->var_name[i])) != current_symbol_table->table.end())
+						if(current_symbol_table->table.find(string( (yyvsp[0].attributes)->var_name[i])) != current_symbol_table->table.end())
 							yyerror("error: redeclaration \n");
 					
 				/*   ------------------------------------ */
 						else {
-							temp.dimension = (yyvsp[(2) - (2)].attributes)->dimension[i];
-							current_symbol_table->table[string((yyvsp[(2) - (2)].attributes)->var_name[i])]=(temp);
+							temp.dimension = (yyvsp[0].attributes)->dimension[i];
+							int j = check_keyword(string((yyvsp[0].attributes)->var_name[i])); // 1 if error
+							if(j==1)
+								yyerror("error: variable name cannot be a keyword \n");
+							else if(j==0)
+								current_symbol_table->table[string((yyvsp[0].attributes)->var_name[i])]=(temp);
 						}
 
 			}
 #ifdef debug
 			printf("Variables declared \n"); 
-				for(int i=0;i<(yyvsp[(2) - (2)].attributes)->index;i++) {
-					printf("%s %d\n",(yyvsp[(2) - (2)].attributes)->var_name[i],(yyvsp[(2) - (2)].attributes)->dimension[i]);
+				for(int i=0;i<(yyvsp[0].attributes)->index;i++) {
+					printf("%s %d\n",(yyvsp[0].attributes)->var_name[i],(yyvsp[0].attributes)->dimension[i]);
 				}
 			#endif
 				(yyval.attributes)->my_type = Useless;
-				free((yyvsp[(1) - (2)].attributes));
-				free((yyvsp[(2) - (2)].attributes));
+				free((yyvsp[-1].attributes));
+				free((yyvsp[0].attributes));
 	}
+#line 2136 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 42:
-/* Line 1787 of yacc.c  */
-#line 490 "Ccfg.ypp"
+  case 48:
+#line 610 "Ccfg.ypp" /* yacc.c:1661  */
     {
 								(yyval.attributes) = (attr*)malloc(sizeof(attr));
 
-								(yyval.attributes)->my_type = (yyvsp[(2) - (2)].attributes)->my_type;
-								(yyval.attributes)->dimension[0] = (yyvsp[(2) - (2)].attributes)->dimension[0];
-								free((yyvsp[(2) - (2)].attributes));
+								(yyval.attributes)->my_type = (yyvsp[0].attributes)->my_type;
+								(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];
+								free((yyvsp[0].attributes));
 								}
+#line 2148 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 43:
-/* Line 1787 of yacc.c  */
-#line 497 "Ccfg.ypp"
+  case 49:
+#line 617 "Ccfg.ypp" /* yacc.c:1661  */
     {
 								(yyval.attributes) = (attr*)malloc(sizeof(attr));
 								(yyval.attributes)->my_type = Void;
 								(yyval.attributes)->dimension[0] = 0;
 						
 								}
+#line 2159 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 44:
-/* Line 1787 of yacc.c  */
-#line 506 "Ccfg.ypp"
+  case 50:
+#line 626 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						 		#ifdef debug
 						 				cout << "init -> assign_stmt ',' init\n";
 						 		#endif
 						 		(yyval.attributes) = (attr*)malloc(sizeof(attr));
-								strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (3)].attributes)->var_name[0]);
-								(yyval.attributes)->dimension[0] = (yyvsp[(1) - (3)].attributes)->dimension[0];
+								strcpy((yyval.attributes)->var_name[0],(yyvsp[-2].attributes)->var_name[0]);
+								(yyval.attributes)->dimension[0] = (yyvsp[-2].attributes)->dimension[0];
 								(yyval.attributes)->index = 1;
-								for(int i=0; i<(yyvsp[(3) - (3)].attributes)->index; i++) {
-									(yyval.attributes)->dimension[(yyval.attributes)->index] = (yyvsp[(3) - (3)].attributes)->dimension[i];
-									strcpy((yyval.attributes)->var_name[(yyval.attributes)->index],(yyvsp[(3) - (3)].attributes)->var_name[i]);
+								for(int i=0; i<(yyvsp[0].attributes)->index; i++) {
+									(yyval.attributes)->dimension[(yyval.attributes)->index] = (yyvsp[0].attributes)->dimension[i];
+									strcpy((yyval.attributes)->var_name[(yyval.attributes)->index],(yyvsp[0].attributes)->var_name[i]);
 									(yyval.attributes)->index++;
 								}
-								free((yyvsp[(1) - (3)].attributes));
-								free((yyvsp[(3) - (3)].attributes));
+								free((yyvsp[-2].attributes));
+								free((yyvsp[0].attributes));
 						}
+#line 2180 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 45:
-/* Line 1787 of yacc.c  */
-#line 522 "Ccfg.ypp"
+  case 51:
+#line 642 "Ccfg.ypp" /* yacc.c:1661  */
     {
 								(yyval.attributes) = (attr*)malloc(sizeof(attr));
-								strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (3)].attributes)->var_name[0]);
-								(yyval.attributes)->dimension[0] = (yyvsp[(1) - (3)].attributes)->dimension[0];
+								strcpy((yyval.attributes)->var_name[0],(yyvsp[-2].attributes)->var_name[0]);
+								(yyval.attributes)->dimension[0] = (yyvsp[-2].attributes)->dimension[0];
 								(yyval.attributes)->index = 1;
-								for(int i=0; i<(yyvsp[(3) - (3)].attributes)->index; i++) {
-									(yyval.attributes)->dimension[(yyval.attributes)->index] = (yyvsp[(3) - (3)].attributes)->dimension[i];
-									strcpy((yyval.attributes)->var_name[(yyval.attributes)->index],(yyvsp[(3) - (3)].attributes)->var_name[i]);
+								for(int i=0; i<(yyvsp[0].attributes)->index; i++) {
+									(yyval.attributes)->dimension[(yyval.attributes)->index] = (yyvsp[0].attributes)->dimension[i];
+									strcpy((yyval.attributes)->var_name[(yyval.attributes)->index],(yyvsp[0].attributes)->var_name[i]);
 									(yyval.attributes)->index++;
 								}
-								free((yyvsp[(1) - (3)].attributes));
-								free((yyvsp[(3) - (3)].attributes));
+								free((yyvsp[-2].attributes));
+								free((yyvsp[0].attributes));
 							}
+#line 2198 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 46:
-/* Line 1787 of yacc.c  */
-#line 535 "Ccfg.ypp"
+  case 52:
+#line 655 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						#ifdef debug
 						 				cout << "init -> assign_stmt\n";
 						 		#endif
 						(yyval.attributes) = (attr*)malloc(sizeof(attr));
-						strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (1)].attributes)->var_name[0]);
-						(yyval.attributes)->dimension[0] = (yyvsp[(1) - (1)].attributes)->dimension[0];
+						strcpy((yyval.attributes)->var_name[0],(yyvsp[0].attributes)->var_name[0]);
+						(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];
 						(yyval.attributes)->index = 1;
-						free((yyvsp[(1) - (1)].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2213 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 47:
-/* Line 1787 of yacc.c  */
-#line 545 "Ccfg.ypp"
+  case 53:
+#line 665 "Ccfg.ypp" /* yacc.c:1661  */
     {
 					(yyval.attributes) = (attr*)malloc(sizeof(attr));
-					strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (1)].attributes)->var_name[0]);
-					(yyval.attributes)->dimension[0] = (yyvsp[(1) - (1)].attributes)->dimension[0];
+					strcpy((yyval.attributes)->var_name[0],(yyvsp[0].attributes)->var_name[0]);
+					(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];
 					(yyval.attributes)->index = 1;
-					free((yyvsp[(1) - (1)].attributes));
+					free((yyvsp[0].attributes));
 				  }
+#line 2225 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 48:
-/* Line 1787 of yacc.c  */
-#line 554 "Ccfg.ypp"
+  case 54:
+#line 674 "Ccfg.ypp" /* yacc.c:1661  */
     {
 											#ifdef debug
 												cout << "block_expr : T_IF '('expr')' '{'M'}'";
 											#endif
 											(yyval.attributes) = new attr();
-											if ((yyvsp[(3) - (8)].attributes)->my_type != Bool) yyerror("condition is not bool inside if statement");
-											(yyval.attributes)->my_type = (yyvsp[(7) - (8)].attributes)->my_type;
-											(yyval.attributes)->dimension[0]= (yyvsp[(7) - (8)].attributes)->dimension[0];
+											if ((yyvsp[-5].attributes)->my_type != Bool) yyerror("condition is not bool inside if statement");
+											(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type;
+											(yyval.attributes)->dimension[0]= (yyvsp[-1].attributes)->dimension[0];
 
-											((compiler *)c)->backpatch((yyvsp[(3) - (8)].attributes)->truelist, (yyvsp[(6) - (8)].integer));
-											(yyval.attributes)->nextlist = ((compiler *)c)->merge_list((yyvsp[(3) - (8)].attributes)->falselist,(yyvsp[(7) - (8)].attributes)->nextlist);
+											((compiler *)c)->backpatch((yyvsp[-5].attributes)->truelist, (yyvsp[-2].integer));
+											(yyval.attributes)->nextlist = ((compiler *)c)->merge_list((yyvsp[-5].attributes)->falselist,(yyvsp[-1].attributes)->nextlist);
 											
-											delete (yyvsp[(5) - (8)].attributes);
-											delete (yyvsp[(8) - (8)].attributes);
- 											free((yyvsp[(3) - (8)].attributes)); free((yyvsp[(7) - (8)].attributes));
+											delete (yyvsp[-3].attributes);
+											delete (yyvsp[0].attributes);
+ 											free((yyvsp[-5].attributes)); free((yyvsp[-1].attributes));
 }
+#line 2246 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 49:
-/* Line 1787 of yacc.c  */
-#line 571 "Ccfg.ypp"
+  case 55:
+#line 691 "Ccfg.ypp" /* yacc.c:1661  */
     {
 												(yyval.attributes) = new attr();
-												if ((yyvsp[(3) - (14)].attributes)->my_type != Bool) yyerror("Condition is not bool inside if statement\n");										
-												((compiler *)c)->backpatch((yyvsp[(3) - (14)].attributes)->truelist, (yyvsp[(6) - (14)].integer));
-												((compiler *)c)->backpatch((yyvsp[(3) - (14)].attributes)->falselist, (yyvsp[(12) - (14)].integer));
+												if ((yyvsp[-11].attributes)->my_type != Bool) yyerror("Condition is not bool inside if statement\n");										
+												((compiler *)c)->backpatch((yyvsp[-11].attributes)->truelist, (yyvsp[-8].integer));
+												((compiler *)c)->backpatch((yyvsp[-11].attributes)->falselist, (yyvsp[-2].integer));
 												vector <int> temp;
-												temp = ((compiler *)c)->merge_list((yyvsp[(7) - (14)].attributes)->nextlist, (yyvsp[(9) - (14)].attributes)->nextlist);
-												(yyval.attributes)->nextlist = ((compiler *)c)->merge_list(temp, (yyvsp[(13) - (14)].attributes)->nextlist);
-													
-												delete (yyvsp[(5) - (14)].attributes);
-												delete (yyvsp[(8) - (14)].attributes),delete (yyvsp[(11) - (14)].attributes),delete (yyvsp[(14) - (14)].attributes);
-	 											free((yyvsp[(3) - (14)].attributes)); free((yyvsp[(7) - (14)].attributes)); free((yyvsp[(13) - (14)].attributes));
-	 											free((yyvsp[(9) - (14)].attributes));
+												temp = ((compiler *)c)->merge_list((yyvsp[-7].attributes)->nextlist, (yyvsp[-5].attributes)->nextlist);
+												(yyval.attributes)->nextlist = ((compiler *)c)->merge_list(temp, (yyvsp[-1].attributes)->nextlist);
+												
+												delete (yyvsp[-9].attributes);
+												delete (yyvsp[-6].attributes),delete (yyvsp[-3].attributes),delete (yyvsp[0].attributes);
+	 											free((yyvsp[-11].attributes)); free((yyvsp[-7].attributes)); free((yyvsp[-1].attributes));
+	 											free((yyvsp[-5].attributes));
 	 										}
+#line 2265 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 50:
-/* Line 1787 of yacc.c  */
-#line 587 "Ccfg.ypp"
+  case 56:
+#line 707 "Ccfg.ypp" /* yacc.c:1661  */
     {
 											(yyval.attributes) = new attr();
 											
-											if((yyvsp[(6) - (15)].attributes)->my_type != Bool) yyerror("Condition not bool in For statement\n");
+											if((yyvsp[-9].attributes)->my_type != Bool) yyerror("Condition not bool in For statement\n");
 
-											(yyval.attributes)->my_type = (yyvsp[(14) - (15)].attributes)->my_type;
-											(yyval.attributes)->dimension[0]= (yyvsp[(14) - (15)].attributes)->dimension[0];										
+											(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type;
+											(yyval.attributes)->dimension[0]= (yyvsp[-1].attributes)->dimension[0];										
 											
-											(yyval.attributes)->nextlist = (yyvsp[(6) - (15)].attributes)->falselist;
-											((compiler *)c)->backpatch((yyvsp[(14) - (15)].attributes)->nextlist, (yyvsp[(8) - (15)].integer));
-											global_code[(yyvsp[(10) - (15)].integer)].result.int_val = (yyvsp[(5) - (15)].integer);
-											((compiler *)c)->backpatch((yyvsp[(6) - (15)].attributes)->truelist, (yyvsp[(13) - (15)].integer));
+											(yyval.attributes)->nextlist = (yyvsp[-9].attributes)->falselist;
+											((compiler *)c)->backpatch((yyvsp[-1].attributes)->nextlist, (yyvsp[-7].integer));
+											global_code[(yyvsp[-5].integer)].result.int_val = (yyvsp[-10].integer);
+											((compiler *)c)->backpatch((yyvsp[-9].attributes)->truelist, (yyvsp[-2].integer));
 											code_element temp;
 											temp.data1 = Jump;
-											temp.result.int_val = (yyvsp[(8) - (15)].integer);
+											temp.result.int_val = (yyvsp[-7].integer);
 											global_code.push_back(temp);
 
-											free((yyvsp[(3) - (15)].attributes));
-											free((yyvsp[(6) - (15)].attributes));
-											free((yyvsp[(9) - (15)].attributes));
-											free((yyvsp[(12) - (15)].attributes));
-											free((yyvsp[(14) - (15)].attributes));
-											free((yyvsp[(15) - (15)].attributes));
+											free((yyvsp[-12].attributes));
+											free((yyvsp[-9].attributes));
+											free((yyvsp[-6].attributes));
+											free((yyvsp[-3].attributes));
+											free((yyvsp[-1].attributes));
+											free((yyvsp[0].attributes));
 										}
+#line 2294 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 51:
-/* Line 1787 of yacc.c  */
-#line 612 "Ccfg.ypp"
+  case 57:
+#line 732 "Ccfg.ypp" /* yacc.c:1661  */
     {
 									(yyval.attributes) = new attr();
 
-									if((yyvsp[(4) - (9)].attributes)->my_type != Bool) yyerror("Condition not bool in While statement\n");
+									if((yyvsp[-5].attributes)->my_type != Bool) yyerror("Condition not bool in While statement\n");
 									
-									(yyval.attributes)->my_type = (yyvsp[(8) - (9)].attributes)->my_type;
-									(yyval.attributes)->dimension[0]= (yyvsp[(8) - (9)].attributes)->dimension[0];
+									(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type;
+									(yyval.attributes)->dimension[0]= (yyvsp[-1].attributes)->dimension[0];
 
-									((compiler *)c)->backpatch((yyvsp[(8) - (9)].attributes)->nextlist, (yyvsp[(2) - (9)].integer));
-									((compiler *)c)->backpatch((yyvsp[(4) - (9)].attributes)->truelist, (yyvsp[(7) - (9)].integer));
-									(yyval.attributes)->nextlist = (yyvsp[(4) - (9)].attributes)->falselist;
+									((compiler *)c)->backpatch((yyvsp[-1].attributes)->nextlist, (yyvsp[-7].integer));
+									((compiler *)c)->backpatch((yyvsp[-5].attributes)->truelist, (yyvsp[-2].integer));
+									(yyval.attributes)->nextlist = (yyvsp[-5].attributes)->falselist;
 #ifdef debug
-cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
+cout << "Marker if :" << (yyvsp[-2].integer) << endl;
 #endif
 									struct code_element temp;
 									temp.data1 = Jump;
-									temp.result.int_val = (yyvsp[(2) - (9)].integer);
+									temp.result.int_val = (yyvsp[-7].integer);
 
 									global_code.push_back(temp);
 
-									delete (yyvsp[(6) - (9)].attributes);
-									delete (yyvsp[(9) - (9)].attributes); 
-									free((yyvsp[(4) - (9)].attributes));
-									free((yyvsp[(8) - (9)].attributes));
+									delete (yyvsp[-3].attributes);
+									delete (yyvsp[0].attributes); 
+									free((yyvsp[-5].attributes));
+									free((yyvsp[-1].attributes));
 	}
+#line 2324 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 52:
-/* Line 1787 of yacc.c  */
-#line 639 "Ccfg.ypp"
+  case 58:
+#line 759 "Ccfg.ypp" /* yacc.c:1661  */
     { 
 						(yyval.attributes) = new attr();
 						
 						(yyval.attributes)->place.temp = newTemp();
 						(yyval.attributes)->place.args_type = 2;
 						struct code_element temp_code;
-						temp_code.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp_code.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp_code.arg1 = (yyvsp[-2].attributes)->place;
+						temp_code.arg2 = (yyvsp[0].attributes)->place;
 						temp_code.result = (yyval.attributes)->place;
 						temp_code.data2 = "+";
 						temp_code.data1 = Assignment;
 
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(1) - (3)].attributes)->code.begin(),(yyvsp[(1) - (3)].attributes)->code.end());
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(3) - (3)].attributes)->code.begin(),(yyvsp[(3) - (3)].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[-2].attributes)->code.begin(),(yyvsp[-2].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[0].attributes)->code.begin(),(yyvsp[0].attributes)->code.end());
 						(yyval.attributes)->code.push_back(temp_code);
 						global_code.push_back(temp_code);
 
@@ -2374,35 +2349,64 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 
 						#endif
 
-						if((yyvsp[(1) - (3)].attributes)->my_type==Char || (yyvsp[(1) - (3)].attributes)->my_type==Bool)
+						if((yyvsp[-2].attributes)->my_type==Char || (yyvsp[-2].attributes)->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
-						else if((yyvsp[(3) - (3)].attributes)->my_type==Char || (yyvsp[(3) - (3)].attributes)->my_type==Bool)
+						else if((yyvsp[0].attributes)->my_type==Char || (yyvsp[0].attributes)->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
 						else {
-							if((yyvsp[(1) - (3)].attributes)->my_type==Double || (yyvsp[(3) - (3)].attributes)->my_type==Double )
+							if((yyvsp[-2].attributes)->my_type==Double || (yyvsp[0].attributes)->my_type==Double )
 								(yyval.attributes)->my_type=Double;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Float || (yyvsp[(3) - (3)].attributes)->my_type==Float)
+							else if((yyvsp[-2].attributes)->my_type==Float || (yyvsp[0].attributes)->my_type==Float)
 								(yyval.attributes)->my_type=Float;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Long_long || (yyvsp[(3) - (3)].attributes)->my_type==Long_long)
+							else if((yyvsp[-2].attributes)->my_type==Long_long || (yyvsp[0].attributes)->my_type==Long_long)
 								(yyval.attributes)->my_type=Long_long;
 							else 
-								(yyval.attributes)->my_type=(yyvsp[(1) - (3)].attributes)->my_type;
+								(yyval.attributes)->my_type=(yyvsp[-2].attributes)->my_type;
 						}
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2370 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 53:
-/* Line 1787 of yacc.c  */
-#line 680 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); free((yyvsp[(1) - (1)].attributes));
+  case 59:
+#line 800 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+								(yyval.attributes) = new attr(); 
+								char *s;
+								symbol_table *temp = current_symbol_table;
+								while (temp->parent != NULL)
+									temp = temp->parent;
+								if (temp->table.find(string( (yyvsp[-3].lexeme))) != temp->table.end())
+								{
+									funcparams paramlist = temp->table[(string((yyvsp[-3].lexeme) ))].paramlist;
+									if (paramlist.total != (yyvsp[-1].paramlist)->total)
+									{
+										sprintf(s,"%d arguments expected, %d given\n",paramlist.total,(yyvsp[-1].paramlist)->total);
+										yyerror(s);
+									}
+								 
+									else for (int i=0;i<paramlist.total;i++)
+									{
+										if (paramlist.my_type[i] != (yyvsp[-1].paramlist)->my_type[i])
+										{
+											sprintf(s,"Cannot convert %s to %s in argument %d of \
+														function",((compiler *)c)->enumtostring((yyvsp[-1].paramlist)->\
+														my_type[i]).c_str(), ((compiler *)c)->enumtostring(\
+														paramlist.my_type[i]).c_str(),i );
+
+											yyerror(s);
+										}
+									}
+								}								
+
+								delete (yyvsp[-1].paramlist);
 }
+#line 2406 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 54:
-/* Line 1787 of yacc.c  */
-#line 682 "Ccfg.ypp"
+  case 60:
+#line 831 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						
 						(yyval.attributes) = new attr;
@@ -2411,8 +2415,8 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						struct code_element temp;
 						temp.data1 = Jump;
 						temp.data2 = "==";
-						temp.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp.arg1 = (yyvsp[-2].attributes)->place;
+						temp.arg2 = (yyvsp[0].attributes)->place;
 
 						global_code.push_back(temp);
 
@@ -2422,14 +2426,14 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						global_code.push_back(temp2);
 
 						(yyval.attributes)->my_type=Bool;
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2433 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 55:
-/* Line 1787 of yacc.c  */
-#line 704 "Ccfg.ypp"
+  case 61:
+#line 853 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						(yyval.attributes) = new attr;
 						(yyval.attributes)->truelist = ((compiler *)c)->makelist(global_code.size());
@@ -2437,8 +2441,8 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						struct code_element temp;
 						temp.data1 = Jump;
 						temp.data2 = "<";
-						temp.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp.arg1 = (yyvsp[-2].attributes)->place;
+						temp.arg2 = (yyvsp[0].attributes)->place;
 
 						global_code.push_back(temp);
 
@@ -2448,14 +2452,14 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						global_code.push_back(temp2);
 
 						(yyval.attributes)->my_type=Bool;
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2459 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 56:
-/* Line 1787 of yacc.c  */
-#line 725 "Ccfg.ypp"
+  case 62:
+#line 874 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						(yyval.attributes) = new attr;
 						(yyval.attributes)->truelist = ((compiler *)c)->makelist(global_code.size());
@@ -2463,8 +2467,8 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						struct code_element temp;
 						temp.data1 = Jump;
 						temp.data2 = ">";
-						temp.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp.arg1 = (yyvsp[-2].attributes)->place;
+						temp.arg2 = (yyvsp[0].attributes)->place;
 
 						global_code.push_back(temp);
 
@@ -2474,14 +2478,14 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						global_code.push_back(temp2);
 
 						(yyval.attributes)->my_type=Bool;
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2485 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 57:
-/* Line 1787 of yacc.c  */
-#line 746 "Ccfg.ypp"
+  case 63:
+#line 895 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						(yyval.attributes) = new attr;
 						(yyval.attributes)->truelist = ((compiler *)c)->makelist(global_code.size());
@@ -2489,8 +2493,8 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						struct code_element temp;
 						temp.data1 = Jump;
 						temp.data2 = "<=";
-						temp.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp.arg1 = (yyvsp[-2].attributes)->place;
+						temp.arg2 = (yyvsp[0].attributes)->place;
 
 						global_code.push_back(temp);
 
@@ -2500,14 +2504,14 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						global_code.push_back(temp2);
 
 						(yyval.attributes)->my_type=Bool;
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2511 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 58:
-/* Line 1787 of yacc.c  */
-#line 767 "Ccfg.ypp"
+  case 64:
+#line 916 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						(yyval.attributes) = new attr;
 						(yyval.attributes)->truelist = ((compiler *)c)->makelist(global_code.size());
@@ -2515,8 +2519,8 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						struct code_element temp;
 						temp.data1 = Jump;
 						temp.data2 = ">=";
-						temp.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp.arg1 = (yyvsp[-2].attributes)->place;
+						temp.arg2 = (yyvsp[0].attributes)->place;
 
 						global_code.push_back(temp);
 
@@ -2526,14 +2530,14 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						global_code.push_back(temp2);
 
 						(yyval.attributes)->my_type=Bool;
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2537 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 59:
-/* Line 1787 of yacc.c  */
-#line 788 "Ccfg.ypp"
+  case 65:
+#line 937 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						(yyval.attributes) = new attr;
 						(yyval.attributes)->truelist = ((compiler *)c)->makelist(global_code.size());
@@ -2541,8 +2545,8 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						struct code_element temp;
 						temp.data1 = Jump;
 						temp.data2 = "!=";
-						temp.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp.arg1 = (yyvsp[-2].attributes)->place;
+						temp.arg2 = (yyvsp[0].attributes)->place;
 
 						global_code.push_back(temp);
 
@@ -2552,35 +2556,39 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 						global_code.push_back(temp2);
 
 						(yyval.attributes)->my_type=Bool;
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2563 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 60:
-/* Line 1787 of yacc.c  */
-#line 809 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); free((yyvsp[(1) - (1)].attributes));
+  case 66:
+#line 958 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+					(yyval.attributes) = new attr(); 
+					(yyval.attributes)->my_type = (yyvsp[0].attributes)->my_type;
+					(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];
+					delete ((yyvsp[0].attributes));
 }
+#line 2574 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 61:
-/* Line 1787 of yacc.c  */
-#line 811 "Ccfg.ypp"
+  case 67:
+#line 964 "Ccfg.ypp" /* yacc.c:1661  */
     { 
     					(yyval.attributes) = new attr();
 						
 						(yyval.attributes)->place.temp = newTemp();
 						(yyval.attributes)->place.args_type = 2;
 						struct code_element temp_code;
-						temp_code.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp_code.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp_code.arg1 = (yyvsp[-2].attributes)->place;
+						temp_code.arg2 = (yyvsp[0].attributes)->place;
 						temp_code.result = (yyval.attributes)->place;
 						temp_code.data2 = "-";
 						temp_code.data1 = Assignment;
 
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(1) - (3)].attributes)->code.begin(),(yyvsp[(1) - (3)].attributes)->code.end());
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(3) - (3)].attributes)->code.begin(),(yyvsp[(3) - (3)].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[-2].attributes)->code.begin(),(yyvsp[-2].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[0].attributes)->code.begin(),(yyvsp[0].attributes)->code.end());
 						(yyval.attributes)->code.push_back(temp_code);
 						global_code.push_back(temp_code);
 
@@ -2591,42 +2599,42 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 
 						#endif
 
-						if((yyvsp[(1) - (3)].attributes)->my_type==Char || (yyvsp[(1) - (3)].attributes)->my_type==Bool)
+						if((yyvsp[-2].attributes)->my_type==Char || (yyvsp[-2].attributes)->my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
-						else if((yyvsp[(3) - (3)].attributes)->my_type==Char || (yyvsp[(3) - (3)].attributes)->my_type==Bool)
+						else if((yyvsp[0].attributes)->my_type==Char || (yyvsp[0].attributes)->my_type==Bool)
 							yyerror("error: MINUS does not support bool and char\n");
 						else {
-							if((yyvsp[(1) - (3)].attributes)->my_type==Double || (yyvsp[(3) - (3)].attributes)->my_type==Double )
+							if((yyvsp[-2].attributes)->my_type==Double || (yyvsp[0].attributes)->my_type==Double )
 								(yyval.attributes)->my_type=Double;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Float || (yyvsp[(3) - (3)].attributes)->my_type==Float)
+							else if((yyvsp[-2].attributes)->my_type==Float || (yyvsp[0].attributes)->my_type==Float)
 								(yyval.attributes)->my_type=Float;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Long_long || (yyvsp[(3) - (3)].attributes)->my_type==Long_long)
+							else if((yyvsp[-2].attributes)->my_type==Long_long || (yyvsp[0].attributes)->my_type==Long_long)
 								(yyval.attributes)->my_type=Long_long;
 							else 
-								(yyval.attributes)->my_type=(yyvsp[(1) - (3)].attributes)->my_type;
+								(yyval.attributes)->my_type=(yyvsp[-2].attributes)->my_type;
 						}
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2620 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 62:
-/* Line 1787 of yacc.c  */
-#line 853 "Ccfg.ypp"
+  case 68:
+#line 1006 "Ccfg.ypp" /* yacc.c:1661  */
     { 
 						(yyval.attributes) = new attr();
 						
 						(yyval.attributes)->place.temp = newTemp();
 						(yyval.attributes)->place.args_type = 2;
 						struct code_element temp_code;
-						temp_code.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp_code.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp_code.arg1 = (yyvsp[-2].attributes)->place;
+						temp_code.arg2 = (yyvsp[0].attributes)->place;
 						temp_code.result = (yyval.attributes)->place;
 						temp_code.data2 = "*";
 						temp_code.data1 = Assignment;
 
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(1) - (3)].attributes)->code.begin(),(yyvsp[(1) - (3)].attributes)->code.end());
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(3) - (3)].attributes)->code.begin(),(yyvsp[(3) - (3)].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[-2].attributes)->code.begin(),(yyvsp[-2].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[0].attributes)->code.begin(),(yyvsp[0].attributes)->code.end());
 						(yyval.attributes)->code.push_back(temp_code);
 						global_code.push_back(temp_code);
 
@@ -2637,42 +2645,42 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 
 						#endif
 
-						if((yyvsp[(1) - (3)].attributes)->my_type==Char || (yyvsp[(1) - (3)].attributes)->my_type==Bool)
+						if((yyvsp[-2].attributes)->my_type==Char || (yyvsp[-2].attributes)->my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
-						else if((yyvsp[(3) - (3)].attributes)->my_type==Char || (yyvsp[(3) - (3)].attributes)->my_type==Bool)
+						else if((yyvsp[0].attributes)->my_type==Char || (yyvsp[0].attributes)->my_type==Bool)
 							yyerror("error: MULTIPLY does not support bool and char\n");
 						else {
-							if((yyvsp[(1) - (3)].attributes)->my_type==Double || (yyvsp[(3) - (3)].attributes)->my_type==Double )
+							if((yyvsp[-2].attributes)->my_type==Double || (yyvsp[0].attributes)->my_type==Double )
 								(yyval.attributes)->my_type=Double;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Float || (yyvsp[(3) - (3)].attributes)->my_type==Float)
+							else if((yyvsp[-2].attributes)->my_type==Float || (yyvsp[0].attributes)->my_type==Float)
 								(yyval.attributes)->my_type=Float;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Long_long || (yyvsp[(3) - (3)].attributes)->my_type==Long_long)
+							else if((yyvsp[-2].attributes)->my_type==Long_long || (yyvsp[0].attributes)->my_type==Long_long)
 								(yyval.attributes)->my_type=Long_long;
 							else 
-								(yyval.attributes)->my_type=(yyvsp[(1) - (3)].attributes)->my_type;
+								(yyval.attributes)->my_type=(yyvsp[-2].attributes)->my_type;
 						}
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2666 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 63:
-/* Line 1787 of yacc.c  */
-#line 894 "Ccfg.ypp"
+  case 69:
+#line 1047 "Ccfg.ypp" /* yacc.c:1661  */
     { 
     					(yyval.attributes) = new attr();
 						
 						(yyval.attributes)->place.temp = newTemp();
 						(yyval.attributes)->place.args_type = 2;
 						struct code_element temp_code;
-						temp_code.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp_code.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp_code.arg1 = (yyvsp[-2].attributes)->place;
+						temp_code.arg2 = (yyvsp[0].attributes)->place;
 						temp_code.result = (yyval.attributes)->place;
 						temp_code.data2 = "";
 						temp_code.data1 = Assignment;
 
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(1) - (3)].attributes)->code.begin(),(yyvsp[(1) - (3)].attributes)->code.end());
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(3) - (3)].attributes)->code.begin(),(yyvsp[(3) - (3)].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[-2].attributes)->code.begin(),(yyvsp[-2].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[0].attributes)->code.begin(),(yyvsp[0].attributes)->code.end());
 						(yyval.attributes)->code.push_back(temp_code);
 						global_code.push_back(temp_code);
 
@@ -2683,42 +2691,42 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 
 						#endif
 
-						if((yyvsp[(1) - (3)].attributes)->my_type==Char || (yyvsp[(1) - (3)].attributes)->my_type==Bool)
+						if((yyvsp[-2].attributes)->my_type==Char || (yyvsp[-2].attributes)->my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
-						else if((yyvsp[(3) - (3)].attributes)->my_type==Char || (yyvsp[(3) - (3)].attributes)->my_type==Bool)
+						else if((yyvsp[0].attributes)->my_type==Char || (yyvsp[0].attributes)->my_type==Bool)
 							yyerror("error: DIVIDE does not support bool and char\n");
 						else {
-							if(((yyvsp[(1) - (3)].attributes)->my_type==Double) || ((yyvsp[(3) - (3)].attributes)->my_type==Double) )
+							if(((yyvsp[-2].attributes)->my_type==Double) || ((yyvsp[0].attributes)->my_type==Double) )
 								(yyval.attributes)->my_type=Double;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Float || (yyvsp[(3) - (3)].attributes)->my_type==Float)
+							else if((yyvsp[-2].attributes)->my_type==Float || (yyvsp[0].attributes)->my_type==Float)
 								(yyval.attributes)->my_type=Float;
-							else if((yyvsp[(1) - (3)].attributes)->my_type==Long_long || (yyvsp[(3) - (3)].attributes)->my_type==Long_long)
+							else if((yyvsp[-2].attributes)->my_type==Long_long || (yyvsp[0].attributes)->my_type==Long_long)
 								(yyval.attributes)->my_type=Long_long;
 							else 
-								(yyval.attributes)->my_type=(yyvsp[(1) - (3)].attributes)->my_type;
+								(yyval.attributes)->my_type=(yyvsp[-2].attributes)->my_type;
 						}
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2712 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 64:
-/* Line 1787 of yacc.c  */
-#line 935 "Ccfg.ypp"
+  case 70:
+#line 1088 "Ccfg.ypp" /* yacc.c:1661  */
     { 
 						(yyval.attributes) = new attr();
 						
 						(yyval.attributes)->place.temp = newTemp();
 						(yyval.attributes)->place.args_type = 2;
 						struct code_element temp_code;
-						temp_code.arg1 = (yyvsp[(1) - (3)].attributes)->place;
-						temp_code.arg2 = (yyvsp[(3) - (3)].attributes)->place;
+						temp_code.arg1 = (yyvsp[-2].attributes)->place;
+						temp_code.arg2 = (yyvsp[0].attributes)->place;
 						temp_code.result = (yyval.attributes)->place;
 						temp_code.data2 = "%";
 						temp_code.data1 = Assignment;
 
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(1) - (3)].attributes)->code.begin(),(yyvsp[(1) - (3)].attributes)->code.end());
-						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(3) - (3)].attributes)->code.begin(),(yyvsp[(3) - (3)].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[-2].attributes)->code.begin(),(yyvsp[-2].attributes)->code.end());
+						(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[0].attributes)->code.begin(),(yyvsp[0].attributes)->code.end());
 						(yyval.attributes)->code.push_back(temp_code);
 						global_code.push_back(temp_code);
 
@@ -2728,96 +2736,99 @@ cout << "Marker if :" << (yyvsp[(7) - (9)].integer) << endl;
 							printf("in expr-> expr\%expr\n");
 						#endif
 
-						if(!((yyvsp[(1) - (3)].attributes)->my_type==Int || (yyvsp[(1) - (3)].attributes)->my_type==Long_long || (yyvsp[(1) - (3)].attributes)->my_type==Bool))        /* Added Bool*/
+						if(!((yyvsp[-2].attributes)->my_type==Int || (yyvsp[-2].attributes)->my_type==Long_long || (yyvsp[-2].attributes)->my_type==Bool))        /* Added Bool*/
 							yyerror("error: MOD supports only bool,int,long long");
-						else if(!((yyvsp[(3) - (3)].attributes)->my_type==Int || (yyvsp[(3) - (3)].attributes)->my_type==Long_long || (yyvsp[(3) - (3)].attributes)->my_type==Bool))
+						else if(!((yyvsp[0].attributes)->my_type==Int || (yyvsp[0].attributes)->my_type==Long_long || (yyvsp[0].attributes)->my_type==Bool))
 							yyerror("error: MOD supports only bool,int,long long");
 						else
-							(yyval.attributes)->my_type=(yyvsp[(3) - (3)].attributes)->my_type;
-						free((yyvsp[(1) - (3)].attributes));
-						free((yyvsp[(3) - (3)].attributes));
+							(yyval.attributes)->my_type=(yyvsp[0].attributes)->my_type;
+						free((yyvsp[-2].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2749 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 65:
-/* Line 1787 of yacc.c  */
-#line 967 "Ccfg.ypp"
+  case 71:
+#line 1120 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						(yyval.attributes) = new attr();
-						((compiler *)c)->backpatch((yyvsp[(1) - (4)].attributes)->truelist,(yyvsp[(3) - (4)].integer));
-						(yyval.attributes)->truelist = (yyvsp[(4) - (4)].attributes)->truelist;
-						(yyval.attributes)->falselist = ((compiler *)c)->merge_list((yyvsp[(1) - (4)].attributes)->falselist,(yyvsp[(4) - (4)].attributes)->falselist);
+						((compiler *)c)->backpatch((yyvsp[-3].attributes)->truelist,(yyvsp[-1].integer));
+						(yyval.attributes)->truelist = (yyvsp[0].attributes)->truelist;
+						(yyval.attributes)->falselist = ((compiler *)c)->merge_list((yyvsp[-3].attributes)->falselist,(yyvsp[0].attributes)->falselist);
 
 
-						if(!((yyvsp[(1) - (4)].attributes)->my_type==Bool || (yyvsp[(1) - (4)].attributes)->my_type==Int || (yyvsp[(1) - (4)].attributes)->my_type==Long_long))
+						if(!((yyvsp[-3].attributes)->my_type==Bool || (yyvsp[-3].attributes)->my_type==Int || (yyvsp[-3].attributes)->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
-						else if(!((yyvsp[(4) - (4)].attributes)->my_type==Bool || (yyvsp[(4) - (4)].attributes)->my_type==Int || (yyvsp[(4) - (4)].attributes)->my_type==Long_long))
+						else if(!((yyvsp[0].attributes)->my_type==Bool || (yyvsp[0].attributes)->my_type==Int || (yyvsp[0].attributes)->my_type==Long_long))
 							yyerror("error: AND supports only bool,int,long long");
 						else 
 							(yyval.attributes)->my_type=Bool;
-						free((yyvsp[(1) - (4)].attributes));
-						free((yyvsp[(4) - (4)].attributes));
+						free((yyvsp[-3].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2770 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 66:
-/* Line 1787 of yacc.c  */
-#line 983 "Ccfg.ypp"
+  case 72:
+#line 1136 "Ccfg.ypp" /* yacc.c:1661  */
     {	
 						(yyval.attributes) = new attr();
  
-						if(!((yyvsp[(1) - (4)].attributes)->my_type==Bool || (yyvsp[(1) - (4)].attributes)->my_type==Int || (yyvsp[(1) - (4)].attributes)->my_type==Long_long))
+						if(!((yyvsp[-3].attributes)->my_type==Bool || (yyvsp[-3].attributes)->my_type==Int || (yyvsp[-3].attributes)->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. left operand is \n");
-						else if(!((yyvsp[(4) - (4)].attributes)->my_type==Bool || (yyvsp[(4) - (4)].attributes)->my_type==Int || (yyvsp[(4) - (4)].attributes)->my_type==Long_long))
+						else if(!((yyvsp[0].attributes)->my_type==Bool || (yyvsp[0].attributes)->my_type==Int || (yyvsp[0].attributes)->my_type==Long_long))
 							yyerror("error: OR supports only bool,int,long long. right operand is \n");
 						else 
 							(yyval.attributes)->my_type=Bool;
 
-						((compiler *)c)->backpatch((yyvsp[(1) - (4)].attributes)->falselist,(yyvsp[(3) - (4)].integer));
-						(yyval.attributes)->truelist = ((compiler *)c)->merge_list((yyvsp[(1) - (4)].attributes)->truelist,(yyvsp[(4) - (4)].attributes)->truelist);
-						(yyval.attributes)->falselist = (yyvsp[(4) - (4)].attributes)->falselist;
-						free((yyvsp[(1) - (4)].attributes));
-						free((yyvsp[(4) - (4)].attributes));
+						((compiler *)c)->backpatch((yyvsp[-3].attributes)->falselist,(yyvsp[-1].integer));
+						(yyval.attributes)->truelist = ((compiler *)c)->merge_list((yyvsp[-3].attributes)->truelist,(yyvsp[0].attributes)->truelist);
+						(yyval.attributes)->falselist = (yyvsp[0].attributes)->falselist;
+						free((yyvsp[-3].attributes));
+						free((yyvsp[0].attributes));
 					}
+#line 2791 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 67:
-/* Line 1787 of yacc.c  */
-#line 999 "Ccfg.ypp"
+  case 73:
+#line 1152 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = (attr*)malloc(sizeof(attr));
 					(yyval.attributes)->my_type = Bool;
 
-					(yyval.attributes)->truelist = (yyvsp[(2) - (2)].attributes)->falselist;
-					(yyval.attributes)->falselist = (yyvsp[(2) - (2)].attributes)->truelist;
+					(yyval.attributes)->truelist = (yyvsp[0].attributes)->falselist;
+					(yyval.attributes)->falselist = (yyvsp[0].attributes)->truelist;
 
-					 free((yyvsp[(2) - (2)].attributes));
+					 free((yyvsp[0].attributes));
 					 }
+#line 2804 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 68:
-/* Line 1787 of yacc.c  */
-#line 1007 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));
-(yyval.attributes)->my_type = (yyvsp[(2) - (3)].attributes)->my_type; free((yyvsp[(2) - (3)].attributes));}
+  case 74:
+#line 1160 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+						(yyval.attributes) = (attr*)malloc(sizeof(attr));
+						(yyval.attributes)->my_type = (yyvsp[-1].attributes)->my_type; 
+						free((yyvsp[-1].attributes));
+					}
+#line 2814 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 69:
-/* Line 1787 of yacc.c  */
-#line 1009 "Ccfg.ypp"
+  case 75:
+#line 1165 "Ccfg.ypp" /* yacc.c:1661  */
     {
 			(yyval.attributes) = new attr();
-			(yyval.attributes)->place.var = (yyvsp[(1) - (1)].attributes)->place.var; 
+			(yyval.attributes)->place.var = (yyvsp[0].attributes)->place.var; 
 			(yyval.attributes)->place.args_type = 1;
 			struct symbol_table *temp = current_symbol_table;
 			int flag = 1;
 			while(flag) {
-			           	if( temp->table.find(string( (yyvsp[(1) - (1)].attributes)->var_name[0])) != temp->table.end()){
-						(yyval.attributes)->my_type = temp->table[string((yyvsp[(1) - (1)].attributes)->var_name[0])].my_type;
+			           	if( temp->table.find(string( (yyvsp[0].attributes)->var_name[0])) != temp->table.end()){
+						(yyval.attributes)->my_type = temp->table[string((yyvsp[0].attributes)->var_name[0])].my_type;
 #ifdef debug
 printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_type);
 #endif
 							flag = 0;
-						(yyval.attributes)->dimension[0] = temp->table[string((yyvsp[(1) - (1)].attributes)->var_name[0])].dimension - (yyvsp[(1) - (1)].attributes)->dimension[0];
+						(yyval.attributes)->dimension[0] = temp->table[string((yyvsp[0].attributes)->var_name[0])].dimension - (yyvsp[0].attributes)->dimension[0];
 				}
 				if(temp->parent==NULL && flag==1) {
 					yyerror("error: variable not declared\n");
@@ -2825,52 +2836,52 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 				}
 				temp = temp->parent;
 			}
-			free((yyvsp[(1) - (1)].attributes));
+			free((yyvsp[0].attributes));
 		  }
+#line 2842 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 70:
-/* Line 1787 of yacc.c  */
-#line 1032 "Ccfg.ypp"
+  case 76:
+#line 1188 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = (attr*)malloc(sizeof(attr));
-(yyval.attributes)->my_type=(yyvsp[(2) - (2)].attributes)->my_type; free((yyvsp[(2) - (2)].attributes));}
+(yyval.attributes)->my_type=(yyvsp[0].attributes)->my_type; free((yyvsp[0].attributes));}
+#line 2849 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 71:
-/* Line 1787 of yacc.c  */
-#line 1034 "Ccfg.ypp"
+  case 77:
+#line 1190 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = (attr*)malloc(sizeof(attr));
-(yyval.attributes)->my_type=(yyvsp[(2) - (2)].attributes)->my_type; free((yyvsp[(2) - (2)].attributes));}
+(yyval.attributes)->my_type=(yyvsp[0].attributes)->my_type; free((yyvsp[0].attributes));}
+#line 2856 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 72:
-/* Line 1787 of yacc.c  */
-#line 1036 "Ccfg.ypp"
+  case 78:
+#line 1192 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = new attr();
-				(yyval.attributes)->place = (yyvsp[(1) - (1)].attributes)->place;
+				(yyval.attributes)->place = (yyvsp[0].attributes)->place;
 
 
 				(yyval.attributes)->place.args_type = (yyval.attributes)->place.args_type;
-				(yyval.attributes)->my_type = (yyvsp[(1) - (1)].attributes)->my_type;
+				(yyval.attributes)->my_type = (yyvsp[0].attributes)->my_type;
 				(yyval.attributes)->dimension[0] = 0;
 			}
+#line 2870 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 73:
-/* Line 1787 of yacc.c  */
-#line 1045 "Ccfg.ypp"
+  case 79:
+#line 1201 "Ccfg.ypp" /* yacc.c:1661  */
     {
 								(yyval.attributes) = (attr*)malloc(sizeof(attr));
-								(yyval.attributes)->my_type=(yyvsp[(2) - (2)].attributes)->my_type; 
-								(yyval.attributes)->dimension[0] = (yyvsp[(2) - (2)].attributes)->dimension[0]+1;
-								free((yyvsp[(2) - (2)].attributes));
+								(yyval.attributes)->my_type=(yyvsp[0].attributes)->my_type; 
+								(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0]+1;
+								free((yyvsp[0].attributes));
 								}
+#line 2881 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 74:
-/* Line 1787 of yacc.c  */
-#line 1051 "Ccfg.ypp"
+  case 80:
+#line 1207 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = new attr();
 				(yyval.attributes)->truelist = ((compiler *)c)->makelist(global_code.size());
@@ -2881,11 +2892,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 				(yyval.attributes)->my_type = Bool;
 
 			}
+#line 2896 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 75:
-/* Line 1787 of yacc.c  */
-#line 1062 "Ccfg.ypp"
+  case 81:
+#line 1218 "Ccfg.ypp" /* yacc.c:1661  */
     {
 				(yyval.attributes) = new attr();
 				(yyval.attributes)->falselist = ((compiler *)c)->makelist(global_code.size());
@@ -2895,11 +2906,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 				global_code.push_back(temp_code);
 				(yyval.attributes)->my_type = Bool;
 	}
+#line 2910 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 76:
-/* Line 1787 of yacc.c  */
-#line 1073 "Ccfg.ypp"
+  case 82:
+#line 1229 "Ccfg.ypp" /* yacc.c:1661  */
     {
 							#ifdef debug
 								printf("In assign_stmt -> identifier '=' expr\n");
@@ -2908,11 +2919,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 							(yyval.attributes) = new attr();
 							(yyval.attributes)->my_type = Void;
 							struct code_element temp_code;
-							temp_code.arg1 = (yyvsp[(3) - (3)].attributes)->place;
-							temp_code.result = (yyvsp[(1) - (3)].attributes)->place;
+							temp_code.arg1 = (yyvsp[0].attributes)->place;
+							temp_code.result = (yyvsp[-2].attributes)->place;
 							temp_code.data2 = "=";
 							temp_code.data1 = Assignment;
-							(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[(3) - (3)].attributes)->code.begin(),(yyvsp[(3) - (3)].attributes)->code.end());
+							(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[0].attributes)->code.begin(),(yyvsp[0].attributes)->code.end());
 							(yyval.attributes)->code.push_back(temp_code);
 							global_code.push_back(temp_code);
 
@@ -2933,10 +2944,10 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 	                       struct symbol_table *temp = current_symbol_table;
                        		int flag = 1;
                         	while(flag) {
-                                        if( temp->table.find(string( (yyvsp[(1) - (3)].attributes)->var_name[0])) != temp->table.end()){
-                                                (yyval.attributes)->my_type = temp->table[string((yyvsp[(1) - (3)].attributes)->var_name[0])].my_type;
+                                        if( temp->table.find(string( (yyvsp[-2].attributes)->var_name[0])) != temp->table.end()){
+                                                (yyval.attributes)->my_type = temp->table[string((yyvsp[-2].attributes)->var_name[0])].my_type;
                                                 flag = 0;
-						(yyval.attributes)->dimension[0] = temp->table[string((yyvsp[(1) - (3)].attributes)->var_name[0])].dimension - (yyvsp[(1) - (3)].attributes)->dimension[0];
+						(yyval.attributes)->dimension[0] = temp->table[string((yyvsp[-2].attributes)->var_name[0])].dimension - (yyvsp[-2].attributes)->dimension[0];
 
                                 	}
                                 	if(temp->parent==NULL && flag==1) {
@@ -2946,7 +2957,7 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
                                 	temp = temp->parent;
                         	}
 				enum type_enum t = (yyval.attributes)->my_type;
-				enum type_enum tt = (yyvsp[(3) - (3)].attributes)->my_type; 
+				enum type_enum tt = (yyvsp[0].attributes)->my_type; 
 				if (t == Int && tt== Long_long)
 					yyerror("Warning: assigning long long to an integer\n",KYEL);
 				else if (t==Int && tt == Float)
@@ -2959,90 +2970,90 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 					yyerror("Warning: assigning long long to a float\n",KYEL);
 				else if (t==Long_long && tt == Double)
 					yyerror("Warning: assigning long long to a double\n",KYEL);
-				else if (t != tt || (yyval.attributes)->dimension[0] != (yyvsp[(3) - (3)].attributes)->dimension[0] )
+				else if (t != tt || (yyval.attributes)->dimension[0] != (yyvsp[0].attributes)->dimension[0] )
 					yyerror("Warning: Type mismatch\n",KYEL);
 
-				free((yyvsp[(1) - (3)].attributes));
-				free((yyvsp[(3) - (3)].attributes));
+				free((yyvsp[-2].attributes));
+				free((yyvsp[0].attributes));
 
 				}
+#line 2981 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
-  case 77:
-/* Line 1787 of yacc.c  */
-#line 1140 "Ccfg.ypp"
+  case 83:
+#line 1296 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						#ifdef debug 
 							printf("number-> T_DEC_INT\n");
 						#endif
 						(yyval.attributes) = new attr();
-						(yyval.attributes)->place.int_val = (yyvsp[(1) - (1)].integer);
+						(yyval.attributes)->place.int_val = (yyvsp[0].integer);
 						(yyval.attributes)->place.args_type = 3;
 						(yyval.attributes)->my_type =Int;
 					}
-    break;
-
-  case 78:
-/* Line 1787 of yacc.c  */
-#line 1149 "Ccfg.ypp"
-    {
-						(yyval.attributes) = new attr();
-						(yyval.attributes)->place.float_val = (yyvsp[(1) - (1)].real);
-						(yyval.attributes)->place.args_type = 4;
-						(yyval.attributes)->my_type = Int;
-					}
-    break;
-
-  case 79:
-/* Line 1787 of yacc.c  */
-#line 1157 "Ccfg.ypp"
-    {  	
-						(yyval.attributes) = new attr();
-						(yyval.attributes)->place.var = (yyvsp[(1) - (1)].lexeme);
-						(yyval.attributes)->place.args_type = 1;
-						strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (1)].lexeme));
-							(yyval.attributes)->dimension[0] = 0;
-					 }
-    break;
-
-  case 80:
-/* Line 1787 of yacc.c  */
-#line 1164 "Ccfg.ypp"
-    {
-							(yyval.attributes) = (attr*)malloc(sizeof(attr));
-							strcpy((yyval.attributes)->var_name[0],(yyvsp[(1) - (2)].lexeme));
-							(yyval.attributes)->dimension[0] = (yyvsp[(2) - (2)].attributes)->dimension[0];
-							free((yyvsp[(2) - (2)].attributes));
-		}
-    break;
-
-  case 81:
-/* Line 1787 of yacc.c  */
-#line 1171 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); (yyval.attributes)->dimension[0] = (yyvsp[(4) - (4)].attributes)->dimension[0] +1; printf("%s",(yyvsp[(2) - (4)].lexeme)); free((yyvsp[(4) - (4)].attributes));}
-    break;
-
-  case 82:
-/* Line 1787 of yacc.c  */
-#line 1172 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); (yyval.attributes)->dimension[0] = 1;}
-    break;
-
-  case 83:
-/* Line 1787 of yacc.c  */
-#line 1173 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr));  (yyval.attributes)->dimension[0] = 1;}
+#line 2995 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 84:
-/* Line 1787 of yacc.c  */
-#line 1174 "Ccfg.ypp"
-    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); (yyval.attributes)->dimension[0] = (yyvsp[(4) - (4)].attributes)->dimension[0] + 1; free((yyvsp[(4) - (4)].attributes));}
+#line 1305 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+						(yyval.attributes) = new attr();
+						(yyval.attributes)->place.float_val = (yyvsp[0].real);
+						(yyval.attributes)->place.args_type = 4;
+						(yyval.attributes)->my_type = Int;
+					}
+#line 3006 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 85:
+#line 1313 "Ccfg.ypp" /* yacc.c:1661  */
+    {  	
+						(yyval.attributes) = new attr();
+						(yyval.attributes)->place.var = (yyvsp[0].lexeme);
+						(yyval.attributes)->place.args_type = 1;
+						strcpy((yyval.attributes)->var_name[0],(yyvsp[0].lexeme));
+							(yyval.attributes)->dimension[0] = 0;
+					 }
+#line 3018 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 86:
+#line 1320 "Ccfg.ypp" /* yacc.c:1661  */
+    {
+							(yyval.attributes) = (attr*)malloc(sizeof(attr));
+							strcpy((yyval.attributes)->var_name[0],(yyvsp[-1].lexeme));
+							(yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0];
+							free((yyvsp[0].attributes));
+		}
+#line 3029 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 87:
+#line 1327 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); (yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0] +1; printf("%s",(yyvsp[-2].lexeme)); free((yyvsp[0].attributes));}
+#line 3035 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 88:
+#line 1328 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); (yyval.attributes)->dimension[0] = 1;}
+#line 3041 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 89:
+#line 1329 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr));  (yyval.attributes)->dimension[0] = 1;}
+#line 3047 "Ccfg.tab.cpp" /* yacc.c:1661  */
+    break;
+
+  case 90:
+#line 1330 "Ccfg.ypp" /* yacc.c:1661  */
+    {(yyval.attributes) = (attr*)malloc(sizeof(attr)); (yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0] + 1; free((yyvsp[0].attributes));}
+#line 3053 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
 
-/* Line 1787 of yacc.c  */
-#line 3046 "Ccfg.tab.cpp"
+#line 3057 "Ccfg.tab.cpp" /* yacc.c:1661  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3064,7 +3075,7 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 
   *++yyvsp = yyval;
 
-  /* Now `shift' the result of the reduction.  Determine what state
+  /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
      number reduced by.  */
 
@@ -3079,9 +3090,9 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
   goto yynewstate;
 
 
-/*------------------------------------.
-| yyerrlab -- here on detecting error |
-`------------------------------------*/
+/*--------------------------------------.
+| yyerrlab -- here on detecting error.  |
+`--------------------------------------*/
 yyerrlab:
   /* Make sure we have latest lookahead translation.  See comments at
      user semantic actions for why this is necessary.  */
@@ -3132,20 +3143,20 @@ yyerrlab:
   if (yyerrstatus == 3)
     {
       /* If just tried and failed to reuse lookahead token after an
-	 error, discard it.  */
+         error, discard it.  */
 
       if (yychar <= YYEOF)
-	{
-	  /* Return failure if at end of input.  */
-	  if (yychar == YYEOF)
-	    YYABORT;
-	}
+        {
+          /* Return failure if at end of input.  */
+          if (yychar == YYEOF)
+            YYABORT;
+        }
       else
-	{
-	  yydestruct ("Error: discarding",
-		      yytoken, &yylval);
-	  yychar = YYEMPTY;
-	}
+        {
+          yydestruct ("Error: discarding",
+                      yytoken, &yylval);
+          yychar = YYEMPTY;
+        }
     }
 
   /* Else will try to reuse lookahead token after shifting the error
@@ -3164,7 +3175,7 @@ yyerrorlab:
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
 
-  /* Do not reclaim the symbols of the rule which action triggered
+  /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
   YYPOPSTACK (yylen);
   yylen = 0;
@@ -3177,29 +3188,29 @@ yyerrorlab:
 | yyerrlab1 -- common code for both syntax error and YYERROR.  |
 `-------------------------------------------------------------*/
 yyerrlab1:
-  yyerrstatus = 3;	/* Each real token shifted decrements this.  */
+  yyerrstatus = 3;      /* Each real token shifted decrements this.  */
 
   for (;;)
     {
       yyn = yypact[yystate];
       if (!yypact_value_is_default (yyn))
-	{
-	  yyn += YYTERROR;
-	  if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
-	    {
-	      yyn = yytable[yyn];
-	      if (0 < yyn)
-		break;
-	    }
-	}
+        {
+          yyn += YYTERROR;
+          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
+            {
+              yyn = yytable[yyn];
+              if (0 < yyn)
+                break;
+            }
+        }
 
       /* Pop the current state because it cannot handle the error token.  */
       if (yyssp == yyss)
-	YYABORT;
+        YYABORT;
 
 
       yydestruct ("Error: popping",
-		  yystos[yystate], yyvsp);
+                  yystos[yystate], yyvsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -3250,14 +3261,14 @@ yyreturn:
       yydestruct ("Cleanup: discarding lookahead",
                   yytoken, &yylval);
     }
-  /* Do not reclaim the symbols of the rule which action triggered
+  /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
   YYPOPSTACK (yylen);
   YY_STACK_PRINT (yyss, yyssp);
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-		  yystos[*yyssp], yyvsp);
+                  yystos[*yyssp], yyvsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -3268,14 +3279,80 @@ yyreturn:
   if (yymsg != yymsgbuf)
     YYSTACK_FREE (yymsg);
 #endif
-  /* Make sure YYID is used.  */
-  return YYID (yyresult);
+  return yyresult;
 }
+#line 1332 "Ccfg.ypp" /* yacc.c:1906  */
 
 
-/* Line 2050 of yacc.c  */
-#line 1176 "Ccfg.ypp"
-
+int check_keyword(string identifier)
+{
+	if(!identifier.compare("auto"))
+		return 1;
+	else if(!identifier.compare("break"))
+		return 1;
+	else if(!identifier.compare("case"))
+                return 1;
+	else if(!identifier.compare("char"))
+                return 1;
+	else if(!identifier.compare("const"))
+                return 1;
+	else if(!identifier.compare("continue"))
+                return 1;
+	 else if(!identifier.compare("default"))
+                return 1;
+	 else if(!identifier.compare("do"))
+                return 1;
+	 else if(!identifier.compare("double"))
+                return 1;
+	 else if(!identifier.compare("else"))
+                return 1;
+	 else if(!identifier.compare("enum"))
+                return 1;
+	 else if(!identifier.compare("extern"))
+                return 1;
+	 else if(!identifier.compare("float"))
+                return 1;
+	 else if(!identifier.compare("for"))
+                return 1;
+	 else if(!identifier.compare("goto"))
+                return 1;
+	 else if(!identifier.compare("if"))
+                return 1;
+	 else if(!identifier.compare("int"))
+                return 1;
+	 else if(!identifier.compare("long"))
+                return 1;
+	 else if(!identifier.compare("register"))
+                return 1;
+	 else if(!identifier.compare("return"))
+                return 1;
+	 else if(!identifier.compare("short"))
+                return 1;
+	 else if(!identifier.compare("signed"))
+                return 1;
+	 else if(!identifier.compare("sizeof"))
+                return 1;
+	 else if(!identifier.compare("static"))
+                return 1;
+	 else if(!identifier.compare("struct"))
+                return 1;
+	 else if(!identifier.compare("switch"))
+                return 1;
+	 else if(!identifier.compare("typedef"))
+                return 1;
+	 else if(!identifier.compare("union"))
+                return 1;
+	 else if(!identifier.compare("unsigned"))
+                return 1;
+	 else if(!identifier.compare("void"))
+                return 1;
+	 else if(!identifier.compare("volatile"))
+                return 1;
+	 else if(!identifier.compare("while"))
+                return 1;
+	else
+		return 0; 
+}
 
 void wrg(args a)
 {
