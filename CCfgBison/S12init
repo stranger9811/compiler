@@ -3,6 +3,9 @@
 S1  : expr ',' Marker_If  S1  {
 					$$ = new attr(); 
 					$$->my_type = $4->my_type; 
+					$$->dimension[0] = $4->dimension[0];
+					$$->isreturn = $4->isreturn;
+
 					((compiler *)c)->backpatch($1->truelist,$3);
 					((compiler *)c)->backpatch($1->falselist,$3);
 					$$->truelist = $4->truelist;
@@ -14,7 +17,8 @@ S1  : expr ',' Marker_If  S1  {
 	
 	|expr  {
 				$$ = new attr(); 
-				$$->my_type = Bool; 
+				$$->my_type = Bool;
+				$$->dimension[0]= $1->dimension[0]; 
 				$$->truelist = $1->truelist; 
 				$$->falselist = $1->falselist; 
 				free($1);
@@ -23,7 +27,7 @@ S1  : expr ',' Marker_If  S1  {
 			#ifdef debug
 						 cout << "S1 -> type init\n";
 			#endif
-			$$ = (attr*)malloc(sizeof(attr));
+			$$ = new attr();
 			struct llm temp;
 
 			temp.my_type= $1->my_type; 
@@ -55,14 +59,15 @@ S1  : expr ',' Marker_If  S1  {
 				free($2);
 	}
 	| T_RETURN expr 	{
-								$$ = (attr*)malloc(sizeof(attr));
-
+								$$ = new attr();
+								$$->isreturn = 1;
 								$$->my_type = $2->my_type;
 								$$->dimension[0] = $2->dimension[0];
 								free($2);
 								}
 	| T_RETURN 				{
-								$$ = (attr*)malloc(sizeof(attr));
+								$$->isreturn = 1;
+								$$ = new attr();
 								$$->my_type = Void;
 								$$->dimension[0] = 0;
 						
@@ -74,7 +79,7 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 						 		#ifdef debug
 						 				cout << "init -> assign_stmt ',' init\n";
 						 		#endif
-						 		$$ = (attr*)malloc(sizeof(attr));
+						 		$$ = new attr();
 								strcpy($$->var_name[0],$1->var_name[0]);
 								$$->dimension[0] = $1->dimension[0];
 								$$->index = 1;
@@ -87,7 +92,7 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 								free($3);
 						} /* Initialization is not done properly. declaration check is done in the assignment statment. Such declarations will always fail since the variable is not yet entered in the symbol table. */
 	| identifier ',' init {
-								$$ = (attr*)malloc(sizeof(attr));
+								$$ = new attr();
 								strcpy($$->var_name[0],$1->var_name[0]);
 								$$->dimension[0] = $1->dimension[0];
 								$$->index = 1;
@@ -103,14 +108,14 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 						#ifdef debug
 						 				cout << "init -> assign_stmt\n";
 						 		#endif
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr();
 						strcpy($$->var_name[0],$1->var_name[0]);
 						$$->dimension[0] = $1->dimension[0];
 						$$->index = 1;
 						free($1);
 					}
 	| identifier  {
-					$$ = (attr*)malloc(sizeof(attr));
+					$$ = new attr();
 					strcpy($$->var_name[0],$1->var_name[0]);
 					$$->dimension[0] = $1->dimension[0];
 					$$->index = 1;

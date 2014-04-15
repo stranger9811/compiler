@@ -91,16 +91,16 @@ identifier  : ID	{
 							$$->dimension[0] = 0;
 					 }/*Array can have infinite dimensions. Must do something about it in future.*/ 
 		| ID array {
-							$$ = (attr*)malloc(sizeof(attr));
+							$$ = new attr();
 							strcpy($$->var_name[0],$1);
 							$$->dimension[0] = $2->dimension[0];
 							free($2);
 		}
 	;
-array  : '[' ID ']' array  {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);}
-	| '[' ID ']' {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = 1;}
-	| '[' T_DEC_INT ']' {$$ = (attr*)malloc(sizeof(attr));  $$->dimension[0] = 1;}
-	| '[' T_DEC_INT ']' array {$$ = (attr*)malloc(sizeof(attr)); $$->dimension[0] = $4->dimension[0] + 1; free($4);}
+array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);}
+	| '[' ID ']' {$$ = new attr(); $$->dimension[0] = 1;}
+	| '[' T_DEC_INT ']' {$$ = new attr();  $$->dimension[0] = 1;}
+	| '[' T_DEC_INT ']' array {$$ = new attr(); $$->dimension[0] = $4->dimension[0] + 1; free($4);}
 	;
 %%
 

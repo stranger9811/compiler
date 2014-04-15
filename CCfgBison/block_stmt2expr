@@ -477,7 +477,7 @@ expr  : expr '+' expr 			{
 						free($1);
 						free($4);
 					}
-	| '!' expr    {$$ = (attr*)malloc(sizeof(attr));
+	| '!' expr    {$$ = new attr();
 					$$->my_type = Bool;
 
 					$$->truelist = $2->falselist;
@@ -486,7 +486,7 @@ expr  : expr '+' expr 			{
 					 free($2);
 					 }
 	| '('expr')'  {
-						$$ = (attr*)malloc(sizeof(attr));
+						$$ = new attr();
 						$$->my_type = $2->my_type; 
 						free($2);
 					}
@@ -513,9 +513,9 @@ printf("expr-->identifier:\nidentifier is of type %d\n",$$->my_type);
 			}
 			free($1);
 		  }
-	| '+' expr %prec UPLUS {$$ = (attr*)malloc(sizeof(attr));
+	| '+' expr %prec UPLUS {$$ = new attr();
 $$->my_type=$2->my_type; free($2);}
-	| '-' expr %prec UMINUS {$$ = (attr*)malloc(sizeof(attr));
+	| '-' expr %prec UMINUS {$$ = new attr();
 $$->my_type=$2->my_type; free($2);}
 	|number {
 				$$ = new attr();
@@ -527,7 +527,7 @@ $$->my_type=$2->my_type; free($2);}
 				$$->dimension[0] = 0;
 			}
 	| '*' expr %prec DEREF {
-								$$ = (attr*)malloc(sizeof(attr));
+								$$ = new attr();
 								$$->my_type=$2->my_type; 
 								$$->dimension[0] = $2->dimension[0]+1;
 								free($2);

@@ -28,37 +28,40 @@ block  : brac_open M brac_close  {
 									#ifdef debug
 						 				cout << "block -> brac_open M brac_close \n";
 						 			#endif
-									$$ = (attr*)malloc(sizeof(attr)); 
+									$$ = new attr(); 
 									$$->my_type = $2->my_type;
 									$$->dimension[0] = $2->dimension[0];
-
+									$$->isreturn = $2->isreturn;
 									$$->nextlist = $2->nextlist;
 
 									free($2);
 									}
 									/*block can either be many statements enclosed in braces or just one S.*/
-	| S  						{$$ = (attr*)malloc(sizeof(attr)); free($1);
+	| S  						{$$ = new attr(); free($1);
 }		/*S can again be multiple statments separated by comma.*/
 	;
 
 M  : M  Marker_If   S 
 			{
-				$$ = (attr*)malloc(sizeof(attr));
+				$$ = new attr();
 				#ifdef debug
 					cout << "M -> S M\n";
 				#endif
-/*				if ($1->my_type != Useless)
-				{
+
+				if ($1->isreturn)
 					$$->my_type = $1->my_type;
-					$$->dimension[0] = $1->dimension[0];
-				}
-				else
-				{
-					$$->my_type = $2->my_type;
-					$$->dimension[0] = $2->dimension[0];
-				}
-				if ($$->my_type!=$2->my_type) yyerror("Different return types for same function\n");
-*/				
+				else if ($3->isreturn)
+					$$->my_type = $3->my_type;
+				else $$->my_type = Useless;
+				$$->dimension[0] = $1->dimension[0];
+				$$->isreturn = $1->isreturn || $3->isreturn;
+				
+				if ($$->my_type!=$3->my_type && $1->isreturn && $3->isreturn )
+					yyerror("Different return types for same function\n");
+#ifdef debug2
+	printf("types are: %d %d\n",$$->my_type,$3->my_type);
+#endif
+				
 				((compiler *)c)->backpatch($1->nextlist,$2);
 				$$->nextlist = $3->nextlist;
 				free($1);
@@ -68,10 +71,10 @@ M  : M  Marker_If   S
 				#ifdef debug
 						cout << "M -> S\n";
 				#endif
-				$$ = (attr*)malloc(sizeof(attr));
+				$$ = new attr();
 				$$->my_type = $1->my_type;
 				$$->dimension[0] = $1->dimension[0];	
-
+				$$->isreturn = $1->isreturn;
 				$$->nextlist = $1->nextlist;
 
 				free($1);
@@ -83,9 +86,12 @@ S  : S1';'	{
 						cout << "S -> S1\n";
 				#endif
 				$$ = new attr();
-				if ($1->isreturn)
-					$$->my_type = $1->my_type;
-				else $$->my_type = Useless;
+				
+				
+				$$->my_type = $1->my_type;
+				$$->isreturn = $1->isreturn;
+
+				
 				$$->dimension[0] = $1->dimension[0];
 
 				$$->nextlist = $1->nextlist;
@@ -97,9 +103,9 @@ S  : S1';'	{
 							cout << "S -> block_stmt\n";
 					#endif
 					$$ = new attr();
-					if ($1->isreturn)
-						$$->my_type = $1->my_type;
-					else $$->my_type = Useless;
+					$$->my_type = $1->my_type;
+					$$->isreturn = $1->isreturn;
+
 					$$->nextlist = $1->nextlist;
 					$$->dimension[0] = $1->dimension[0];
 					free($1);

@@ -9,6 +9,7 @@
 using namespace std;
 extern int no_line;
 #define MAXPARAM 50
+#define STACKSIZE 512
 
 enum type_enum{
 Bool,
@@ -25,7 +26,8 @@ Error
 };
 enum type_instr{
 Jump,
-Assignment
+Assignment,
+Mipscode;
 };
 
 
@@ -53,11 +55,13 @@ struct llm {
         enum type_enum my_type;
         int dimension;
         funcparams paramlist;
+        int funcline;
 };
 
 
 struct code_element {
-	enum type_instr data1; 	//Type of the instruction
+	enum type_instr data1; 	//Type of the instruction. If the instruction is Mipscode then we have
+							// the mips statement in the order data2 arg1.var arg2.var result.var
 	string data2;    //Lexeme of the operator
 	struct args arg1;	//1st operand
 	struct args arg2; 	//2nd operand

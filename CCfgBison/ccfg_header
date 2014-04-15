@@ -27,6 +27,9 @@ bool maindef;
 struct symbol_table *current_symbol_table;
 int max_index=0;
 vector <struct code_element> global_code;
+int A[1000][3];
+extern void codegen();
+extern void create_mips();
 
 int yylex();
 int yyparse();

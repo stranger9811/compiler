@@ -122,9 +122,11 @@ int main()
 		current_symbol_table->parent = NULL;
 		c = (void *) (new compiler);
         yyparse();
+
         if (!maindef) yyerror("main function not defined");
 		print();
-
-
+		codegen();
+		print();
+		create_mips();
 		return 0;
 }

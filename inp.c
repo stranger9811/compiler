@@ -1,24 +1,9 @@
 int main()
 {
-	int x;
-	while(x-1>=0)
-	{
-		if (x==1 && x<2 && x>5)
-		{
-			x=5;
-		}
-		else
-		{
-			x = 9;
-		}
+	int x,a,b;
+	x=a*a+2*a*b+b*b;
+	while(x=x-1) {
+		x=a*a+2*a*b+b*b;
 
-		x = 8;
-		if (x<3|| x>=3)
-		{
-			int y;
-			y = 7;
-		}
-		x = y+5;
 	}
-	return x;
 }
