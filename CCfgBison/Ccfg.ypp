@@ -23,6 +23,7 @@
 
 using namespace std;
 int no_line;
+int totalerrs;
 bool maindef;
 struct symbol_table *current_symbol_table;
 int max_index=0;
@@ -39,16 +40,19 @@ int newTemp() {
 	max_index++;
 	return max_index;		
 }
+
+
 int check_keyword(string identifier);
 void yyerror(const char *s,string color=KRED,string e="")
 {
-
-        
-   fprintf(stderr, "%sline %d: %s %s%s",color.c_str(),no_line, s,e.c_str(),KNRM);
+	if(color==KRED)
+   		totalerrs++;
+    fprintf(stderr, "%sline %d: %s %s%s",color.c_str(),no_line, s,e.c_str(),KNRM);
 
 }
 
 void *c;
+FILE *text;
 
 
 %}
@@ -248,9 +252,16 @@ decl  : type identifier';' {
 		current_symbol_table->table[$2->lexeme]=(temp); 
 		code_element setsp,setfp;
 		setsp.data1 = setfp.data1 = Mipscode;
+
 		setsp.data2 = "subu";
 		setsp.arg1.var = "$sp";
 		setsp.arg1.args_type = 1;
+		setsp.arg2.var = "$sp";
+		setsp.arg2.args_type = 1;
+		setsp.result.int_val = STACKSIZE;
+		setsp.result.args_type = 3;
+
+		
 	}
 
 	 block   {
@@ -294,9 +305,16 @@ decl  : type identifier';' {
 		current_symbol_table->table[$2->lexeme]=(temp); 
 		code_element setsp,setfp;
 		setsp.data1 = setfp.data1 = Mipscode;
+
 		setsp.data2 = "subu";
 		setsp.arg1.var = "$sp";
 		setsp.arg1.args_type = 1;
+		setsp.arg2.var = "$sp";
+		setsp.arg2.args_type = 1;
+		setsp.result.int_val = STACKSIZE;
+		setsp.result.args_type = 3;
+
+		
 	}
 
 	 block {
@@ -1194,7 +1212,15 @@ expr  : expr '+' expr 			{
 	| identifier  {
 			$$ = new attr();
 			$$->place.var = $1->place.var; 
-			$$->place.args_type = 1;
+
+			struct code_element temp_code;
+			temp_code.data2 = "=";
+			temp_code.result.temp = newTemp();
+			temp_code.result.args_type = 2;
+			temp_code.arg1 =  $1->place;
+			global_code.push_back(temp_code);
+			$$->place  = temp_code.result; 
+
 			struct symbol_table *temp = current_symbol_table;
 			int flag = 1;
 			while(flag) {
@@ -1220,8 +1246,17 @@ $$->my_type=$2->my_type; free($2);}
 $$->my_type=$2->my_type; free($2);}
 	|number {
 				$$ = new attr();
+				printf("args_type = %d\n",$1->place.args_type);
 				$$->place = $1->place;
 
+				struct code_element temp_code;
+				temp_code.data2 = "=";
+				temp_code.result.temp = newTemp();
+				temp_code.result.args_type = 2;
+				temp_code.arg1 =  $1->place;
+				global_code.push_back(temp_code);
+
+				$$->place  = temp_code.result; 
 
 				$$->place.args_type = $$->place.args_type;
 				$$->my_type = $1->my_type;
@@ -1476,10 +1511,12 @@ void print()
 	}
 }
 
+
 int main()
 {
 		no_line = 1;
 		maindef = 0;
+		totalerrs = 0;
 		current_symbol_table = new symbol_table;
 		current_symbol_table->parent = NULL;
 		c = (void *) (new compiler);
@@ -1487,6 +1524,11 @@ int main()
 
         if (!maindef) yyerror("main function not defined");
 		print();
+		if (totalerrs>0)
+		{
+			printf("%d errors found: No code generated\n",totalerrs);
+		    //return 0;
+		}
 		codegen();
 		print();
 		create_mips();

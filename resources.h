@@ -10,6 +10,7 @@ using namespace std;
 extern int no_line;
 #define MAXPARAM 50
 #define STACKSIZE 512
+extern FILE *text;
 
 enum type_enum{
 Bool,
@@ -27,7 +28,7 @@ Error
 enum type_instr{
 Jump,
 Assignment,
-Mipscode;
+Mipscode
 };
 
 
@@ -92,9 +93,6 @@ struct attr
 	attr() {isreturn = 0;}
 };
 
-/*
-
-*/
 
 struct symbol_table {
         vector <struct symbol_table *> children;
@@ -105,39 +103,105 @@ struct symbol_table {
 
 struct compiler {
 
-string enumtostring(enum type_enum type)
-{
-
-        if(type==Bool) return "bool";
-        if(type==Long_long) return "long long";
-        if(type==Char) return "char";
-        if(type==Int) return "int";
-        if(Float==type) return "float";
-        if(Double==type) return "double";
-        if(Void==type) return "void";
-        if(Pointer==type) return "Pointer";
-}
-
-void backpatch(vector <int> lines, int label) {
-	int i;
-
-	for (i=0;i<lines.size();i++)
+	string enumtostring(enum type_enum type)
 	{
-		global_code[lines[i]].result.int_val = label;
-	}
-}
 
-vector <int> makelist(int p) {
-	vector <int> new1;
-	new1.push_back(p);
-	return new1;
-}
-
-vector <int> merge_list(vector <int> l1,vector <int> l2) {
-	
-	for(int i=0; i<l1.size(); i++) {
-		l2.push_back(l1[i]);
+	        if(type==Bool) return "bool";
+	        if(type==Long_long) return "long long";
+	        if(type==Char) return "char";
+	        if(type==Int) return "int";
+	        if(Float==type) return "float";
+	        if(Double==type) return "double";
+	        if(Void==type) return "void";
+	        if(Pointer==type) return "Pointer";
 	}
-	return l2;
- }
+
+	int width(enum type_enum type)  //Size of the type in bytes
+	{
+		if (type == Int) return 4;
+		if (type == Bool) return 1;
+		if (type == Float) return 4;
+		if (type == Double) return 8;
+		if (type == Pointer) return 8;
+		if (type == Long_long) return 8;
+	}
+
+	void backpatch(vector <int> lines, int label) {
+		int i;
+
+		for (i=0;i<lines.size();i++)
+		{
+			global_code[lines[i]].result.int_val = label;
+		}
+	}
+
+	vector <int> makelist(int p) {
+		vector <int> new1;
+		new1.push_back(p);
+		return new1;
+	}
+
+	vector <int> merge_list(vector <int> l1,vector <int> l2) {
+		
+		for(int i=0; i<l1.size(); i++) {
+			l2.push_back(l1[i]);
+		}
+		return l2;
+	 }
+
+	 void writemipscode (string a, string b, string c, string d="")
+	 {
+	 		code_element setsp;
+			setsp.data1 = Mipscode;
+
+			setsp.data2 = a;
+			setsp.arg1.var = b;
+			setsp.arg1.args_type = 1;
+			setsp.arg2.var = c;
+			setsp.arg2.args_type = 1;
+			setsp.result.var = d;
+			setsp.result.args_type = 1;
+
+			global_code.push_back(setsp);
+	 }
+	 void savereg (string reg, int where)
+	 {
+	 	writemipscode ("sw",reg,to_string(where) + "($sp)");
+	 }
+	 void restorereg (string reg, int where)
+	 {
+	 	writemipscode ("lw",reg,to_string(where)+"($sp)");
+	 }
+
+	void gencalleecode (bool justcalled, funcparams paramlist  ) //callee saved register: t0 through t7
+	{
+		if (justcalled)
+		{
+			writemipscode ("subu","$sp","$sp",to_string(MAXPARAM));
+			int lim = MAXPARAM;
+			lim -= 4;
+			savereg("$ra",lim);
+			lim -= 4;
+			savereg ("$fp",lim);
+			writemipscode ("addu","$fp","$sp,",to_string(MAXPARAM));
+			for (int i=0;i<8;i++)
+			{
+				lim -= 4;
+				savereg("$t"+to_string(i),lim);
+			}
+		}
+		else
+		{
+			/*lw $ra,28($sp)
+			lw $fp,24($sp)
+			addu $sp, $sp,32
+			jr $ra*/
+		}
+	}
+
+	void gencallercode () // caller saved registers: s0 through s7
+	{
+
+	}
+
 };

@@ -83,29 +83,29 @@ void codegen() {
 
 int check_operator(int i)
 {
-	if (global_code.data2 == "+")
+	if (global_code[i].data2 == "+")
 	{
-		fprintf(text,"\tadd $t%d,$t%d,$t%d\n",global_code.result.temp,global_code.result.arg1,global_code.result.arg2);
+		fprintf(text,"\tadd $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
 		return 1;
 	}
-	else if(global_code.data2 == "-")
+	else if(global_code[i].data2 == "-")
 	{
-		fprintf(text,"\tsub $t%d,$t%d,$t%d\n",global_code.result.temp,global_code.result.arg1,global_code.result.arg2);
+		fprintf(text,"\tsub $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
 		return 1;
 	}
-	else if(global_code.data2 == "/")
+	else if(global_code[i].data2 == "/")
 	{
-		fprintf(text,"\tdiv $t%d,$t%d,$t%d\n",global_code.result.temp,global_code.result.arg1,global_code.result.arg2);
+		fprintf(text,"\tdiv $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
 		return 1;
 	}
-	else if(global_code.data2 == "*")
+	else if(global_code[i].data2 == "*")
 	{	
-		fprintf(text,"\tmul $t%d,$t%d,$t%d\n",global_code.result.temp,global_code.result.arg1,global_code.result.arg2);
+		fprintf(text,"\tmul $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
 		return 1;
 	}
-	else if(global_code.data2 == "MOD")
+	else if(global_code[i].data2 == "MOD")
 	{
-		fprintf(text,"\trem $t%d,$t%d,$t%d\n",global_code.result.temp,global_code.result.arg1,global_code.result.argsss2);
+		fprintf(text,"\trem $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
 		return 1;
 	}
 	return 0;
@@ -113,6 +113,8 @@ int check_operator(int i)
 
 void create_mips()
 {
+	
+	text =  fopen("misp_code.s","w");
 	int is_leader[global_code.size()+1];   // +1 for end of program
 		memset(is_leader,0,sizeof(is_leader));
 		is_leader[0] = 1;
@@ -128,6 +130,14 @@ void create_mips()
 				}
 			}
 		}
+		cout << "leaders ";
+		for (int i=0; i<=global_code.size(); i++) {
+			
+			if(is_leader[i]) 
+				cout << i << " ";
+			
+		}
+		cout << endl;
 	int label_count = 0;
 	for(int i=0;i<global_code.size();i++)
 	{
@@ -137,26 +147,26 @@ void create_mips()
 			{
 				label_count+=1;
 				fprintf(text,"L%d:\n",label_count);
+			}
+
 				int j = check_operator(i);
+
 				if(j==0)
 				{
 					if(global_code[i].result.args_type == 1 && global_code[i].data2 == "=")
 					{
 						fprintf(text,"\tsw t%d scope1\n",global_code[i].arg1.temp);
 					}
-					else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 1 global_code[i].data2 == "=")
+					else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 1 && global_code[i].data2 == "=")
 					{
 						fprintf(text,"\tlw t%d scope1\n",global_code[i].result.temp);
 
 					}
-					else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 3 global_code[i].data2 == "=")
+					else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 3 &&  global_code[i].data2 == "=")
 					{
 						fprintf(text,"\tmv t%d %d\n",global_code[i].result.temp,global_code[i].arg1.int_val);
 					}
-
 				}
-
-			}
 		}
 
 	}

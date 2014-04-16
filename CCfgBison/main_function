@@ -114,10 +114,12 @@ void print()
 	}
 }
 
+
 int main()
 {
 		no_line = 1;
 		maindef = 0;
+		totalerrs = 0;
 		current_symbol_table = new symbol_table;
 		current_symbol_table->parent = NULL;
 		c = (void *) (new compiler);
@@ -125,6 +127,11 @@ int main()
 
         if (!maindef) yyerror("main function not defined");
 		print();
+		if (totalerrs>0)
+		{
+			printf("%d errors found: No code generated\n",totalerrs);
+		    //return 0;
+		}
 		codegen();
 		print();
 		create_mips();
