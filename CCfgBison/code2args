@@ -78,16 +78,19 @@ decl  : type identifier';' {
 
 		}
 
-		current_symbol_table->table[$2->lexeme]=(temp); 
+		symbol_table *tempTable = current_symbol_table;
+		while (tempTable->parent != NULL) tempTable= tempTable->parent;
+		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
+
 		
 	}
 
-	 block   {
+	 '{'   M   brac_close   {
 								$$ = new attr();
-								if ($1->my_type == $4->my_type)
+								if ($1->my_type == $5->my_type)
 								{
-									if ($1->dimension[0] == $4->dimension[0])
+									if ($1->dimension[0] == $5->dimension[0])
 									{	/* Everything is fine. Enter in symbol table */
 									}
 									else
@@ -95,15 +98,15 @@ decl  : type identifier';' {
 										yyerror("Dimension Mismatch\n");
 									}
 								}
-								else if($1->my_type == Void && !$4->isreturn) ;
+								else if($1->my_type == Void && !$5->isreturn) ;
 								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
-								$$->nextlist = $4->nextlist;
+								$$->nextlist = $5->nextlist;
 
 								free($1);
 								free($2);
-								free($4);
-
+								free($5);
+								delete $6;
 								((compiler *)c)-> gencalleecode(0);
 								((compiler *)c)-> writemipscode("jr","$ra");
 								}	/*This is for function definition only. No rule yet for function declation.*/
@@ -124,17 +127,19 @@ decl  : type identifier';' {
 
 		}
 
-		current_symbol_table->table[$2->lexeme]=(temp); 
+		symbol_table *tempTable = current_symbol_table;
+		while (tempTable->parent != NULL) tempTable= tempTable->parent;
+		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
 
 		
 	}
 
-	 block {
+	 '{'   M   brac_close  {
 								$$ = new attr();
-								if ($1->my_type == $4->my_type && $4->isreturn)
+								if ($1->my_type == $5->my_type && $5->isreturn)
 								{
-									if ($1->dimension[0] == $4->dimension[0])
+									if ($1->dimension[0] == $5->dimension[0])
 									{	/* Everything is fine. Enter in symbol table */
 									}
 									else
@@ -142,15 +147,16 @@ decl  : type identifier';' {
 										yyerror("Dimension Mismatch\n");
 									}
 								}
-								else if($1->my_type == Void && !$4->isreturn) ;
+								else if($1->my_type == Void && !$5->isreturn) ;
 								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
-								$$->nextlist = $4->nextlist;
+								$$->nextlist = $5->nextlist;
 
 
 								free($1);
 								free($2);
-								free($4);
+								free($5);
+								delete $6;
 
 								((compiler *)c)-> gencalleecode(0);
 								((compiler *)c)-> writemipscode("jr","$ra");
@@ -195,7 +201,7 @@ void  : void '*' %prec DEREF   {
 				$$->dimension[0] = 0;
 				}
 	;
-func  : ID'('args')'   {
+func  : ID   circl_brac_open  args   ')'      {
 						$$ = new lexemeNparam();
 						$$->lexeme = string($1);
 						int total = $$->my_params.total = $3->total;
@@ -229,10 +235,13 @@ func  : ID'('args')'   {
 							$$ = new lexemeNparam();
 							$$->lexeme = "main";
 							if (!maindef)
+							{
 								maindef = 1;
+								main_function_line = global_code.size();
+							}
 							else yyerror("Conflicting declaration of function main");
 
-							}
+					}
 	;
 args  : args ',' type identifier    {
 									$$ = new funcparams();
@@ -259,6 +268,39 @@ args  : args ',' type identifier    {
 							$$->my_type[total] = $1->my_type;
 							$$->dimension[total] = $1->dimension[0] + $2->dimension[0];
 							$$->total = 1;
+
+							
+
+							struct llm temp;
+
+							temp.my_type= $1->my_type; 
+
+							/* checking if variable is already declared */
+
+							if(current_symbol_table->table.find(string( $2->var_name[0])) != current_symbol_table->table.end())
+								yyerror("error: redeclaration \n");
+								
+							/*   ------------------------------------ */
+							else 
+							{
+								temp.dimension = $2->dimension[0];
+								temp.element_size = $2->element_size[0];
+								if(temp.dimension==2) 
+									temp.array_size = $2->array_size[0];
+
+								#ifdef debug2
+									if(temp.dimension>=1) {
+										printf("entering in symbol table with variable %s dimension %d and array_size %d\n",$2->var_name[0],temp.dimension,temp.array_size);
+									}
+								#endif
+								int j = check_keyword(string($2->var_name[0])); // 1 if error
+								if(j==1)
+									yyerror("error: variable name cannot be a keyword \n");
+								else if(j==0)
+									current_symbol_table->table[string($2->var_name[0])]=(temp);
+							}
+
+							
 							free($1); 
 							free($2);
 							}

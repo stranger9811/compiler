@@ -1,0 +1,296 @@
+creating new symbol table
+y has dimension 0
+S1 -> type init
+args_type = 3
+in expr -> identifier x
+in get_scope x
+expr-->identifier:
+identifier is of type 3
+assign_stmt -> identifier = expr 
+ in get_scope y
+In assign_stmt -> identifier '=' expr
+y_2types are: 8 0
+in expr -> identifier y
+in get_scope y
+expr-->identifier:
+identifier is of type 3
+types are: 3 3
+a has dimension -1094118408
+S1 -> type init
+args_type = 4
+assign_stmt -> identifier = expr 
+ in get_scope a
+In assign_stmt -> identifier '=' expr
+a_1types are: 8 0
+is_declaration = 1 
+is_declaration = 1 
+y has dimension 10
+S1 -> type init
+entering in symbol table with variable x dimension 1 and array_size 0
+entering in symbol table with variable y dimension 1 and array_size 0
+types are: 8 8
+args_type = 3
+assign_stmt -> identifier = expr 
+ in get_scope i
+In assign_stmt -> identifier '=' expr
+i_1in expr -> identifier i
+in get_scope i
+expr-->identifier:
+identifier is of type 3
+args_type = 3
+in expr -> identifier i
+in get_scope i
+expr-->identifier:
+identifier is of type 3
+args_type = 3
+assign_stmt -> identifier = expr 
+ in get_scope i
+In assign_stmt -> identifier '=' expr
+i_1creating new symbol table
+is_declaration = 0 
+in expr -> identifier a
+in get_scope a
+expr-->identifier:
+identifier is of type 3
+is_declaration = 0 
+in expr -> identifier x
+in get_scope x
+expr-->identifier:
+identifier is of type 3
+is_declaration = 0 
+in expr -> identifier y
+in get_scope y
+expr-->identifier:
+identifier is of type 3
+assign_stmt -> identifier = expr 
+ in get_scope y
+In assign_stmt -> identifier '=' expr
+y_1is_declaration = 0 
+in expr -> identifier y
+in get_scope y
+expr-->identifier:
+identifier is of type 3
+printing rule
+IDENTIFIER is 
+types are: 8 3
+types are: 8 8
+args_type = 3
+types are: 3 3
+l0:	subu $sp, $sp,512
+l1:	sw $ra, 384($sp)
+l2:	sw $fp, 388($sp)
+l3:	addu $fp, $sp,512
+l4:	sw $s0, 444($sp)
+l5:	sw $s1, 440($sp)
+l6:	sw $s2, 436($sp)
+l7:	sw $s3, 432($sp)
+l8:	sw $s4, 428($sp)
+l9:	sw $s5, 424($sp)
+l10:	sw $s6, 420($sp)
+l11:	sw $s7, 416($sp)
+l12:	t1= 2 = 
+l13:	t2= x_2 = 
+l14:	t3= t1 * t2
+l15:	y_2= t3 = 
+l16:	t4= y_2 = 
+l17:	lw $ra, 384($sp)
+l18:	lw $fp, 388($sp)
+l19:	addu  $sp,  $sp,512
+l20:	lw $s0, 444($sp)
+l21:	lw $s1, 440($sp)
+l22:	lw $s2, 436($sp)
+l23:	lw $s3, 432($sp)
+l24:	lw $s4, 428($sp)
+l25:	lw $s5, 424($sp)
+l26:	lw $s6, 420($sp)
+l27:	lw $s7, 416($sp)
+l28:	jr $ra 
+l29:	subu $sp, $sp,512
+l30:	sw $ra, 384($sp)
+l31:	sw $fp, 388($sp)
+l32:	addu $fp, $sp,512
+l33:	sw $s0, 444($sp)
+l34:	sw $s1, 440($sp)
+l35:	sw $s2, 436($sp)
+l36:	sw $s3, 432($sp)
+l37:	sw $s4, 428($sp)
+l38:	sw $s5, 424($sp)
+l39:	sw $s6, 420($sp)
+l40:	sw $s7, 416($sp)
+l41:	t5= 0.4 = 
+l42:	a_1= t5 = 
+l43:	t6= 0 = 
+l44:	i_1= t6 = 
+l45:	t7= i_1 = 
+l46:	t8= 10 = 
+l47:	if t7 < t8 then goto 54
+l48:			goto 93
+l49:	t9= i_1 = 
+l50:	t10= 1 = 
+l51:	t11= t9 + t10
+l52:	i_1= t11 = 
+l53:			goto 45
+l54:	subu $sp, $sp,512
+l55:	sw $ra, 384($sp)
+l56:	sw $fp, 388($sp)
+l57:	addu $fp, $sp,512
+l58:	sw $s0, 444($sp)
+l59:	sw $s1, 440($sp)
+l60:	sw $s2, 436($sp)
+l61:	sw $s3, 432($sp)
+l62:	sw $s4, 428($sp)
+l63:	sw $s5, 424($sp)
+l64:	sw $s6, 420($sp)
+l65:	sw $s7, 416($sp)
+l66:	t12= i = 
+l67:	t13= a_1 = 
+l68:	t14= i = 
+l69:	t15=x_1[t0]
+l70:	t16= t13 * t15
+l71:	t17= i = 
+l72:	t18=y_1[t0]
+l73:	t19= t16 + 
+l74:	y_1=t19[t0]
+l75:	t20= i = 
+l76:	t21=y_1[t0]
+l77:	t22=   t21
+l78:	move $a0 ,$22
+l79:	li $v0, 1
+l80:	syscall  
+l81:	lw $ra, 384($sp)
+l82:	lw $fp, 388($sp)
+l83:	addu  $sp,  $sp,512
+l84:	lw $s0, 444($sp)
+l85:	lw $s1, 440($sp)
+l86:	lw $s2, 436($sp)
+l87:	lw $s3, 432($sp)
+l88:	lw $s4, 428($sp)
+l89:	lw $s5, 424($sp)
+l90:	lw $s6, 420($sp)
+l91:	lw $s7, 416($sp)
+l92:			goto 49
+l93:	t23= 0 = 
+l94:	lw $ra, 384($sp)
+l95:	lw $fp, 388($sp)
+l96:	addu  $sp,  $sp,512
+l97:	lw $s0, 444($sp)
+l98:	lw $s1, 440($sp)
+l99:	lw $s2, 436($sp)
+l100:	lw $s3, 432($sp)
+l101:	lw $s4, 428($sp)
+l102:	lw $s5, 424($sp)
+l103:	lw $s6, 420($sp)
+l104:	lw $s7, 416($sp)
+l105:	jr $ra 
+=======mips code==== 106
+0 44
+45 48
+49 53
+54 92
+93 105
+l0:	subu $sp, $sp,512
+l1:	sw $ra, 384($sp)
+l2:	sw $fp, 388($sp)
+l3:	addu $fp, $sp,512
+l4:	sw $s0, 444($sp)
+l5:	sw $s1, 440($sp)
+l6:	sw $s2, 436($sp)
+l7:	sw $s3, 432($sp)
+l8:	sw $s4, 428($sp)
+l9:	sw $s5, 424($sp)
+l10:	sw $s6, 420($sp)
+l11:	sw $s7, 416($sp)
+l12:	t1= 2 = 
+l13:	t2= x_2 = 
+l14:	t1= t1 * t2
+l15:	y_2= t1 = 
+l16:	t0= y_2 = 
+l17:	lw $ra, 384($sp)
+l18:	lw $fp, 388($sp)
+l19:	addu  $sp,  $sp,512
+l20:	lw $s0, 444($sp)
+l21:	lw $s1, 440($sp)
+l22:	lw $s2, 436($sp)
+l23:	lw $s3, 432($sp)
+l24:	lw $s4, 428($sp)
+l25:	lw $s5, 424($sp)
+l26:	lw $s6, 420($sp)
+l27:	lw $s7, 416($sp)
+l28:	jr $ra 
+l29:	subu $sp, $sp,512
+l30:	sw $ra, 384($sp)
+l31:	sw $fp, 388($sp)
+l32:	addu $fp, $sp,512
+l33:	sw $s0, 444($sp)
+l34:	sw $s1, 440($sp)
+l35:	sw $s2, 436($sp)
+l36:	sw $s3, 432($sp)
+l37:	sw $s4, 428($sp)
+l38:	sw $s5, 424($sp)
+l39:	sw $s6, 420($sp)
+l40:	sw $s7, 416($sp)
+l41:	t1= 0.4 = 
+l42:	a_1= t1 = 
+l43:	t1= 0 = 
+l44:	i_1= t1 = 
+l45:	t1= i_1 = 
+l46:	t2= 10 = 
+l47:	if t1 < t2 then goto 54
+l48:			goto 93
+l49:	t1= i_1 = 
+l50:	t2= 1 = 
+l51:	t1= t1 + t2
+l52:	i_1= t1 = 
+l53:			goto 45
+l54:	subu $sp, $sp,512
+l55:	sw $ra, 384($sp)
+l56:	sw $fp, 388($sp)
+l57:	addu $fp, $sp,512
+l58:	sw $s0, 444($sp)
+l59:	sw $s1, 440($sp)
+l60:	sw $s2, 436($sp)
+l61:	sw $s3, 432($sp)
+l62:	sw $s4, 428($sp)
+l63:	sw $s5, 424($sp)
+l64:	sw $s6, 420($sp)
+l65:	sw $s7, 416($sp)
+l66:	t0= i = 
+l67:	t2= a_1 = 
+l68:	t0= i = 
+l69:	t3=x_1[t1]
+l70:	t2= t2 * t3
+l71:	t0= i = 
+l72:	t0=y_1[t1]
+l73:	t2= t2 + 
+l74:	y_1=t2[t1]
+l75:	t0= i = 
+l76:	t1=y_1[t1]
+l77:	t0=   t1
+l78:	move $a0 ,$22
+l79:	li $v0, 1
+l80:	syscall  
+l81:	lw $ra, 384($sp)
+l82:	lw $fp, 388($sp)
+l83:	addu  $sp,  $sp,512
+l84:	lw $s0, 444($sp)
+l85:	lw $s1, 440($sp)
+l86:	lw $s2, 436($sp)
+l87:	lw $s3, 432($sp)
+l88:	lw $s4, 428($sp)
+l89:	lw $s5, 424($sp)
+l90:	lw $s6, 420($sp)
+l91:	lw $s7, 416($sp)
+l92:			goto 49
+l93:	t0= 0 = 
+l94:	lw $ra, 384($sp)
+l95:	lw $fp, 388($sp)
+l96:	addu  $sp,  $sp,512
+l97:	lw $s0, 444($sp)
+l98:	lw $s1, 440($sp)
+l99:	lw $s2, 436($sp)
+l100:	lw $s3, 432($sp)
+l101:	lw $s4, 428($sp)
+l102:	lw $s5, 424($sp)
+l103:	lw $s6, 420($sp)
+l104:	lw $s7, 416($sp)
+l105:	jr $ra 

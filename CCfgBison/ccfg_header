@@ -59,6 +59,7 @@ FILE *text;
 map <int,int> label_info;
 int is_declaration = 0;
 int global_scope = 1;
+int main_function_line = -1;
 
 
 %}
@@ -173,6 +174,6 @@ struct attr *attributes;
 %type<attributes> expr
 %type<attributes> number
 %type<paramlist> exprlist
-
+%type<attributes> circl_brac_open
 
 %start code1

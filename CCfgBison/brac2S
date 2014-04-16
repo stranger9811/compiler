@@ -14,6 +14,7 @@ brac_open : '{' {
 				  current_symbol_table = temp;
 				 
 		 }
+		 ;
 
 brac_close : '}' {
 				$$ = new attr();
@@ -25,7 +26,7 @@ brac_close : '}' {
 				  current_symbol_table = temp->parent;
 				  delete temp;
 		 }
-
+		 ;
 block  : brac_open M brac_close  {	
 									#ifdef debug
 						 				cout << "block -> brac_open M brac_close \n";

@@ -175,27 +175,27 @@ int check_operator(int i)
 {
 			if (global_code[i].data2 == "+")
 			{
-				fprintf(text,"\tadd $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
+				fprintf(text,"\tadd $%d,$%d,$%d\n",8+global_code[i].result.temp,8+global_code[i].arg1.temp,8+global_code[i].arg2.temp);
 				return 1;
 			}
 			else if(global_code[i].data2 == "-")
 			{
-				fprintf(text,"\tsub $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
+				fprintf(text,"\tsub $%d,$%d,$%d\n",8+global_code[i].result.8+temp,global_code[i].arg1.temp,8+global_code[i].arg2.temp);
 				return 1;
 			}
 			else if(global_code[i].data2 == "/")
 			{
-				fprintf(text,"\tdiv $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
+				fprintf(text,"\tdiv $%d,$%d,$%d\n",8+global_code[i].result.temp,8+global_code[i].arg1.temp,8+global_code[i].arg2.temp);
 				return 1;
 			}
 			else if(global_code[i].data2 == "*")
 			{	
-				fprintf(text,"\tmul $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
+				fprintf(text,"\tmul $%d,$%d,$%d\n",8+global_code[i].result.temp,8+global_code[i].arg1.temp,8+global_code[i].arg2.temp);
 				return 1;
 			}
 			else if(global_code[i].data2 == "MOD")
 			{
-				fprintf(text,"\trem $t%d,$t%d,$t%d\n",global_code[i].result.temp,global_code[i].arg1.temp,global_code[i].arg2.temp);
+				fprintf(text,"\trem $%d,$%d,$%d\n",8+global_code[i].result.temp,8+global_code[i].arg1.temp,8+global_code[i].arg2.temp);
 				return 1;
 			}
 			return 0;
@@ -203,14 +203,32 @@ int check_operator(int i)
 void create_jump(int i)
 {
 			if(global_code[i].data2=="") {
-				fprintf(text, "\tjump L%d\n",label_info[global_code[i].result.int_val]);
+				fprintf(text, "\tb L%d\n",global_code[i].result.int_val);
 				//printf("simple jump to %d\n",global_code[i].result.int_val);
 			}
-			else {
-				if(global_code[i].data2=="==") {
-					fprintf(text, "\tbeq $t%d,$t%d,L%d\n",global_code[i].arg1.int_val,global_code[i].arg2.int_val,label_info[global_code[i].result.int_val]);
+			else if(global_code[i].data2=="==") {
+					fprintf(text, "\tbeq $%d,$%d,L%d\n",8+global_code[i].arg1.int_val,8+global_code[i].arg2.int_val,global_code[i].result.int_val);
 					//printf("conditional jump to %d\n",global_code[i].result.int_val);
-				}
+			}
+			else if(global_code[i].data2==">=") {
+					fprintf(text, "\tbge $%d,$%d,L%d\n",8+global_code[i].arg1.int_val,8+global_code[i].arg2.int_val,global_code[i].result.int_val);
+					//printf("conditional jump to %d\n",global_code[i].result.int_val);
+			}
+			else if(global_code[i].data2=="<=") {
+					fprintf(text, "\tble $%d,$%d,L%d\n",8+global_code[i].arg1.int_val,8+global_code[i].arg2.int_val,global_code[i].result.int_val);
+					//printf("conditional jump to %d\n",global_code[i].result.int_val);
+			}
+			else if(global_code[i].data2==">") {
+					fprintf(text, "\tbgt $%d,$%d,L%d\n",8+global_code[i].arg1.int_val,8+global_code[i].arg2.int_val,global_code[i].result.int_val);
+					//printf("conditional jump to %d\n",global_code[i].result.int_val);
+			}
+			else if(global_code[i].data2=="<") {
+					fprintf(text, "\tblt $%d,$%d,L%d\n",8+global_code[i].arg1.int_val,8+global_code[i].arg2.int_val,global_code[i].result.int_val);
+					//printf("conditional jump to %d\n",global_code[i].result.int_val);
+			}
+			else if(global_code[i].data2=="!=") {
+					fprintf(text, "\tbne $%d,$%d,L%d\n",8+global_code[i].arg1.int_val,8+global_code[i].arg2.int_val,global_code[i].result.int_val);
+					//printf("conditional jump to %d\n",global_code[i].result.int_val);
 			}
 }
 
@@ -250,8 +268,7 @@ void create_mips()
 		}
 		for(int i=0;i<=global_code.size();i++)
 		{
-			if(is_leader[i])
-				fprintf(text,"L%d:\n",label_info[i]);
+				fprintf(text,"L%d:\n",i);
 
 			if(global_code[i].data1 == Jump) {
 				create_jump(i);
@@ -276,5 +293,6 @@ void create_mips()
 					}
 				}
 			}
-	}
+			else if(global_code[i].data1 == Array)
+		}
 }

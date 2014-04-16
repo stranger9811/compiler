@@ -15,7 +15,15 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 											delete $8;
  											free($3); free($7);
 }	/*without brace if statements not allowed!*/
-	| T_IF     '('    expr    ')'     brac_open     Marker_If     M     brac_close  Marker_Else    T_ELSE     brac_open     Marker_If     M      brac_close
+	| T_IF     '('    expr    ')'     brac_open     Marker_If 
+	{
+		((compiler *)c)-> gencalleecode(1);
+	}
+	   M     brac_close  Marker_Else    T_ELSE     brac_open     Marker_If  
+	{
+	   	((compiler *)c)-> gencalleecode(1);
+	}
+	   M      brac_close
 											{
 												$$ = new attr();
 												if ($3->my_type != Bool) yyerror("Condition is not bool inside if statement\n");										
@@ -169,11 +177,12 @@ expr  : expr '+' expr 			{
 											yyerror(s);
 										}
 									}
+			printf("just entered funciton\n");
 									((compiler *)c)->gencallercode(1,paramlist);
 									code_element callerjump;
 									callerjump.data1 = Jump;
 									callerjump.result.int_val = temp->table[string($1)].funcline;
-									printf("testing in func call%d\n",temp->table[string($1)].funcline);
+			printf("testing in func call%d\n",temp->table[string($1)].funcline);
 									callerjump.result.args_type = 3;
 									global_code.push_back(callerjump);
 									((compiler *)c)->gencallercode(0,paramlist);
@@ -182,11 +191,15 @@ expr  : expr '+' expr 			{
 									callerjump.data1 = Assignment;
 									callerjump.result.temp = t;
 									callerjump.result.args_type = 2;
-									callerjump.arg1.temp = 2;
+									callerjump.arg1.temp = -1;
 									callerjump.arg1.args_type = 2;
 									global_code.push_back(callerjump);
 
 									$$->place = callerjump.result;
+								}
+								else
+								{
+									yyerror("Function not declared\n");
 								}								
 
 								delete $3;
@@ -534,7 +547,7 @@ expr  : expr '+' expr 			{
 				printf("\n");
 			#endif
 			int scope = ((compiler *)c)->get_scope($1->place.var);
-
+			
 			struct code_element temp_code;
 			temp_code.data2 = "=";
 			temp_code.result.temp = newTemp();
@@ -562,7 +575,7 @@ expr  : expr '+' expr 			{
 			while(flag) {
 			           	if( temp->table.find(string( $1->var_name[0])) != temp->table.end()){
 						$$->my_type = temp->table[string($1->var_name[0])].my_type;
-#ifdef debug
+#ifdef debug2
 printf("expr-->identifier:\nidentifier is of type %d\n",$$->my_type);
 #endif
 							flag = 0;

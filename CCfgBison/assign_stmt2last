@@ -1,6 +1,8 @@
 
 assign_stmt : identifier  '=' expr {
-							
+							#ifdef debug2
+								cout << "assign_stmt -> identifier = expr \n ";
+							#endif
 							$$ = new attr();
 							$$->my_type = Void;
 							struct code_element temp_code;

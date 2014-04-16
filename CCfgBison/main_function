@@ -141,11 +141,11 @@ int main()
         yyparse();
 
         if (!maindef) yyerror("main function not defined");
-		print();
+		//print();
 		if (totalerrs>0)
 		{
 			printf("%d errors found: No code generated\n",totalerrs);
-		    //return 0;
+		    return 0;
 		}
 		codegen();
 		print();

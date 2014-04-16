@@ -59,6 +59,7 @@ FILE *text;
 map <int,int> label_info;
 int is_declaration = 0;
 int global_scope = 1;
+int main_function_line = -1;
 
 
 %}
@@ -173,7 +174,7 @@ struct attr *attributes;
 %type<attributes> expr
 %type<attributes> number
 %type<paramlist> exprlist
-
+%type<attributes> circl_brac_open
 
 %start code1
 %%
@@ -256,16 +257,19 @@ decl  : type identifier';' {
 
 		}
 
-		current_symbol_table->table[$2->lexeme]=(temp); 
+		symbol_table *tempTable = current_symbol_table;
+		while (tempTable->parent != NULL) tempTable= tempTable->parent;
+		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
+
 		
 	}
 
-	 block   {
+	 '{'   M   brac_close   {
 								$$ = new attr();
-								if ($1->my_type == $4->my_type)
+								if ($1->my_type == $5->my_type)
 								{
-									if ($1->dimension[0] == $4->dimension[0])
+									if ($1->dimension[0] == $5->dimension[0])
 									{	/* Everything is fine. Enter in symbol table */
 									}
 									else
@@ -273,15 +277,15 @@ decl  : type identifier';' {
 										yyerror("Dimension Mismatch\n");
 									}
 								}
-								else if($1->my_type == Void && !$4->isreturn) ;
+								else if($1->my_type == Void && !$5->isreturn) ;
 								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
-								$$->nextlist = $4->nextlist;
+								$$->nextlist = $5->nextlist;
 
 								free($1);
 								free($2);
-								free($4);
-
+								free($5);
+								delete $6;
 								((compiler *)c)-> gencalleecode(0);
 								((compiler *)c)-> writemipscode("jr","$ra");
 								}	/*This is for function definition only. No rule yet for function declation.*/
@@ -302,17 +306,19 @@ decl  : type identifier';' {
 
 		}
 
-		current_symbol_table->table[$2->lexeme]=(temp); 
+		symbol_table *tempTable = current_symbol_table;
+		while (tempTable->parent != NULL) tempTable= tempTable->parent;
+		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
 
 		
 	}
 
-	 block {
+	 '{'   M   brac_close  {
 								$$ = new attr();
-								if ($1->my_type == $4->my_type && $4->isreturn)
+								if ($1->my_type == $5->my_type && $5->isreturn)
 								{
-									if ($1->dimension[0] == $4->dimension[0])
+									if ($1->dimension[0] == $5->dimension[0])
 									{	/* Everything is fine. Enter in symbol table */
 									}
 									else
@@ -320,15 +326,16 @@ decl  : type identifier';' {
 										yyerror("Dimension Mismatch\n");
 									}
 								}
-								else if($1->my_type == Void && !$4->isreturn) ;
+								else if($1->my_type == Void && !$5->isreturn) ;
 								else yyerror("Type mismatch: Return type doesn't match declared type\n");
 
-								$$->nextlist = $4->nextlist;
+								$$->nextlist = $5->nextlist;
 
 
 								free($1);
 								free($2);
-								free($4);
+								free($5);
+								delete $6;
 
 								((compiler *)c)-> gencalleecode(0);
 								((compiler *)c)-> writemipscode("jr","$ra");
@@ -373,7 +380,7 @@ void  : void '*' %prec DEREF   {
 				$$->dimension[0] = 0;
 				}
 	;
-func  : ID'('args')'   {
+func  : ID   circl_brac_open  args   ')'      {
 						$$ = new lexemeNparam();
 						$$->lexeme = string($1);
 						int total = $$->my_params.total = $3->total;
@@ -407,10 +414,13 @@ func  : ID'('args')'   {
 							$$ = new lexemeNparam();
 							$$->lexeme = "main";
 							if (!maindef)
+							{
 								maindef = 1;
+								main_function_line = global_code.size();
+							}
 							else yyerror("Conflicting declaration of function main");
 
-							}
+					}
 	;
 args  : args ',' type identifier    {
 									$$ = new funcparams();
@@ -437,6 +447,39 @@ args  : args ',' type identifier    {
 							$$->my_type[total] = $1->my_type;
 							$$->dimension[total] = $1->dimension[0] + $2->dimension[0];
 							$$->total = 1;
+
+							
+
+							struct llm temp;
+
+							temp.my_type= $1->my_type; 
+
+							/* checking if variable is already declared */
+
+							if(current_symbol_table->table.find(string( $2->var_name[0])) != current_symbol_table->table.end())
+								yyerror("error: redeclaration \n");
+								
+							/*   ------------------------------------ */
+							else 
+							{
+								temp.dimension = $2->dimension[0];
+								temp.element_size = $2->element_size[0];
+								if(temp.dimension==2) 
+									temp.array_size = $2->array_size[0];
+
+								#ifdef debug2
+									if(temp.dimension>=1) {
+										printf("entering in symbol table with variable %s dimension %d and array_size %d\n",$2->var_name[0],temp.dimension,temp.array_size);
+									}
+								#endif
+								int j = check_keyword(string($2->var_name[0])); // 1 if error
+								if(j==1)
+									yyerror("error: variable name cannot be a keyword \n");
+								else if(j==0)
+									current_symbol_table->table[string($2->var_name[0])]=(temp);
+							}
+
+							
 							free($1); 
 							free($2);
 							}
@@ -456,6 +499,7 @@ brac_open : '{' {
 				  current_symbol_table = temp;
 				 
 		 }
+		 ;
 
 brac_close : '}' {
 				$$ = new attr();
@@ -467,7 +511,7 @@ brac_close : '}' {
 				  current_symbol_table = temp->parent;
 				  delete temp;
 		 }
-
+		 ;
 block  : brac_open M brac_close  {	
 									#ifdef debug
 						 				cout << "block -> brac_open M brac_close \n";
@@ -617,7 +661,7 @@ S1  : expr ',' Marker_If  S1  {
 			}
 	|type {is_declaration=1;} init {
 						is_declaration = 0;
-			#ifdef debug
+			#ifdef debug2
 						 cout << "S1 -> type init\n";
 			#endif
 			$$ = new attr();
@@ -665,6 +709,14 @@ S1  : expr ',' Marker_If  S1  {
 								$$->isreturn = 1;
 								$$->my_type = $2->my_type;
 								$$->dimension[0] = $2->dimension[0];
+
+								code_element temp;
+								temp.result.temp = -1;
+								temp.result.args_type = 2;
+								temp.data1 = Assignment;
+								temp.arg1 = $2->place;
+								global_code.push_back(temp);
+
 								free($2);
 								}
 	| T_RETURN 				{
@@ -760,6 +812,23 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 					free($1);
 				  }
 	;
+
+circl_brac_open : '(' { 
+					$$ = new attr();
+
+					#ifdef debug2
+						printf("creating new symbol table\n");
+					#endif
+				  struct symbol_table *temp = new  symbol_table;
+				  current_symbol_table->children.push_back(temp); 
+				  temp->scope_number = global_scope;
+				  global_scope = global_scope + 1;
+				  temp->parent = current_symbol_table;
+
+				  current_symbol_table = temp;
+				 
+		 }
+		 ;
 
 block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_close 	{
 											#ifdef debug
@@ -931,11 +1000,12 @@ expr  : expr '+' expr 			{
 											yyerror(s);
 										}
 									}
+			printf("just entered funciton\n");
 									((compiler *)c)->gencallercode(1,paramlist);
 									code_element callerjump;
 									callerjump.data1 = Jump;
 									callerjump.result.int_val = temp->table[string($1)].funcline;
-									printf("testing in func call%d\n",temp->table[string($1)].funcline);
+			printf("testing in func call%d\n",temp->table[string($1)].funcline);
 									callerjump.result.args_type = 3;
 									global_code.push_back(callerjump);
 									((compiler *)c)->gencallercode(0,paramlist);
@@ -944,11 +1014,15 @@ expr  : expr '+' expr 			{
 									callerjump.data1 = Assignment;
 									callerjump.result.temp = t;
 									callerjump.result.args_type = 2;
-									callerjump.arg1.temp = 2;
+									callerjump.arg1.temp = -1;
 									callerjump.arg1.args_type = 2;
 									global_code.push_back(callerjump);
 
 									$$->place = callerjump.result;
+								}
+								else
+								{
+									yyerror("Function not declared\n");
 								}								
 
 								delete $3;
@@ -1296,7 +1370,7 @@ expr  : expr '+' expr 			{
 				printf("\n");
 			#endif
 			int scope = ((compiler *)c)->get_scope($1->place.var);
-
+			
 			struct code_element temp_code;
 			temp_code.data2 = "=";
 			temp_code.result.temp = newTemp();
@@ -1324,7 +1398,7 @@ expr  : expr '+' expr 			{
 			while(flag) {
 			           	if( temp->table.find(string( $1->var_name[0])) != temp->table.end()){
 						$$->my_type = temp->table[string($1->var_name[0])].my_type;
-#ifdef debug
+#ifdef debug2
 printf("expr-->identifier:\nidentifier is of type %d\n",$$->my_type);
 #endif
 							flag = 0;
@@ -1390,7 +1464,9 @@ $$->my_type=$2->my_type; free($2);}
 	
 
 assign_stmt : identifier  '=' expr {
-							
+							#ifdef debug2
+								cout << "assign_stmt -> identifier = expr \n ";
+							#endif
 							$$ = new attr();
 							$$->my_type = Void;
 							struct code_element temp_code;
@@ -1738,11 +1814,11 @@ int main()
         yyparse();
 
         if (!maindef) yyerror("main function not defined");
-		print();
+		//print();
 		if (totalerrs>0)
 		{
 			printf("%d errors found: No code generated\n",totalerrs);
-		    //return 0;
+		    return 0;
 		}
 		codegen();
 		print();

@@ -264,13 +264,11 @@ struct compiler {
 		cout << "in get_scope" << " " << var_name_t << endl;
 		#endif
 		struct symbol_table *temp = current_symbol_table;
-		cout << "scope is " << temp->scope_number << endl;
 		while(temp!=NULL && temp->table.find(var_name_t)==temp->table.end()) {
-			cout << "scope is " << temp->scope_number << endl;
 			temp = temp->parent;
 		}
 
-		if(temp->table.find(var_name_t)!=temp->table.end())
+		if(temp!=NULL&&temp->table.find(var_name_t)!=temp->table.end())
 			return temp->scope_number;
 		return -1;
 	}
@@ -283,7 +281,7 @@ struct compiler {
 		while(temp!=NULL && temp->table.find(var_name_t)==temp->table.end()) {
 			temp = temp->parent;
 		}
-		if(temp->table.find(var_name_t)!=temp->table.end()) {
+		if(temp!=NULL && temp->table.find(var_name_t)!=temp->table.end()) {
 			if(temp->table[var_name_t].dimension >= 1)
 				return temp->table[var_name_t].element_size;
 			else
@@ -300,7 +298,7 @@ struct compiler {
 		while(temp!=NULL && temp->table.find(var_name_t)==temp->table.end()) {
 			temp = temp->parent;
 		}
-		if(temp->table.find(var_name_t)!=temp->table.end()) {
+		if(temp!=NULL && temp->table.find(var_name_t)!=temp->table.end()) {
 			if(temp->table[var_name_t].dimension>=1)
 				return temp->table[var_name_t].array_size;
 			else
@@ -388,7 +386,7 @@ struct compiler {
 				}
 
 			}
-			for (int i=0;i<8;i++)
+			for (int i=0;i<10;i++)
 			{
 				savereg("$t"+to_string(i),get_addr("$t"+to_string(i)));
 			} // Must execute jal or jalr
@@ -397,7 +395,7 @@ struct compiler {
 
 		else //Callee has returned from call
 		{
-			for (int i = 0; i < 8; ++i)
+			for (int i = 0; i < 10; ++i)
 			{
 				/* code */
 				loadreg("$t"+to_string(i),get_addr("$t"+to_string(i)));
