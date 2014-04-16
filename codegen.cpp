@@ -1,11 +1,12 @@
 #include<vector>
+#include <algorithm>
 #include<utility>
 #include "resources.h"
 using namespace std;
 
 
 void codegen() {
-		printf("=======mips code==== %d\n",global_code.size());
+		printf("=======mips code==== %lu\n",global_code.size());
 
 		int is_leader[global_code.size()+1];   // +1 for end of program
 		memset(is_leader,0,sizeof(is_leader));
@@ -31,8 +32,12 @@ void codegen() {
 			end = i-1;
 			cout << start  << " " << end << endl;
 			vector <pair<int,int> > live;
+			vector <int> dead;
+			for(int i=1;i<=28;i++) 
+				dead.push_back(i);
 			for(int j=end; j>=start; j--) {
 				if(global_code[j].data1==Jump){
+					
 					if(global_code[j].arg1.args_type == 2){
 						int flag = 1;
 						for(int k=0; k<live.size();k++) {
@@ -41,12 +46,14 @@ void codegen() {
 								global_code[j].arg1.temp = live[k].second;
 							}
 						}
-					}
-					if(flag==1) {
+						if(flag==1) {
 
-							live.push_back(make_pair(global_code[j].arg1.temp,live.size()+1));
-							global_code[j].arg1.temp = live.size();
+							live.push_back(make_pair(global_code[j].arg1.temp,dead[0]));
+							global_code[j].arg1.temp = dead[0];
+							dead.erase(dead.begin());
+						}
 					}
+					
 				
 					if(global_code[j].arg2.args_type == 2){
 						int flag = 1;
@@ -57,21 +64,74 @@ void codegen() {
 							}
 						}
 						if(flag==1) {
-							live.push_back(make_pair(global_code[j].arg2.temp,live.size()+1));
-							global_code[j].arg2.temp = live.size();
+							live.push_back(make_pair(global_code[j].arg2.temp,dead[0]));
+							global_code[j].arg2.temp = dead[0];
+							dead.erase(dead.begin());
+						}
+					}
+				}
+				else if(global_code[j].data1==Array) {
+					if(global_code[j].result.args_type==2) {
+						int flag = 1;
+						for(int k=0; k<live.size();k++) {
+							if(live[k].first==global_code[j].result.temp) {
+								flag = 0;
+								global_code[j].result.temp = live[k].second;
+								dead.push_back(live[k].second);
+								live.erase(live.begin()+k);
+								sort(dead.begin(),dead.end());
+							}
+						}
+						if(flag==1) {
+							global_code[j].result.temp = 0;
+						}
+					}
+					if(global_code[j].arg1.args_type == 2){
+						int flag = 1;
+						for(int k=0; k<live.size();k++) {
+							if(live[k].first==global_code[j].arg1.temp) {
+								flag = 0; 
+								global_code[j].arg1.temp = live[k].second;
+							}
+						}
+
+						if(flag==1) {
+
+							live.push_back(make_pair(global_code[j].arg1.temp,dead[0]));
+							global_code[j].arg1.temp = dead[0];
+							dead.erase(dead.begin());
+						}
+					}
+					if(global_code[j].arg2.args_type == 2){
+						int flag = 1;
+						for(int k=0; k<live.size();k++) {
+							if(live[k].first==global_code[j].arg2.temp) {
+								flag = 0; 
+								global_code[j].arg2.temp = live[k].second;
+							}
+						}
+						if(flag==1) {
+							live.push_back(make_pair(global_code[j].arg2.temp,dead[0]));
+							global_code[j].arg2.temp = dead[0];
+							dead.erase(dead.begin());
 						}
 					}
 				}
 				else if(global_code[j].data1==Assignment) {
 
 					if(global_code[j].result.args_type==2) {
-
+						int flag = 1;
 						for(int k=0; k<live.size();k++) {
 							if(live[k].first==global_code[j].result.temp) {
+								flag = 0;
 								global_code[j].result.temp = live[k].second;
+								dead.push_back(live[k].second);
 								live.erase(live.begin()+k);
-
+								sort(dead.begin(),dead.end());
 							}
+						}
+						if(flag==1) {
+							global_code[j].result.temp = 0;
 						}
 					}
 
@@ -86,8 +146,9 @@ void codegen() {
 
 						if(flag==1) {
 
-							live.push_back(make_pair(global_code[j].arg1.temp,live.size()+1));
-							global_code[j].arg1.temp = live.size();
+							live.push_back(make_pair(global_code[j].arg1.temp,dead[0]));
+							global_code[j].arg1.temp = dead[0];
+							dead.erase(dead.begin());
 						}
 					}
 					if(global_code[j].arg2.args_type == 2){
@@ -99,8 +160,9 @@ void codegen() {
 							}
 						}
 						if(flag==1) {
-							live.push_back(make_pair(global_code[j].arg2.temp,live.size()+1));
-							global_code[j].arg2.temp = live.size();
+							live.push_back(make_pair(global_code[j].arg2.temp,dead[0]));
+							global_code[j].arg2.temp = dead[0];
+							dead.erase(dead.begin());
 						}
 					}
 				}
@@ -207,13 +269,12 @@ void create_mips()
 					else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 1 && global_code[i].data2 == "=")
 					{
 						fprintf(text,"\tlw t%d scope1\n",global_code[i].result.temp);
-
 					}
 					else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 3 &&  global_code[i].data2 == "=")
 					{
 						fprintf(text,"\tmv t%d %d\n",global_code[i].result.temp,global_code[i].arg1.int_val);
 					}
 				}
-		}
+			}
 	}
 }

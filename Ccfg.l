@@ -43,7 +43,7 @@ hex [A-F0-9]
 <INITIAL>"while"                      {return (T_WHILE);}
 <INITIAL>"goto"                      {return (T_GOTO);}
 <INITIAL>"return"                      {return (T_RETURN);}
-<INITIAL>"printf"                      {return (T_PRINTF);}
+<INITIAL>"print_int"                      {return (T_PRINT_INT);}
 <INITIAL>"void"                      {return (T_VOID);}
 <INITIAL>"scanf"                      {return (T_SCANF);}
 <INITIAL>"sizeof"                      {return (T_SIZEOF);}

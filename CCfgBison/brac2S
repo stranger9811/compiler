@@ -2,11 +2,13 @@
 brac_open : '{' { 
 					$$ = new attr();
 
-					#ifdef debug
+					#ifdef debug2
 						printf("creating new symbol table\n");
 					#endif
 				  struct symbol_table *temp = new  symbol_table;
 				  current_symbol_table->children.push_back(temp); 
+				  temp->scope_number = global_scope;
+				  global_scope = global_scope + 1;
 				  temp->parent = current_symbol_table;
 
 				  current_symbol_table = temp;
@@ -113,6 +115,7 @@ S  : S1';'	{
 	| ';' {
 				$$ = new attr();
 	}
+
 	;
 
 exprlist : exprlist ',' expr    {

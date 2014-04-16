@@ -1,18 +1,35 @@
 
-assign_stmt : identifier '=' expr {
-							#ifdef debug
-								printf("In assign_stmt -> identifier '=' expr\n");
-
-							#endif 
+assign_stmt : identifier  '=' expr {
+							
 							$$ = new attr();
 							$$->my_type = Void;
 							struct code_element temp_code;
 							temp_code.arg1 = $3->place;
+							int scope = ((compiler *)c)->get_scope($1->place.var);
 							temp_code.result = $1->place;
+							temp_code.result.var = $1->place.var + "_" + to_string(scope);
+							temp_code.result.args_type = 1;
 							temp_code.data2 = "=";
 							temp_code.data1 = Assignment;
 							$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
 							$$->code.push_back(temp_code);
+							if($1->dimension[0]==2) {
+								temp_code.data2 = "[][]";
+								temp_code.data1 = Array;
+								printf("double array in assign_stmt -> identifier = expr offset %d\n",$1->offset_temp_number);
+								temp_code.arg2.temp = $1->offset_temp_number;
+								temp_code.arg2.args_type = 2;
+							}
+							else if($1->dimension[0]==1) {
+								temp_code.data2 = "[]";
+								temp_code.data1 = Array;
+								temp_code.arg2.temp = $1->offset_temp_number;
+								temp_code.arg2.args_type = 2;
+							}
+							#ifdef debug2
+								printf("In assign_stmt -> identifier '=' expr\n");
+								cout << temp_code.result.var;
+							#endif 
 							global_code.push_back(temp_code);
 
 
@@ -93,14 +110,98 @@ identifier  : ID	{
 		| ID array {
 							$$ = new attr();
 							strcpy($$->var_name[0],$1);
+							$$->place.var = $1;
+							if(!is_declaration&& $2->dimension[0]==2) {
+								struct code_element temp;
+								temp.result.temp = newTemp();
+								temp.result.args_type = 2;
+								temp.data2 = "=";
+								temp.arg1.int_val = ((compiler *)c)->get_second_size($1);
+								temp.arg1.args_type = 3;
+								global_code.push_back(temp);
+
+								temp.result.temp = newTemp();
+								temp.data2 = "*";
+								temp.arg1.temp = temp.result.temp-1;
+								temp.arg1.args_type = 2;
+								temp.arg2.temp = temp.result.temp-2;
+								temp.arg2.args_type = 2;
+								global_code.push_back(temp);
+
+								temp.result.temp = newTemp();
+								temp.data2 = "+";
+								temp.arg1.temp = temp.result.temp-1;
+								temp.arg1.args_type = 2;
+								temp.arg2.temp = temp.result.temp-4;
+								temp.arg2.args_type = 2;
+								global_code.push_back(temp);
+
+								$$->offset_temp_number  = temp.result.temp;
+
+
+							}
 							$$->dimension[0] = $2->dimension[0];
+							$$->array_size[0] = $2->array_size[0];
+							$$->element_size[0] = $2->element_size[0];
+							#ifdef debug2
+								printf("is_declaration = %d \n",is_declaration);
+							#endif
 							free($2);
 		}
 	;
-array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);}
-	| '[' ID ']' {$$ = new attr(); $$->dimension[0] = 1;}
-	| '[' T_DEC_INT ']' {$$ = new attr();  $$->dimension[0] = 1;}
-	| '[' T_DEC_INT ']' array {$$ = new attr(); $$->dimension[0] = $4->dimension[0] + 1; free($4);}
+array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);
+								if(!is_declaration) {
+									struct code_element temp;
+											temp.result.temp = newTemp();
+											temp.result.args_type = 2;
+											temp.data2 = "=";
+											temp.arg1.var = $2;
+											temp.arg1.args_type = 1;
+											global_code.push_back(temp);
+								}
+}
+	| '[' ID ']' {$$ = new attr(); $$->dimension[0] = 1;
+					if(!is_declaration) {
+											struct code_element temp;
+											temp.result.temp = newTemp();
+											temp.result.args_type = 2;
+											temp.data2 = "=";
+											temp.arg1.var = $2;
+											temp.arg1.args_type = 1;
+											global_code.push_back(temp);
+					}
+				}
+	| '[' T_DEC_INT ']' {$$ = new attr();  $$->dimension[0] = 1; $$->array_size[0] = $2;
+							if(is_declaration)
+								$$->element_size[0] = $2;
+							else {
+								struct code_element temp;
+								temp.result.temp = newTemp();
+								temp.result.args_type = 2;
+								temp.data2 = "=";
+								temp.arg1.int_val = $2;
+								temp.arg1.args_type = 3;
+								global_code.push_back(temp);
+							}
+						}
+	| '[' T_DEC_INT ']' array {
+									$$ = new attr(); $$->dimension[0] = $4->dimension[0] + 1; free($4);
+									if($$->dimension[0] == 2) {
+										$$->array_size[0] = $4->array_size[0];
+										if(is_declaration)
+											$$->element_size[0] =$2*$4->element_size[0];
+										else {
+											struct code_element temp;
+											temp.result.temp = newTemp();
+											temp.result.args_type = 2;
+											temp.data2 = "=";
+											temp.arg1.int_val = $2;
+											temp.arg1.args_type = 3;
+											global_code.push_back(temp);
+										}
+									}
+
+							  }
 	;
 %%
 

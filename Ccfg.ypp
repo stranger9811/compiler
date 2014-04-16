@@ -28,9 +28,12 @@ bool maindef;
 struct symbol_table *current_symbol_table;
 int max_index=0;
 vector <struct code_element> global_code;
-int A[1000][3];
+map <string, int> stackaddr;
+string reg[32];
 extern void codegen();
 extern void create_mips();
+
+
 
 int yylex();
 int yyparse();
@@ -54,6 +57,8 @@ void yyerror(const char *s,string color=KRED,string e="")
 void *c;
 FILE *text;
 map <int,int> label_info;
+int is_declaration = 0;
+int global_scope = 1;
 
 
 %}
@@ -89,7 +94,7 @@ struct attr *attributes;
 %token T_WHILE
 %token T_GOTO
 %token T_RETURN
-%token T_PRINTF
+%token T_PRINT_INT
 %token T_VOID
 %token T_SCANF
 %token T_SIZEOF
@@ -101,6 +106,7 @@ struct attr *attributes;
 %token T_LONG
 %token T_BOOL
 %token T_APOS
+
 
 %token <real> T_DEC_FLOAT
 %token <integer> T_DEC_INT
@@ -438,11 +444,13 @@ args  : args ',' type identifier    {
 brac_open : '{' { 
 					$$ = new attr();
 
-					#ifdef debug
+					#ifdef debug2
 						printf("creating new symbol table\n");
 					#endif
 				  struct symbol_table *temp = new  symbol_table;
 				  current_symbol_table->children.push_back(temp); 
+				  temp->scope_number = global_scope;
+				  global_scope = global_scope + 1;
 				  temp->parent = current_symbol_table;
 
 				  current_symbol_table = temp;
@@ -549,6 +557,7 @@ S  : S1';'	{
 	| ';' {
 				$$ = new attr();
 	}
+
 	;
 
 exprlist : exprlist ',' expr    {
@@ -606,7 +615,8 @@ S1  : expr ',' Marker_If  S1  {
 				$$->falselist = $1->falselist; 
 				free($1);
 			}
-	|type init {
+	|type {is_declaration=1;} init {
+						is_declaration = 0;
 			#ifdef debug
 						 cout << "S1 -> type init\n";
 			#endif
@@ -614,32 +624,41 @@ S1  : expr ',' Marker_If  S1  {
 			struct llm temp;
 
 			temp.my_type= $1->my_type; 
-			for(int i=0;i<$2->index;i++) {
+			for(int i=0;i<$3->index;i++) {
 				/* checking if variable is already declared */
 
-						if(current_symbol_table->table.find(string( $2->var_name[i])) != current_symbol_table->table.end())
+						if(current_symbol_table->table.find(string( $3->var_name[i])) != current_symbol_table->table.end())
 							yyerror("error: redeclaration \n");
 					
 				/*   ------------------------------------ */
 						else {
-							temp.dimension = $2->dimension[i];
-							int j = check_keyword(string($2->var_name[i])); // 1 if error
+							temp.dimension = $3->dimension[i];
+							temp.element_size = $3->element_size[i];
+							if(temp.dimension==2) 
+								temp.array_size = $3->array_size[i];
+
+							#ifdef debug2
+								if(temp.dimension>=1) {
+									printf("entering in symbol table with variable %s dimension %d and array_size %d\n",$3->var_name[i],temp.dimension,temp.array_size);
+								}
+							#endif
+							int j = check_keyword(string($3->var_name[i])); // 1 if error
 							if(j==1)
 								yyerror("error: variable name cannot be a keyword \n");
 							else if(j==0)
-								current_symbol_table->table[string($2->var_name[i])]=(temp);
+								current_symbol_table->table[string($3->var_name[i])]=(temp);
 						}
 
 			}
-#ifdef debug
+			#ifdef debug
 			printf("Variables declared \n"); 
-				for(int i=0;i<$2->index;i++) {
-					printf("%s %d\n",$2->var_name[i],$2->dimension[i]);
+				for(int i=0;i<$3->index;i++) {
+					printf("%s %d\n",$3->var_name[i],$3->dimension[i]);
 				}
 			#endif
 				$$->my_type = Useless;
 				free($1);
-				free($2);
+				free($3);
 	}
 	| T_RETURN expr 	{
 								$$ = new attr();
@@ -655,6 +674,31 @@ S1  : expr ',' Marker_If  S1  {
 								$$->dimension[0] = 0;
 						
 								}
+	| T_PRINT_INT expr	{
+#ifdef debug2
+cout << "printing rule\n";
+#endif
+									$$ = new attr();
+									int t = newTemp();
+
+									code_element temp;
+									temp.data1 = Assignment;
+									temp.data2 = "";
+									temp.result.temp = t;
+									temp.result.args_type = 2;
+									temp.arg2 = $2->place;
+#ifdef debug2
+cout << "IDENTIFIER is " << $2->place.var << endl;
+#endif
+									global_code.push_back(temp) ;
+									((compiler *)c)->writemipscode("move","$a0",",$"+to_string(t) );
+									((compiler *)c)->writemipscode("li","$v0,","1");
+									((compiler *)c)->writemipscode("syscall");
+									delete $2;
+#ifdef debug2
+
+#endif
+	}
 	;
 
 init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializing, use assign_stmt*/
@@ -668,6 +712,8 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 								$$->index = 1;
 								for(int i=0; i<$3->index; i++) {
 									$$->dimension[$$->index] = $3->dimension[i];
+									$$->array_size[$$->index] = $3->array_size[i];
+									$$->element_size[$$->index] = $3->element_size[i];
 									strcpy($$->var_name[$$->index],$3->var_name[i]);
 									$$->index++;
 								}
@@ -678,9 +724,13 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 								$$ = new attr();
 								strcpy($$->var_name[0],$1->var_name[0]);
 								$$->dimension[0] = $1->dimension[0];
+								$$->array_size[0] = $1->array_size[0];
+								$$->element_size[0] = $1->element_size[0];
 								$$->index = 1;
 								for(int i=0; i<$3->index; i++) {
 									$$->dimension[$$->index] = $3->dimension[i];
+									$$->array_size[$$->index] = $3->array_size[i];
+									$$->element_size[$$->index] = $3->element_size[i];
 									strcpy($$->var_name[$$->index],$3->var_name[i]);
 									$$->index++;
 								}
@@ -701,6 +751,11 @@ init : assign_stmt',' init 	/*Denotes declaration/initialization. If initializin
 					$$ = new attr();
 					strcpy($$->var_name[0],$1->var_name[0]);
 					$$->dimension[0] = $1->dimension[0];
+					$$->array_size[0] = $1->array_size[0];
+					$$->element_size[0] = $1->element_size[0];
+					#ifdef debug2
+								printf("%s has dimension %d\n",$$->var_name[0],$1->array_size[0]);
+					#endif
 					$$->index = 1;
 					free($1);
 				  }
@@ -751,18 +806,18 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 											
 											if($6->my_type != Bool) yyerror("Condition not bool in For statement\n");
 
-											$$->my_type = $14->my_type;
-											$$->dimension[0]= $14->dimension[0];										
+											$$->my_type = $15->my_type;
+											$$->dimension[0]= $15->dimension[0];										
 											
 											$$->nextlist = $6->falselist;
-											((compiler *)c)->backpatch($14->nextlist, $8);
+											((compiler *)c)->backpatch($15->nextlist, $8);
 											global_code[$10].result.int_val = $5;
 											((compiler *)c)->backpatch($6->truelist, $13);
 											code_element temp;
 											temp.data1 = Jump;
 											temp.result.int_val = $8;
 											((compiler *)c)-> gencalleecode(0);
-											((compiler *)c)-> writemipscode("jr","$ra");
+										
 
 											global_code.push_back(temp);
 
@@ -770,7 +825,7 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 											free($6);
 											free($9);
 											free($12);
-											free($14);
+											free($16);
 											free($15);
 										}
 
@@ -786,10 +841,10 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 
 									if($4->my_type != Bool) yyerror("Condition not bool in While statement\n");
 									
-									$$->my_type = $8->my_type;
-									$$->dimension[0]= $8->dimension[0];
+									$$->my_type = $9->my_type;
+									$$->dimension[0]= $9->dimension[0];
 
-									((compiler *)c)->backpatch($8->nextlist, $2);
+									((compiler *)c)->backpatch($9->nextlist, $2);
 									((compiler *)c)->backpatch($4->truelist, $7);
 									$$->nextlist = $4->falselist;
 #ifdef debug
@@ -799,13 +854,12 @@ cout << "Marker if :" << $7 << endl;
 									temp.data1 = Jump;
 									temp.result.int_val = $2;
 									((compiler *)c)-> gencalleecode(0);
-									((compiler *)c)-> writemipscode("jr","$ra");
 									global_code.push_back(temp);
 
 									delete $6;
-									delete $9; 
+									delete $10; 
 									free($4);
-									free($8);
+									free($9);
 	}
 	;
 
@@ -877,6 +931,24 @@ expr  : expr '+' expr 			{
 											yyerror(s);
 										}
 									}
+									((compiler *)c)->gencallercode(1,paramlist);
+									code_element callerjump;
+									callerjump.data1 = Jump;
+									callerjump.result.int_val = temp->table[string($1)].funcline;
+									printf("testing in func call%d\n",temp->table[string($1)].funcline);
+									callerjump.result.args_type = 3;
+									global_code.push_back(callerjump);
+									((compiler *)c)->gencallercode(0,paramlist);
+
+									int t=newTemp();
+									callerjump.data1 = Assignment;
+									callerjump.result.temp = t;
+									callerjump.result.args_type = 2;
+									callerjump.arg1.temp = 2;
+									callerjump.arg1.args_type = 2;
+									global_code.push_back(callerjump);
+
+									$$->place = callerjump.result;
 								}								
 
 								delete $3;
@@ -1218,12 +1290,32 @@ expr  : expr '+' expr 			{
 	| identifier  {
 			$$ = new attr();
 			$$->place.var = $1->place.var; 
+			#ifdef debug2
+				cout << "in expr -> identifier ";
+				cout << $1->place.var;
+				printf("\n");
+			#endif
+			int scope = ((compiler *)c)->get_scope($1->place.var);
 
 			struct code_element temp_code;
 			temp_code.data2 = "=";
 			temp_code.result.temp = newTemp();
 			temp_code.result.args_type = 2;
 			temp_code.arg1 =  $1->place;
+			temp_code.arg1.var = $1->place.var + "_" +to_string(scope);
+			temp_code.arg1.args_type = 1;
+			if($1->dimension[0]==2) {
+					temp_code.data2 = "[]";
+					temp_code.data1 = Array;
+					temp_code.arg2.temp = $1->offset_temp_number;
+					temp_code.arg2.args_type = 2;
+			}
+			else if($1->dimension[0]==1) {
+					temp_code.data2 = "[]";
+					temp_code.data1 = Array;
+					temp_code.arg2.temp = $1->offset_temp_number;
+					temp_code.arg2.args_type = 2;
+			}
 			global_code.push_back(temp_code);
 			$$->place  = temp_code.result; 
 
@@ -1296,20 +1388,38 @@ $$->my_type=$2->my_type; free($2);}
 	}
 	;
 	
-assign_stmt : identifier '=' expr {
-							#ifdef debug
-								printf("In assign_stmt -> identifier '=' expr\n");
 
-							#endif 
+assign_stmt : identifier  '=' expr {
+							
 							$$ = new attr();
 							$$->my_type = Void;
 							struct code_element temp_code;
 							temp_code.arg1 = $3->place;
+							int scope = ((compiler *)c)->get_scope($1->place.var);
 							temp_code.result = $1->place;
+							temp_code.result.var = $1->place.var + "_" + to_string(scope);
+							temp_code.result.args_type = 1;
 							temp_code.data2 = "=";
 							temp_code.data1 = Assignment;
 							$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
 							$$->code.push_back(temp_code);
+							if($1->dimension[0]==2) {
+								temp_code.data2 = "[][]";
+								temp_code.data1 = Array;
+								printf("double array in assign_stmt -> identifier = expr offset %d\n",$1->offset_temp_number);
+								temp_code.arg2.temp = $1->offset_temp_number;
+								temp_code.arg2.args_type = 2;
+							}
+							else if($1->dimension[0]==1) {
+								temp_code.data2 = "[]";
+								temp_code.data1 = Array;
+								temp_code.arg2.temp = $1->offset_temp_number;
+								temp_code.arg2.args_type = 2;
+							}
+							#ifdef debug2
+								printf("In assign_stmt -> identifier '=' expr\n");
+								cout << temp_code.result.var;
+							#endif 
 							global_code.push_back(temp_code);
 
 
@@ -1390,14 +1500,98 @@ identifier  : ID	{
 		| ID array {
 							$$ = new attr();
 							strcpy($$->var_name[0],$1);
+							$$->place.var = $1;
+							if(!is_declaration&& $2->dimension[0]==2) {
+								struct code_element temp;
+								temp.result.temp = newTemp();
+								temp.result.args_type = 2;
+								temp.data2 = "=";
+								temp.arg1.int_val = ((compiler *)c)->get_second_size($1);
+								temp.arg1.args_type = 3;
+								global_code.push_back(temp);
+
+								temp.result.temp = newTemp();
+								temp.data2 = "*";
+								temp.arg1.temp = temp.result.temp-1;
+								temp.arg1.args_type = 2;
+								temp.arg2.temp = temp.result.temp-2;
+								temp.arg2.args_type = 2;
+								global_code.push_back(temp);
+
+								temp.result.temp = newTemp();
+								temp.data2 = "+";
+								temp.arg1.temp = temp.result.temp-1;
+								temp.arg1.args_type = 2;
+								temp.arg2.temp = temp.result.temp-4;
+								temp.arg2.args_type = 2;
+								global_code.push_back(temp);
+
+								$$->offset_temp_number  = temp.result.temp;
+
+
+							}
 							$$->dimension[0] = $2->dimension[0];
+							$$->array_size[0] = $2->array_size[0];
+							$$->element_size[0] = $2->element_size[0];
+							#ifdef debug2
+								printf("is_declaration = %d \n",is_declaration);
+							#endif
 							free($2);
 		}
 	;
-array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);}
-	| '[' ID ']' {$$ = new attr(); $$->dimension[0] = 1;}
-	| '[' T_DEC_INT ']' {$$ = new attr();  $$->dimension[0] = 1;}
-	| '[' T_DEC_INT ']' array {$$ = new attr(); $$->dimension[0] = $4->dimension[0] + 1; free($4);}
+array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);
+								if(!is_declaration) {
+									struct code_element temp;
+											temp.result.temp = newTemp();
+											temp.result.args_type = 2;
+											temp.data2 = "=";
+											temp.arg1.var = $2;
+											temp.arg1.args_type = 1;
+											global_code.push_back(temp);
+								}
+}
+	| '[' ID ']' {$$ = new attr(); $$->dimension[0] = 1;
+					if(!is_declaration) {
+											struct code_element temp;
+											temp.result.temp = newTemp();
+											temp.result.args_type = 2;
+											temp.data2 = "=";
+											temp.arg1.var = $2;
+											temp.arg1.args_type = 1;
+											global_code.push_back(temp);
+					}
+				}
+	| '[' T_DEC_INT ']' {$$ = new attr();  $$->dimension[0] = 1; $$->array_size[0] = $2;
+							if(is_declaration)
+								$$->element_size[0] = $2;
+							else {
+								struct code_element temp;
+								temp.result.temp = newTemp();
+								temp.result.args_type = 2;
+								temp.data2 = "=";
+								temp.arg1.int_val = $2;
+								temp.arg1.args_type = 3;
+								global_code.push_back(temp);
+							}
+						}
+	| '[' T_DEC_INT ']' array {
+									$$ = new attr(); $$->dimension[0] = $4->dimension[0] + 1; free($4);
+									if($$->dimension[0] == 2) {
+										$$->array_size[0] = $4->array_size[0];
+										if(is_declaration)
+											$$->element_size[0] =$2*$4->element_size[0];
+										else {
+											struct code_element temp;
+											temp.result.temp = newTemp();
+											temp.result.args_type = 2;
+											temp.data2 = "=";
+											temp.arg1.int_val = $2;
+											temp.arg1.args_type = 3;
+											global_code.push_back(temp);
+										}
+									}
+
+							  }
 	;
 %%
 
@@ -1492,9 +1686,10 @@ void print()
 	for (int i=0;i<global_code.size();i++)
 	{
 		code_element a=global_code[i];
+		cout << "l" << i << ":\t";
 		if (a.data1==Assignment)
 		{
-			cout << i << ":\t";
+			
 			 wrg(a.result); cout << "= ";
 			 wrg(a.arg1);
 			 cout << " " << a.data2 << " ";
@@ -1502,7 +1697,7 @@ void print()
 		}
 		else if(a.data1==Jump)
 		{
-			cout << i << ":\t";
+			
 			if (a.data2 == "") cout << "\t\tgoto " << a.result.int_val;
 			else
 			{ 
@@ -1513,9 +1708,15 @@ void print()
 			 	cout << " then goto " << a.result.int_val;
 			}
 		}
+		else if(a.data1 == Array)
+		{
+			
+			wrg(a.result); cout << "=";
+			wrg(a.arg1);
+			cout << "["; wrg(a.arg2); cout << "]";
+		}
 		else if(a.data1==Mipscode)
 		{
-			cout<< i << ":\t";
 			cout << a.data2 << " " << a.arg1.var << " " << a.arg2.var << a.result.var;
 		}
 		cout << endl;
@@ -1528,8 +1729,11 @@ int main()
 		no_line = 1;
 		maindef = 0;
 		totalerrs = 0;
+		global_scope = 1;
 		current_symbol_table = new symbol_table;
 		current_symbol_table->parent = NULL;
+		current_symbol_table->scope_number = global_scope;
+		global_scope = global_scope + 1;
 		c = (void *) (new compiler);
         yyparse();
 
@@ -1542,6 +1746,6 @@ int main()
 		}
 		codegen();
 		print();
-		create_mips();
+		//create_mips();
 		return 0;
 }

@@ -1,5 +1,5 @@
 a.out:	lex.yy.c Ccfg.tab.cpp
-	g++ lex.yy.c codegen.cpp Ccfg.tab.cpp -ll -std=c++11 -D debug2
+	g++ lex.yy.c codegen.cpp Ccfg.tab.cpp -ll -std=c++11 -g -D debug2
 lex.yy.c:	Ccfg.l Ccfg.tab.hpp resources.h
 	flex Ccfg.l 
 Ccfg.tab.hpp:	Ccfg.ypp resources.h codegen.cpp
@@ -10,4 +10,4 @@ Ccfg.ypp:	CCfgBison/assign_stmt2last  CCfgBison/block_stmt2expr  CCfgBison/brac2
 	cd CCfgBison; $(MAKE)
 	cp ./CCfgBison/Ccfg.ypp ./Ccfg.ypp
 clean:
-	rm  *.cpp *.hpp *.ypp *.out CCfgBison/Ccfg.ypp
+	rm  Ccfg.tab.cpp *.hpp *.ypp *.out CCfgBison/Ccfg.ypp

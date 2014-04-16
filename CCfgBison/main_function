@@ -89,9 +89,10 @@ void print()
 	for (int i=0;i<global_code.size();i++)
 	{
 		code_element a=global_code[i];
+		cout << "l" << i << ":\t";
 		if (a.data1==Assignment)
 		{
-			cout << i << ":\t";
+			
 			 wrg(a.result); cout << "= ";
 			 wrg(a.arg1);
 			 cout << " " << a.data2 << " ";
@@ -99,7 +100,7 @@ void print()
 		}
 		else if(a.data1==Jump)
 		{
-			cout << i << ":\t";
+			
 			if (a.data2 == "") cout << "\t\tgoto " << a.result.int_val;
 			else
 			{ 
@@ -110,9 +111,15 @@ void print()
 			 	cout << " then goto " << a.result.int_val;
 			}
 		}
+		else if(a.data1 == Array)
+		{
+			
+			wrg(a.result); cout << "=";
+			wrg(a.arg1);
+			cout << "["; wrg(a.arg2); cout << "]";
+		}
 		else if(a.data1==Mipscode)
 		{
-			cout<< i << ":\t";
 			cout << a.data2 << " " << a.arg1.var << " " << a.arg2.var << a.result.var;
 		}
 		cout << endl;
@@ -125,8 +132,11 @@ int main()
 		no_line = 1;
 		maindef = 0;
 		totalerrs = 0;
+		global_scope = 1;
 		current_symbol_table = new symbol_table;
 		current_symbol_table->parent = NULL;
+		current_symbol_table->scope_number = global_scope;
+		global_scope = global_scope + 1;
 		c = (void *) (new compiler);
         yyparse();
 
@@ -139,6 +149,6 @@ int main()
 		}
 		codegen();
 		print();
-		create_mips();
+		//create_mips();
 		return 0;
 }

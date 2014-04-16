@@ -44,18 +44,18 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 											
 											if($6->my_type != Bool) yyerror("Condition not bool in For statement\n");
 
-											$$->my_type = $14->my_type;
-											$$->dimension[0]= $14->dimension[0];										
+											$$->my_type = $15->my_type;
+											$$->dimension[0]= $15->dimension[0];										
 											
 											$$->nextlist = $6->falselist;
-											((compiler *)c)->backpatch($14->nextlist, $8);
+											((compiler *)c)->backpatch($15->nextlist, $8);
 											global_code[$10].result.int_val = $5;
 											((compiler *)c)->backpatch($6->truelist, $13);
 											code_element temp;
 											temp.data1 = Jump;
 											temp.result.int_val = $8;
 											((compiler *)c)-> gencalleecode(0);
-											((compiler *)c)-> writemipscode("jr","$ra");
+										
 
 											global_code.push_back(temp);
 
@@ -63,7 +63,7 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 											free($6);
 											free($9);
 											free($12);
-											free($14);
+											free($16);
 											free($15);
 										}
 
@@ -79,10 +79,10 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 
 									if($4->my_type != Bool) yyerror("Condition not bool in While statement\n");
 									
-									$$->my_type = $8->my_type;
-									$$->dimension[0]= $8->dimension[0];
+									$$->my_type = $9->my_type;
+									$$->dimension[0]= $9->dimension[0];
 
-									((compiler *)c)->backpatch($8->nextlist, $2);
+									((compiler *)c)->backpatch($9->nextlist, $2);
 									((compiler *)c)->backpatch($4->truelist, $7);
 									$$->nextlist = $4->falselist;
 #ifdef debug
@@ -92,13 +92,12 @@ cout << "Marker if :" << $7 << endl;
 									temp.data1 = Jump;
 									temp.result.int_val = $2;
 									((compiler *)c)-> gencalleecode(0);
-									((compiler *)c)-> writemipscode("jr","$ra");
 									global_code.push_back(temp);
 
 									delete $6;
-									delete $9; 
+									delete $10; 
 									free($4);
-									free($8);
+									free($9);
 	}
 	;
 
@@ -170,6 +169,24 @@ expr  : expr '+' expr 			{
 											yyerror(s);
 										}
 									}
+									((compiler *)c)->gencallercode(1,paramlist);
+									code_element callerjump;
+									callerjump.data1 = Jump;
+									callerjump.result.int_val = temp->table[string($1)].funcline;
+									printf("testing in func call%d\n",temp->table[string($1)].funcline);
+									callerjump.result.args_type = 3;
+									global_code.push_back(callerjump);
+									((compiler *)c)->gencallercode(0,paramlist);
+
+									int t=newTemp();
+									callerjump.data1 = Assignment;
+									callerjump.result.temp = t;
+									callerjump.result.args_type = 2;
+									callerjump.arg1.temp = 2;
+									callerjump.arg1.args_type = 2;
+									global_code.push_back(callerjump);
+
+									$$->place = callerjump.result;
 								}								
 
 								delete $3;
@@ -511,12 +528,32 @@ expr  : expr '+' expr 			{
 	| identifier  {
 			$$ = new attr();
 			$$->place.var = $1->place.var; 
+			#ifdef debug2
+				cout << "in expr -> identifier ";
+				cout << $1->place.var;
+				printf("\n");
+			#endif
+			int scope = ((compiler *)c)->get_scope($1->place.var);
 
 			struct code_element temp_code;
 			temp_code.data2 = "=";
 			temp_code.result.temp = newTemp();
 			temp_code.result.args_type = 2;
 			temp_code.arg1 =  $1->place;
+			temp_code.arg1.var = $1->place.var + "_" +to_string(scope);
+			temp_code.arg1.args_type = 1;
+			if($1->dimension[0]==2) {
+					temp_code.data2 = "[]";
+					temp_code.data1 = Array;
+					temp_code.arg2.temp = $1->offset_temp_number;
+					temp_code.arg2.args_type = 2;
+			}
+			else if($1->dimension[0]==1) {
+					temp_code.data2 = "[]";
+					temp_code.data1 = Array;
+					temp_code.arg2.temp = $1->offset_temp_number;
+					temp_code.arg2.args_type = 2;
+			}
 			global_code.push_back(temp_code);
 			$$->place  = temp_code.result; 
 

@@ -28,9 +28,12 @@ bool maindef;
 struct symbol_table *current_symbol_table;
 int max_index=0;
 vector <struct code_element> global_code;
-int A[1000][3];
+map <string, int> stackaddr;
+string reg[32];
 extern void codegen();
 extern void create_mips();
+
+
 
 int yylex();
 int yyparse();
@@ -54,6 +57,8 @@ void yyerror(const char *s,string color=KRED,string e="")
 void *c;
 FILE *text;
 map <int,int> label_info;
+int is_declaration = 0;
+int global_scope = 1;
 
 
 %}
@@ -89,7 +94,7 @@ struct attr *attributes;
 %token T_WHILE
 %token T_GOTO
 %token T_RETURN
-%token T_PRINTF
+%token T_PRINT_INT
 %token T_VOID
 %token T_SCANF
 %token T_SIZEOF
@@ -101,6 +106,7 @@ struct attr *attributes;
 %token T_LONG
 %token T_BOOL
 %token T_APOS
+
 
 %token <real> T_DEC_FLOAT
 %token <integer> T_DEC_INT
