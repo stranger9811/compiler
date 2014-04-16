@@ -53,6 +53,7 @@ void yyerror(const char *s,string color=KRED,string e="")
 
 void *c;
 FILE *text;
+map <int,int> label_info;
 
 
 %}

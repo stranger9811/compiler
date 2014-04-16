@@ -31,7 +31,14 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 	 											free($9);
 	 										}
 
-	| T_FOR    '('   S1   ';'   Marker_If    S1    ';'    Marker_If    S1   Marker_For  ')'    brac_open   Marker_If    M    brac_close  
+	| T_FOR    '('   S1   ';'   Marker_If    S1    ';'    Marker_If    S1   Marker_For  ')'    brac_open   Marker_If   
+
+
+
+	{
+		((compiler *)c)-> gencalleecode(1);
+	} M
+	   brac_close  
 										{
 											$$ = new attr();
 											
@@ -47,6 +54,9 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 											code_element temp;
 											temp.data1 = Jump;
 											temp.result.int_val = $8;
+											((compiler *)c)-> gencalleecode(0);
+											((compiler *)c)-> writemipscode("jr","$ra");
+
 											global_code.push_back(temp);
 
 											free($3);
@@ -57,7 +67,14 @@ block_stmt : T_IF    '('   expr   ')'    brac_open     Marker_If    M    brac_cl
 											free($15);
 										}
 
-	| T_WHILE    Marker_If    '('   S1   ')'   brac_open    Marker_If     M     brac_close  {
+	| T_WHILE    Marker_If    '('   S1   ')'   brac_open    Marker_If  
+
+
+{
+	((compiler *)c)-> gencalleecode(1);
+
+}
+	   M     brac_close  {
 									$$ = new attr();
 
 									if($4->my_type != Bool) yyerror("Condition not bool in While statement\n");
@@ -74,7 +91,8 @@ cout << "Marker if :" << $7 << endl;
 									struct code_element temp;
 									temp.data1 = Jump;
 									temp.result.int_val = $2;
-
+									((compiler *)c)-> gencalleecode(0);
+									((compiler *)c)-> writemipscode("jr","$ra");
 									global_code.push_back(temp);
 
 									delete $6;

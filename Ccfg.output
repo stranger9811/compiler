@@ -18,15 +18,15 @@ Terminals unused in grammar
    T_IO_LONG_LONG
    T_IO_STRING
    T_IO_FLOAT
-   T_MULT_SELF
    T_DIVIDE_SELF
-   T_PLUS_SELF
+   T_MULT_SELF
    T_MINUS_SELF
+   T_PLUS_SELF
    '|'
    '^'
    '&'
-   T_ADD_ONE
    T_SUB_ONE
+   T_ADD_ONE
    T_THIS_POINTER
    '.'
 
@@ -41,7 +41,7 @@ Grammar
 
     3 Marker_For: epsilon
 
-    4 epsilon: %empty
+    4 epsilon: /* empty */
 
     5 code1: code
 
@@ -51,11 +51,11 @@ Grammar
     8 decl: type identifier ';'
     9     | T_TYPEDEF type ID ';'
 
-   10 $@1: %empty
+   10 $@1: /* empty */
 
    11 decl: type func $@1 block
 
-   12 $@2: %empty
+   12 $@2: /* empty */
 
    13 decl: void func $@2 block
    14     | T_STRUCT ID block ';'
@@ -217,21 +217,21 @@ T_IO_INT (291)
 T_IO_LONG_LONG (292)
 T_IO_STRING (293)
 T_IO_FLOAT (294)
-T_MULT_SELF (295)
-T_DIVIDE_SELF (296)
-T_PLUS_SELF (297)
-T_MINUS_SELF (298)
+T_DIVIDE_SELF (295)
+T_MULT_SELF (296)
+T_MINUS_SELF (297)
+T_PLUS_SELF (298)
 T_OR (299) 71
 T_AND (300) 70
-T_EQUAL_TEST (301) 59
-T_NOT_EQUAL (302) 64
+T_NOT_EQUAL (301) 64
+T_EQUAL_TEST (302) 59
 T_GREATER_THAN_EQUAL (303) 63
 T_LESS_THAN_EQUAL (304) 62
 DEREF (305)
-UPLUS (306)
-UMINUS (307)
-T_ADD_ONE (308)
-T_SUB_ONE (309)
+UMINUS (306)
+UPLUS (307)
+T_SUB_ONE (308)
+T_ADD_ONE (309)
 T_THIS_POINTER (310)
 "true" (311) 79
 "false" (312) 80
@@ -926,8 +926,8 @@ State 52
     ','                   shift, and go to state 83
     T_OR                  shift, and go to state 84
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -1199,8 +1199,8 @@ State 68
 
     T_OR                  shift, and go to state 84
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -1258,8 +1258,8 @@ State 70
 
     T_OR                  shift, and go to state 84
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -1460,7 +1460,7 @@ State 85
 
 State 86
 
-   59 expr: expr T_EQUAL_TEST . expr
+   64 expr: expr T_NOT_EQUAL . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
@@ -1481,7 +1481,7 @@ State 86
 
 State 87
 
-   64 expr: expr T_NOT_EQUAL . expr
+   59 expr: expr T_EQUAL_TEST . expr
 
     T_DEC_FLOAT  shift, and go to state 34
     T_DEC_INT    shift, and go to state 35
@@ -1817,8 +1817,8 @@ State 109
 
     T_OR                  shift, and go to state 84
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -1897,8 +1897,8 @@ State 113
 
     T_OR                  shift, and go to state 84
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -2069,36 +2069,6 @@ State 123
 
    57 expr: expr . '+' expr
    59     | expr . T_EQUAL_TEST expr
-   59     | expr T_EQUAL_TEST expr .
-   60     | expr . '<' expr
-   61     | expr . '>' expr
-   62     | expr . T_LESS_THAN_EQUAL expr
-   63     | expr . T_GREATER_THAN_EQUAL expr
-   64     | expr . T_NOT_EQUAL expr
-   66     | expr . '-' expr
-   67     | expr . '*' expr
-   68     | expr . '/' expr
-   69     | expr . '%' expr
-   70     | expr . T_AND Marker_If expr
-   71     | expr . T_OR Marker_If expr
-
-    '>'                   shift, and go to state 88
-    T_GREATER_THAN_EQUAL  shift, and go to state 89
-    '<'                   shift, and go to state 90
-    T_LESS_THAN_EQUAL     shift, and go to state 91
-    '+'                   shift, and go to state 92
-    '-'                   shift, and go to state 93
-    '*'                   shift, and go to state 94
-    '/'                   shift, and go to state 95
-    '%'                   shift, and go to state 96
-
-    $default  reduce using rule 59 (expr)
-
-
-State 124
-
-   57 expr: expr . '+' expr
-   59     | expr . T_EQUAL_TEST expr
    60     | expr . '<' expr
    61     | expr . '>' expr
    62     | expr . T_LESS_THAN_EQUAL expr
@@ -2123,6 +2093,36 @@ State 124
     '%'                   shift, and go to state 96
 
     $default  reduce using rule 64 (expr)
+
+
+State 124
+
+   57 expr: expr . '+' expr
+   59     | expr . T_EQUAL_TEST expr
+   59     | expr T_EQUAL_TEST expr .
+   60     | expr . '<' expr
+   61     | expr . '>' expr
+   62     | expr . T_LESS_THAN_EQUAL expr
+   63     | expr . T_GREATER_THAN_EQUAL expr
+   64     | expr . T_NOT_EQUAL expr
+   66     | expr . '-' expr
+   67     | expr . '*' expr
+   68     | expr . '/' expr
+   69     | expr . '%' expr
+   70     | expr . T_AND Marker_If expr
+   71     | expr . T_OR Marker_If expr
+
+    '>'                   shift, and go to state 88
+    T_GREATER_THAN_EQUAL  shift, and go to state 89
+    '<'                   shift, and go to state 90
+    T_LESS_THAN_EQUAL     shift, and go to state 91
+    '+'                   shift, and go to state 92
+    '-'                   shift, and go to state 93
+    '*'                   shift, and go to state 94
+    '/'                   shift, and go to state 95
+    '%'                   shift, and go to state 96
+
+    $default  reduce using rule 59 (expr)
 
 
 State 125
@@ -2360,8 +2360,8 @@ State 134
 
     T_OR                  shift, and go to state 84
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -2536,8 +2536,8 @@ State 150
    71     | expr T_OR Marker_If expr .
 
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -2568,8 +2568,8 @@ State 151
    70     | expr T_AND Marker_If expr .
    71     | expr . T_OR Marker_If expr
 
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90
@@ -2678,8 +2678,8 @@ State 158
 
     T_OR                  shift, and go to state 84
     T_AND                 shift, and go to state 85
-    T_EQUAL_TEST          shift, and go to state 86
-    T_NOT_EQUAL           shift, and go to state 87
+    T_NOT_EQUAL           shift, and go to state 86
+    T_EQUAL_TEST          shift, and go to state 87
     '>'                   shift, and go to state 88
     T_GREATER_THAN_EQUAL  shift, and go to state 89
     '<'                   shift, and go to state 90

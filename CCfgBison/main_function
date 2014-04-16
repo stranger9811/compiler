@@ -110,6 +110,11 @@ void print()
 			 	cout << " then goto " << a.result.int_val;
 			}
 		}
+		else if(a.data1==Mipscode)
+		{
+			cout<< i << ":\t";
+			cout << a.data2 << " " << a.arg1.var << " " << a.arg2.var << a.result.var;
+		}
 		cout << endl;
 	}
 }

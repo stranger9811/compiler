@@ -79,17 +79,7 @@ decl  : type identifier';' {
 		}
 
 		current_symbol_table->table[$2->lexeme]=(temp); 
-		code_element setsp,setfp;
-		setsp.data1 = setfp.data1 = Mipscode;
-
-		setsp.data2 = "subu";
-		setsp.arg1.var = "$sp";
-		setsp.arg1.args_type = 1;
-		setsp.arg2.var = "$sp";
-		setsp.arg2.args_type = 1;
-		setsp.result.int_val = STACKSIZE;
-		setsp.result.args_type = 3;
-
+		((compiler *)c)-> gencalleecode(1);
 		
 	}
 
@@ -113,6 +103,9 @@ decl  : type identifier';' {
 								free($1);
 								free($2);
 								free($4);
+
+								((compiler *)c)-> gencalleecode(0);
+								((compiler *)c)-> writemipscode("jr","$ra");
 								}	/*This is for function definition only. No rule yet for function declation.*/
 	| void func
 	{
@@ -132,16 +125,7 @@ decl  : type identifier';' {
 		}
 
 		current_symbol_table->table[$2->lexeme]=(temp); 
-		code_element setsp,setfp;
-		setsp.data1 = setfp.data1 = Mipscode;
-
-		setsp.data2 = "subu";
-		setsp.arg1.var = "$sp";
-		setsp.arg1.args_type = 1;
-		setsp.arg2.var = "$sp";
-		setsp.arg2.args_type = 1;
-		setsp.result.int_val = STACKSIZE;
-		setsp.result.args_type = 3;
+		((compiler *)c)-> gencalleecode(1);
 
 		
 	}
@@ -167,6 +151,9 @@ decl  : type identifier';' {
 								free($1);
 								free($2);
 								free($4);
+
+								((compiler *)c)-> gencalleecode(0);
+								((compiler *)c)-> writemipscode("jr","$ra");
 								}	/*void type, since allowed only for functions must be separated. Don't allow return stmts for such blocks. Must define another type of block to do this.*/
 	| T_STRUCT ID block';'  {$$ = new attr();
 								free($3);

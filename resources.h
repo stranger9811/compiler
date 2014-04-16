@@ -11,6 +11,7 @@ extern int no_line;
 #define MAXPARAM 50
 #define STACKSIZE 512
 extern FILE *text;
+extern map <int,int> label_info;
 
 enum type_enum{
 Bool,
@@ -149,7 +150,7 @@ struct compiler {
 		return l2;
 	 }
 
-	 void writemipscode (string a, string b, string c, string d="")
+	 void writemipscode (string a, string b, string c="", string d="")
 	 {
 	 		code_element setsp;
 			setsp.data1 = Mipscode;
@@ -168,40 +169,66 @@ struct compiler {
 	 {
 	 	writemipscode ("sw",reg,to_string(where) + "($sp)");
 	 }
-	 void restorereg (string reg, int where)
+	 void loadreg (string reg, int where)
 	 {
 	 	writemipscode ("lw",reg,to_string(where)+"($sp)");
 	 }
 
-	void gencalleecode (bool justcalled, funcparams paramlist  ) //callee saved register: t0 through t7
+	void gencalleecode (bool justcalled) //callee saved register: s0 through s7
 	{
 		if (justcalled)
 		{
-			writemipscode ("subu","$sp","$sp",to_string(MAXPARAM));
-			int lim = MAXPARAM;
+			writemipscode ("subu","$sp","$sp",to_string(STACKSIZE));
+			int lim = STACKSIZE;
 			lim -= 4;
 			savereg("$ra",lim);
 			lim -= 4;
 			savereg ("$fp",lim);
-			writemipscode ("addu","$fp","$sp,",to_string(MAXPARAM));
+			writemipscode ("addu","$fp","$sp,",to_string(STACKSIZE));
 			for (int i=0;i<8;i++)
 			{
 				lim -= 4;
-				savereg("$t"+to_string(i),lim);
+				savereg("$s"+to_string(i),lim);
 			}
 		}
 		else
 		{
-			/*lw $ra,28($sp)
-			lw $fp,24($sp)
-			addu $sp, $sp,32
-			jr $ra*/
+			int lim = STACKSIZE-4;
+			loadreg("$ra",lim);
+			lim -= 4;
+			loadreg("$fp",lim);
+			lim -= 4;
+			writemipscode ("$sp", "$sp",to_string(STACKSIZE));
+			for (int i=0;i<8;i++)
+			{
+				loadreg("$s"+to_string(i),lim);
+				lim -= 4;
+			}
+
+			//after this, if it is a function call you need to do jr $ra
 		}
 	}
 
-	void gencallercode () // caller saved registers: s0 through s7
+	/*void gencallercode (bool calling, funcparams paramlist,lim) // caller saved registers: t0 through t7
 	{
+		if (calling)
+		{
+			/*for (int i = 0; i < 4; ++i)
+			{
+				loadreg("$a"+to_string(i),);
+			}*//*
+			for (int i=0;i<8;i++)
+			{
+				loadreg("$t"+to_string(i),lim);
+				lim -= 4;
+			}
+			
+		}
 
-	}
+		else
+		{
+
+		}
+	}*/
 
 };
