@@ -76,7 +76,9 @@ void codegen()
 							sort(dead.begin(),dead.end());
 						}
 					}
-					
+					if(flag==1) {
+						global_code[j].result.temp = 0;
+					}
 				}
 				if(global_code[j].arg1.args_type == 2 && global_code[j].arg1.temp > -1){
 					int flag = 1;
@@ -121,6 +123,9 @@ void codegen()
 							live.erase(live.begin()+k);
 							sort(dead.begin(),dead.end());
 						}
+					}
+					if(flag==1) {
+						global_code[j].result.temp = 0;
 					}
 					
 				}
@@ -265,7 +270,11 @@ void create_mips()
 		if(i!=main_function_line)
 			printf("L%d:\n",i);
 		else
+		{
 			printf("main:\n");
+			printf("\tli $v1 1\n");
+			printf("L%d:\n",i);
+		}
 		if(global_code[i].data1 == Jump) {
 			create_jump(i);
 		}
@@ -279,8 +288,11 @@ void create_mips()
 				{
 					if(global_code[i].arg1.temp<=-1)
 						printf("\tsw $%d %s\n",-global_code[i].arg1.temp,global_code[i].result.var.c_str());
-					else
+					else {
+						if(global_code[i].arg1.temp==51-8)
+							global_code[i].arg1.temp=0;
 						printf("\tsw $%d %s\n",8+global_code[i].arg1.temp,global_code[i].result.var.c_str());
+					}
 				}
 				else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 1 && global_code[i].data2 == "=")
 				{

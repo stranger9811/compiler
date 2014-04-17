@@ -1,13 +1,20 @@
 
+int i;
 int give_twice(int x)
 { int y;
   y=2*x;
+  i=i+1;
+  print_int x;
+  if(x!=0) {
+   return give_twice(x-1);
+}
+  
   return y;
 }
 
 int main()
 { 
-
+i=0;
 int i,a;
 a=4;
 int x[10],y[10];
@@ -28,13 +35,12 @@ printf("\n");
 for (i = 0; i < n; i=i+1)
 printf("%d\t",y[i]);  */
 
-for (i = 0; i < 10; i=i+1)
+for (i = 0; i < 1; i=i+1)
 {
 	int j;
 	j=i+1;
 	x[i]=2;
-	y[i] = a*x[i]+give_twice(2);
-	print_int y[i];
+	y[i] = a*x[i]+give_twice(50);
 }
 
 return 0;

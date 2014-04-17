@@ -25,7 +25,7 @@ int k;
 //scanf("%d",&n);
 //printf("Fibonacci series\n");
 
-k=Fibonacci(1);
+k=Fibonacci(4);
 print_int k;
 
 

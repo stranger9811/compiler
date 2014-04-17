@@ -1894,7 +1894,7 @@ int main()
     							printf("\t%s_%s: .space %d\n",it->first.c_str(),to_string(temp->scope_number).c_str(),it->second.element_size*4);
     					}
     					else {
-    						cout << "hello " << it->second.my_type;
+    						
     						if(it->second.my_type==Int) {
     							printf("\t%s_%s: .space 4\n",it->first.c_str(),to_string(temp->scope_number).c_str());
     							}	
@@ -1904,7 +1904,7 @@ int main()
 
         printf( ".text\n");
         if (!maindef) yyerror("main function not defined");
-		//print();
+		print();
 		if (totalerrs>0)
 		{
 			printf("%d errors found: No code generated\n",totalerrs);

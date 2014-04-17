@@ -9,7 +9,7 @@
 using namespace std;
 extern int no_line;
 #define MAXPARAM 50
-#define STACKSIZE 512
+#define STACKSIZE 128
 extern FILE *text;
 extern map <int,int> label_info;
 extern struct symbol_table *current_symbol_table;

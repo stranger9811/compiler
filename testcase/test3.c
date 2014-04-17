@@ -18,6 +18,8 @@ int out[5][5];
 int in[5][5];
 int scale;
 scale=2;
+int a,b,c;
+a = b+c;
 int coeffs[5][5];
 int a1,a2,a1minus;
 int b1,b2;

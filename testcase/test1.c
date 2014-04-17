@@ -1,9 +1,11 @@
 int main()
 { 
-int a,b,c;
-    a = 3;
+int a,b,c,d;
+    a = 5;
     b=4;
-    c = a+b;
+    d = 4;
+    c = d+ b;
+    c = c+a;
     print_int c;
 return c;
 }
