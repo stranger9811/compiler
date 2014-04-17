@@ -75,8 +75,10 @@ Grammar
 
    26 func: ID circl_brac_open args ')'
    27     | ID '(' ')'
-   28     | T_MAIN '(' args ')'
-   29     | T_MAIN '(' ')'
+
+   28 $@3: %empty
+
+   29 func: T_MAIN $@3 circl_brac_open ')'
 
    30 args: args ',' type identifier
    31     | type identifier
@@ -102,9 +104,9 @@ Grammar
    44 S1: expr ',' Marker_If S1
    45   | expr
 
-   46 $@3: %empty
+   46 $@4: %empty
 
-   47 S1: type $@3 init
+   47 S1: type $@4 init
    48   | T_RETURN expr
    49   | T_RETURN
    50   | T_PRINT_INT expr
@@ -166,8 +168,8 @@ $end (0) 0
 '!' (33) 75
 '%' (37) 72
 '&' (38)
-'(' (40) 27 28 29 55 56 57 58 59 61 76
-')' (41) 26 27 28 29 56 57 58 59 61 76
+'(' (40) 27 55 56 57 58 59 61 76
+')' (41) 26 27 29 56 57 58 59 61 76
 '*' (42) 16 24 70 81
 '+' (43) 60 78
 ',' (44) 30 41 44 51 52
@@ -217,7 +219,7 @@ T_DEC_INT (286) 85 91 92
 T_STRING (287)
 T_HEADER (288) 15
 ID (289) 9 14 26 27 61 87 88 89 90
-T_MAIN (290) 28 29
+T_MAIN (290) 29
 T_IO_INT (291)
 T_IO_LONG_LONG (292)
 T_IO_STRING (293)
@@ -271,42 +273,44 @@ basic (90)
 void (91)
     on left: 24 25, on right: 13 24
 func (92)
-    on left: 26 27 28 29, on right: 11 13
-args (93)
-    on left: 30 31, on right: 26 28 30
-brac_open (94)
+    on left: 26 27 29, on right: 11 13
+$@3 (93)
+    on left: 28, on right: 29
+args (94)
+    on left: 30 31, on right: 26 30
+brac_open (95)
     on left: 32, on right: 34 56 57 58 59
-brac_close (95)
+brac_close (96)
     on left: 33, on right: 11 13 34 56 57 58 59
-block (96)
+block (97)
     on left: 34 35, on right: 14
-M (97)
+M (98)
     on left: 36 37, on right: 11 13 34 36 56 57 58 59
-S (98)
+S (99)
     on left: 38 39 40, on right: 35 36 37
-exprlist (99)
+exprlist (100)
     on left: 41 42 43, on right: 41 61
-S1 (100)
+S1 (101)
     on left: 44 45 47 48 49 50, on right: 38 44 58 59
-$@3 (101)
+$@4 (102)
     on left: 46, on right: 47
-init (102)
+init (103)
     on left: 51 52 53 54, on right: 47 51 52
-circl_brac_open (103)
-    on left: 55, on right: 26
-block_stmt (104)
+circl_brac_open (104)
+    on left: 55, on right: 26 29
+block_stmt (105)
     on left: 56 57 58 59, on right: 39
-expr (105)
+expr (106)
     on left: 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77
     78 79 80 81 82 83, on right: 41 42 44 45 48 50 56 57 60 62 63 64
     65 66 67 69 70 71 72 73 74 75 76 78 79 81 84
-assign_stmt (106)
+assign_stmt (107)
     on left: 84, on right: 51 53 68
-number (107)
+number (108)
     on left: 85 86, on right: 80
-identifier (108)
+identifier (109)
     on left: 87 88, on right: 8 30 31 52 54 77 84
-array (109)
+array (110)
     on left: 89 90 91 92, on right: 88 89 92
 
 
@@ -574,10 +578,11 @@ State 22
 
 State 23
 
-   28 func: T_MAIN . '(' args ')'
-   29     | T_MAIN . '(' ')'
+   29 func: T_MAIN . $@3 circl_brac_open ')'
 
-    '('  shift, and go to state 63
+    $default  reduce using rule 28 ($@3)
+
+    $@3  go to state 63
 
 
 State 24
@@ -863,13 +868,13 @@ State 46
 State 47
 
    16 type: type . '*'
-   47 S1: type . $@3 init
+   47 S1: type . $@4 init
 
     '*'  shift, and go to state 24
 
-    $default  reduce using rule 46 ($@3)
+    $default  reduce using rule 46 ($@4)
 
-    $@3  go to state 78
+    $@4  go to state 78
 
 
 State 48
@@ -1059,20 +1064,11 @@ State 62
 
 State 63
 
-   28 func: T_MAIN '(' . args ')'
-   29     | T_MAIN '(' . ')'
+   29 func: T_MAIN $@3 . circl_brac_open ')'
 
-    T_CHAR       shift, and go to state 3
-    T_DOUBLE     shift, and go to state 4
-    T_INT        shift, and go to state 5
-    T_FLOAT      shift, and go to state 6
-    T_LONG_LONG  shift, and go to state 7
-    T_BOOL       shift, and go to state 9
-    ')'          shift, and go to state 104
+    '('  shift, and go to state 104
 
-    type   go to state 102
-    basic  go to state 15
-    args   go to state 105
+    circl_brac_open  go to state 105
 
 
 State 64
@@ -1365,7 +1361,7 @@ State 77
 
 State 78
 
-   47 S1: type $@3 . init
+   47 S1: type $@4 . init
 
     ID  shift, and go to state 115
 
@@ -1743,17 +1739,15 @@ State 103
 
 State 104
 
-   29 func: T_MAIN '(' ')' .
+   55 circl_brac_open: '(' .
 
-    $default  reduce using rule 29 (func)
+    $default  reduce using rule 55 (circl_brac_open)
 
 
 State 105
 
-   28 func: T_MAIN '(' args . ')'
-   30 args: args . ',' type identifier
+   29 func: T_MAIN $@3 circl_brac_open . ')'
 
-    ','  shift, and go to state 140
     ')'  shift, and go to state 142
 
 
@@ -1979,7 +1973,7 @@ State 115
 
 State 116
 
-   47 S1: type $@3 init .
+   47 S1: type $@4 init .
 
     $default  reduce using rule 47 (S1)
 
@@ -2497,9 +2491,9 @@ State 141
 
 State 142
 
-   28 func: T_MAIN '(' args ')' .
+   29 func: T_MAIN $@3 circl_brac_open ')' .
 
-    $default  reduce using rule 28 (func)
+    $default  reduce using rule 29 (func)
 
 
 State 143

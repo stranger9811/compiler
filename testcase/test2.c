@@ -32,7 +32,8 @@ for (i = 0; i < 10; i=i+1)
 {
 	int j;
 	j=i+1;
-	y[i] = a*x[i]+give_twice( y[j]);
+	x[i]=2;
+	y[i] = a*x[i]+give_twice(2);
 	print_int y[i];
 }
 

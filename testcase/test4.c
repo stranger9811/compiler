@@ -1,12 +1,18 @@
-#include<stdio.h>
 int Fibonacci(int n)
 {
-if ( n == 0 )
-return 0;
-else if ( n == 1 )
-return 1;
-else
-return ( Fibonacci(n-1) + Fibonacci(n-2) );
+	if ( n == 0 ) {
+		return 0;
+	}
+	
+	if ( n == 1 ) {
+		return 1;
+	}
+		int a,b,c;
+		a = Fibonacci(n-1);
+		b = Fibonacci(n-2);
+		c = a+b;
+		return c;
+	
 
 }
 
@@ -18,13 +24,10 @@ i=0;
 int k;
 //scanf("%d",&n);
 //printf("Fibonacci series\n");
-n=10;
-for ( c = 1 ; c <= n ; c=c+1 )
-{
-k=Fibonacci(i);
+
+k=Fibonacci(1);
 print_int k;
-i=i+1;
-}
+
 
 
 return 0;

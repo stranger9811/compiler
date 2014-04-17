@@ -222,7 +222,7 @@ code  : decl Marker_If code	{$$ = new attr();
 			 	free($1);
 			}
 	;
-decl  : type identifier';' {
+decl  : type  identifier';' {
 							$$ = new attr();
 							if(current_symbol_table->table.find(string( $2->var_name[0])) != current_symbol_table->table.end())
 								yyerror("error: redeclaration \n");
@@ -230,6 +230,23 @@ decl  : type identifier';' {
 							{
 								$2->my_type = $1->my_type;
 								$2->dimension[0]= $1->dimension[0];
+								struct llm temp;
+								temp.dimension = $2->dimension[0];
+								temp.my_type = $2->my_type;
+								temp.element_size = $2->element_size[0];
+								if(temp.dimension==2) 
+									temp.array_size = $2->array_size[0];
+
+								#ifdef debug2
+									if(temp.dimension>=1) {
+										printf("entering in symbol table with variable %s dimension %d and array_size %d\n",$2->var_name[0],temp.dimension,temp.array_size);
+									}
+								#endif
+								int j = check_keyword(string($2->var_name[0])); // 1 if error
+								if(j==1)
+									yyerror("error: variable name cannot be a keyword \n");
+								else if(j==0)
+									current_symbol_table->table[string($2->var_name[0])]=(temp);
 							} 
 							
 
@@ -261,16 +278,21 @@ decl  : type identifier';' {
 		while (tempTable->parent != NULL) tempTable= tempTable->parent;
 		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
-
-		for (int i = -4; i > -8 && i<temp.paramlist.total; i--)
+		int j;
+		for (int i = -4,j=0; i > -8 && j<temp.paramlist.total; i--,j++)
 		{
+			printf("Printing once\n");
 			code_element codeTemp;
 			codeTemp.data1 = Assignment;
 			codeTemp.arg1.temp = i;
 			codeTemp.arg2.args_type = 2;
 			codeTemp.data2 = "=";
-			codeTemp.result = $2->my_params.my_args[-4-i];
+			codeTemp.result = $2->my_params.my_args[j];
+			if (codeTemp.result.args_type==1 )
+				codeTemp.result.var = codeTemp.result.var + "_"+to_string(((compiler *)c)-> get_scope(codeTemp.result.var));
+			global_code.push_back(codeTemp);
 		}
+		
 		
 	}
 
@@ -321,16 +343,20 @@ decl  : type identifier';' {
 		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
 
-		for (int i = -4; i > -8 && i<temp.paramlist.total; i--)
+		int j;
+		for (int i = -4,j=0; i > -8 && j<temp.paramlist.total; i--,j++)
 		{
+			printf("Printing once\n");
 			code_element codeTemp;
 			codeTemp.data1 = Assignment;
 			codeTemp.arg1.temp = i;
 			codeTemp.arg2.args_type = 2;
 			codeTemp.data2 = "=";
-			codeTemp.result = $2->my_params.my_args[-4-i];
+			codeTemp.result = $2->my_params.my_args[j];
+			if (codeTemp.result.args_type==1 )
+				codeTemp.result.var = codeTemp.result.var + "_"+to_string(((compiler *)c)-> get_scope(codeTemp.result.var));
+			global_code.push_back(codeTemp);
 		}
-
 		
 	}
 
@@ -422,23 +448,27 @@ func  : ID   circl_brac_open  args   ')'      {
 
 							}
 
-	| T_MAIN'('args')'   {
+	/*| T_MAIN { 	if (!maindef)
+					maindef = 1;
+				else yyerror("Conflicting declaration of function main");
+							 }  '('args')'   
+							 {
+									$$ = new lexemeNparam();
+									$$->lexeme = "main";
+
+							 		free($4);
+							}*/
+	| T_MAIN  { 
+	if (!maindef)
+	{
+		maindef = 1;
+		main_function_line = global_code.size();
+	}
+	else yyerror("Conflicting declaration of function main");
+	}  circl_brac_open ')'  {
 							$$ = new lexemeNparam();
 							$$->lexeme = "main";
-							if (!maindef)
-								maindef = 1;
-							else yyerror("Conflicting declaration of function main");
-							 free($3);
-							}
-	| T_MAIN'('')'  {
-							$$ = new lexemeNparam();
-							$$->lexeme = "main";
-							if (!maindef)
-							{
-								maindef = 1;
-								main_function_line = global_code.size();
-							}
-							else yyerror("Conflicting declaration of function main");
+				
 
 					}
 	;
@@ -1031,15 +1061,18 @@ expr  : expr '+' expr 			{
 
 									((compiler *)c)->gencallercode(1);
 
-
-									for (int i = -4; i > -8 && i<$3->total; i--)
+									int j;
+									for (int i = -4,j=0; i > -8 && j < $3->total;j++, i--)
 									{
 										code_element codeTemp;
 										codeTemp.data1 = Assignment;
 										codeTemp.result.temp = i;
 										codeTemp.result.args_type = 2;
 										codeTemp.data2 = "=";
-										codeTemp.arg1 = $3->my_args[-4-i];
+										codeTemp.arg1 = $3->my_args[j];
+										if (codeTemp.result.args_type==1 )
+											codeTemp.result.var = codeTemp.result.var + "_"+to_string(((compiler *)c)-> get_scope(codeTemp.result.var));
+										global_code.push_back(codeTemp);
 									}
 
 
@@ -1856,8 +1889,30 @@ int main()
 		global_scope = global_scope + 1;
 		c = (void *) (new compiler);
 		text = fopen("mips_code.s","w");
-		fprintf(text, ".data\n\tstr: .asciiz \" Program ended. \\n\"\n\tnewLine: .asciiz \"\\n\" \n");
+		fprintf(text, ".data\n\tstr: .asciiz \" Program ended. \\n\"\n\tnewLine: .asciiz \"\\n\"\n.align 2\n");
         yyparse();
+        struct symbol_table *temp = current_symbol_table;
+        cout << "symbol table " << temp;
+        map<string, struct llm>::iterator it;
+
+
+				  for (map<string, struct llm>::iterator it=temp->table.begin(); it!=temp->table.end(); ++it) {
+				  		if(it->second.funcline!=-1)
+				  			continue;
+
+    					if(it->second.dimension>=1) {
+    						if(it->second.my_type==Int)
+    							fprintf(text,"\t%s_%s: .space %d\n",it->first.c_str(),to_string(temp->scope_number).c_str(),it->second.element_size*4);
+    					}
+    					else {
+    						cout << "hello " << it->second.my_type;
+    						if(it->second.my_type==Int) {
+    							fprintf(text,"\t%s_%s: .space 4\n",it->first.c_str(),to_string(temp->scope_number).c_str());
+    							}	
+    					}
+    			  }
+
+
         fprintf(text, ".text\n");
         if (!maindef) yyerror("main function not defined");
 		print();

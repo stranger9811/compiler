@@ -1,21 +1,19 @@
-#include <stdio.h>
- 
-
-int g=50;
-int f=60;
-
- 
+int g;
+int f;
 int main ()
 {
-  
-  
- 
-  
-  
-  int g=10;
+  if(2==2) {
+  	g= 20;
+  }
   
  
-  printf ("value of g = %d, f = %d ", g, f);
+  
+  print_int g;
+  int g,x;
+  g = 10;
+  
+ 
+  print_int g;
  
   return 0;
 }

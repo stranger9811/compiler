@@ -160,15 +160,18 @@ expr  : expr '+' expr 			{
 
 									((compiler *)c)->gencallercode(1);
 
-
-									for (int i = -4; i > -8 && i<$3->total; i--)
+									int j;
+									for (int i = -4,j=0; i > -8 && j < $3->total;j++, i--)
 									{
 										code_element codeTemp;
 										codeTemp.data1 = Assignment;
 										codeTemp.result.temp = i;
 										codeTemp.result.args_type = 2;
 										codeTemp.data2 = "=";
-										codeTemp.arg1 = $3->my_args[-4-i];
+										codeTemp.arg1 = $3->my_args[j];
+										if (codeTemp.result.args_type==1 )
+											codeTemp.result.var = codeTemp.result.var + "_"+to_string(((compiler *)c)-> get_scope(codeTemp.result.var));
+										global_code.push_back(codeTemp);
 									}
 
 

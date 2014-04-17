@@ -320,13 +320,17 @@ void create_mips()
 			cout << " hello "<< global_code[i].result.args_type << "&" << global_code[i].data2<< "&" << global_code[i].arg1.args_type<<"&" << endl;
 			if(global_code[i].result.args_type == 1 && global_code[i].arg1.args_type == 2 && global_code[i].data2 == "[]")
 			{
-				fprintf(text, "la $v1 %s\n",global_code[i].result.var.c_str());
-				fprintf(text,"\tsw $%d %d($v1)\n",8+global_code[i].arg1.temp,8+global_code[i].arg2.temp);
+				fprintf(text, "\tla $v1 %s\n",global_code[i].result.var.c_str());
+				fprintf(text, "\tmul $%d,$%d,4\n", 8+global_code[i].arg2.temp, 8+global_code[i].arg2.temp);
+				fprintf(text, "\tadd $v1,$v1,$%d\n",8+global_code[i].arg2.temp );
+				fprintf(text,"\tsw $%d ($v1)\n",8+global_code[i].arg1.temp);
 			}
 			else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 1 && global_code[i].data2 == "[]")
 			{
-				fprintf(text, "la $v1 %s\n",global_code[i].result.var.c_str() );
-				fprintf(text,"\tlw $%d %d($v1)\n",global_code[i].result.temp,global_code[i].arg2.temp);
+				fprintf(text, "\tla $v1 %s\n",global_code[i].arg1.var.c_str() );
+				fprintf(text, "\tmul $%d,$%d,4\n", 8+global_code[i].arg2.temp, 8+global_code[i].arg2.temp);
+				fprintf(text, "\tadd $v1,$v1,$%d\n",8+global_code[i].arg2.temp );
+				fprintf(text,"\tlw $%d ($v1)\n",global_code[i].result.temp+8);
 			}
 			
 		}
