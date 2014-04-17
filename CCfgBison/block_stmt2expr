@@ -107,11 +107,9 @@ expr  : expr '+' expr 			{
 
 
 
-						#ifdef debug
-							printf("in expr-> expr+expr\n");
 
-						#endif
-
+					
+						
 						if($1->my_type==Char || $1->my_type==Bool)
 							yyerror("error: PLUS does not support bool and char\n");
 						else if($3->my_type==Char || $3->my_type==Bool)
@@ -156,7 +154,6 @@ expr  : expr '+' expr 			{
 											yyerror(s);
 										}
 									}
-			printf("just entered funciton\n");
 
 									((compiler *)c)->gencallercode(1);
 
@@ -535,11 +532,7 @@ expr  : expr '+' expr 			{
 	| identifier  {
 			$$ = new attr();
 			$$->place.var = $1->place.var; 
-			#ifdef debug2
-				cout << "in expr -> identifier ";
-				cout << $1->place.var;
-				printf("\n");
-			#endif
+			
 			int scope = ((compiler *)c)->get_scope($1->place.var);
 			
 			struct code_element temp_code;
@@ -559,7 +552,6 @@ expr  : expr '+' expr 			{
 					temp_code.data2 = "[]";
 					temp_code.data1 = Array;
 					temp_code.arg2.temp = $1->offset_temp_number;
-					printf("******************************%d\n",$1->offset_temp_number);
 					temp_code.arg2.args_type = 2;
 			}
 			global_code.push_back(temp_code);
@@ -570,9 +562,9 @@ expr  : expr '+' expr 			{
 			while(flag) {
 			           	if( temp->table.find(string( $1->var_name[0])) != temp->table.end()){
 						$$->my_type = temp->table[string($1->var_name[0])].my_type;
-#ifdef debug2
-printf("expr-->identifier:\nidentifier is of type %d\n",$$->my_type);
-#endif
+
+
+
 							flag = 0;
 						$$->dimension[0] = temp->table[string($1->var_name[0])].dimension - $1->dimension[0];
 				}
@@ -590,7 +582,6 @@ $$->my_type=$2->my_type; free($2);}
 $$->my_type=$2->my_type; free($2);}
 	|number {
 				$$ = new attr();
-				printf("args_type = %d\n",$1->place.args_type);
 				$$->place = $1->place;
 
 				struct code_element temp_code;

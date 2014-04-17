@@ -19,7 +19,7 @@ assign_stmt : identifier  '=' expr {
 							
 								temp_code.data2 = "[][]";
 								temp_code.data1 = Array;
-								printf("double array in assign_stmt -> identifier = expr offset %d\n",$1->offset_temp_number);
+								
 								temp_code.arg2.temp = $1->offset_temp_number;
 								temp_code.arg2.args_type = 2;
 							}
@@ -155,7 +155,7 @@ identifier  : ID	{
 							free($2);
 		}
 	;
-array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0] +1; printf("%s",$2); free($4);
+array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0] +1; 
 								if(!is_declaration) {
 									struct code_element temp;
 											temp.result.temp = newTemp();

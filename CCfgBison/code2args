@@ -102,7 +102,6 @@ decl  : type  identifier';' {
 		int j;
 		for (int i = -4,j=0; i > -8 && j<temp.paramlist.total; i--,j++)
 		{
-			printf("Printing once\n");
 			code_element codeTemp;
 			codeTemp.data1 = Assignment;
 			codeTemp.arg1.temp = i;
@@ -167,7 +166,7 @@ decl  : type  identifier';' {
 		int j;
 		for (int i = -4,j=0; i > -8 && j<temp.paramlist.total; i--,j++)
 		{
-			printf("Printing once\n");
+		
 			code_element codeTemp;
 			codeTemp.data1 = Assignment;
 			codeTemp.arg1.temp = i;
@@ -225,6 +224,7 @@ type  : type '*' %prec DEREF   {
 				$$ = new attr(); 
 				$$->my_type=$1->my_type; 
 				$$->dimension[0] = $1->dimension[0];
+				
 				free($1);
 				}
 	;

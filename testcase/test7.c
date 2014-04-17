@@ -3,11 +3,11 @@
 int main()
 {
 
-float a=3.4;
-char b='a';
+float a;
+char b;
 float c;
 c=a+b;
-printf("%f",c);
+print_int c;
 return 0;
 
 

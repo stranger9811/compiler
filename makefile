@@ -1,5 +1,5 @@
 a.out:	lex.yy.c Ccfg.tab.cpp
-	g++ lex.yy.c codegen.cpp Ccfg.tab.cpp -ll -std=c++11 -g -D debug2
+	g++ lex.yy.c codegen.cpp Ccfg.tab.cpp -ll -std=c++11 -g 
 lex.yy.c:	Ccfg.l Ccfg.tab.hpp resources.h
 	flex Ccfg.l 
 Ccfg.tab.hpp:	Ccfg.ypp resources.h codegen.cpp
