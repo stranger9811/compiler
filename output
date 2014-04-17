@@ -14,8 +14,9 @@ in expr -> identifier y
 in get_scope y
 expr-->identifier:
 identifier is of type 3
+code is at line 18:-1
 types are: 3 3
-a has dimension -1094118408
+a has dimension 0
 S1 -> type init
 args_type = 4
 assign_stmt -> identifier = expr 
@@ -47,6 +48,17 @@ assign_stmt -> identifier = expr
  in get_scope i
 In assign_stmt -> identifier '=' expr
 i_1creating new symbol table
+j has dimension 0
+S1 -> type init
+in expr -> identifier i
+in get_scope i
+expr-->identifier:
+identifier is of type 3
+args_type = 3
+assign_stmt -> identifier = expr 
+ in get_scope j
+In assign_stmt -> identifier '=' expr
+j_3types are: 8 0
 is_declaration = 0 
 in expr -> identifier a
 in get_scope a
@@ -55,26 +67,34 @@ identifier is of type 3
 is_declaration = 0 
 in expr -> identifier x
 in get_scope x
+******************************17
 expr-->identifier:
 identifier is of type 3
 is_declaration = 0 
 in expr -> identifier y
 in get_scope y
+******************************20
 expr-->identifier:
 identifier is of type 3
+just entered funciton
+in get_scope x
+testing in func call0
 assign_stmt -> identifier = expr 
  in get_scope y
 In assign_stmt -> identifier '=' expr
-y_1is_declaration = 0 
+y_1types are: 8 0
+is_declaration = 0 
 in expr -> identifier y
 in get_scope y
+******************************24
 expr-->identifier:
 identifier is of type 3
 printing rule
 IDENTIFIER is 
-types are: 8 3
+types are: 8 1102225016
 types are: 8 8
 args_type = 3
+code is at line 123:-1
 types are: 3 3
 l0:	subu $sp, $sp,512
 l1:	sw $ra, 384($sp)
@@ -93,101 +113,130 @@ l13:	t2= x_2 =
 l14:	t3= t1 * t2
 l15:	y_2= t3 = 
 l16:	t4= y_2 = 
-l17:	lw $ra, 384($sp)
-l18:	lw $fp, 388($sp)
-l19:	addu  $sp,  $sp,512
-l20:	lw $s0, 444($sp)
-l21:	lw $s1, 440($sp)
-l22:	lw $s2, 436($sp)
-l23:	lw $s3, 432($sp)
-l24:	lw $s4, 428($sp)
-l25:	lw $s5, 424($sp)
-l26:	lw $s6, 420($sp)
-l27:	lw $s7, 416($sp)
-l28:	jr $ra 
-l29:	subu $sp, $sp,512
-l30:	sw $ra, 384($sp)
-l31:	sw $fp, 388($sp)
-l32:	addu $fp, $sp,512
-l33:	sw $s0, 444($sp)
-l34:	sw $s1, 440($sp)
-l35:	sw $s2, 436($sp)
-l36:	sw $s3, 432($sp)
-l37:	sw $s4, 428($sp)
-l38:	sw $s5, 424($sp)
-l39:	sw $s6, 420($sp)
-l40:	sw $s7, 416($sp)
-l41:	t5= 0.4 = 
-l42:	a_1= t5 = 
-l43:	t6= 0 = 
-l44:	i_1= t6 = 
-l45:	t7= i_1 = 
-l46:	t8= 10 = 
-l47:	if t7 < t8 then goto 54
-l48:			goto 93
-l49:	t9= i_1 = 
-l50:	t10= 1 = 
-l51:	t11= t9 + t10
-l52:	i_1= t11 = 
-l53:			goto 45
-l54:	subu $sp, $sp,512
-l55:	sw $ra, 384($sp)
-l56:	sw $fp, 388($sp)
-l57:	addu $fp, $sp,512
-l58:	sw $s0, 444($sp)
-l59:	sw $s1, 440($sp)
-l60:	sw $s2, 436($sp)
-l61:	sw $s3, 432($sp)
-l62:	sw $s4, 428($sp)
-l63:	sw $s5, 424($sp)
-l64:	sw $s6, 420($sp)
-l65:	sw $s7, 416($sp)
-l66:	t12= i = 
-l67:	t13= a_1 = 
-l68:	t14= i = 
-l69:	t15=x_1[t0]
-l70:	t16= t13 * t15
-l71:	t17= i = 
-l72:	t18=y_1[t0]
-l73:	t19= t16 + 
-l74:	y_1=t19[t0]
-l75:	t20= i = 
-l76:	t21=y_1[t0]
-l77:	t22=   t21
-l78:	move $a0 ,$22
-l79:	li $v0, 1
-l80:	syscall  
-l81:	lw $ra, 384($sp)
-l82:	lw $fp, 388($sp)
-l83:	addu  $sp,  $sp,512
-l84:	lw $s0, 444($sp)
-l85:	lw $s1, 440($sp)
-l86:	lw $s2, 436($sp)
-l87:	lw $s3, 432($sp)
-l88:	lw $s4, 428($sp)
-l89:	lw $s5, 424($sp)
-l90:	lw $s6, 420($sp)
-l91:	lw $s7, 416($sp)
-l92:			goto 49
-l93:	t23= 0 = 
-l94:	lw $ra, 384($sp)
-l95:	lw $fp, 388($sp)
-l96:	addu  $sp,  $sp,512
-l97:	lw $s0, 444($sp)
-l98:	lw $s1, 440($sp)
-l99:	lw $s2, 436($sp)
-l100:	lw $s3, 432($sp)
-l101:	lw $s4, 428($sp)
-l102:	lw $s5, 424($sp)
-l103:	lw $s6, 420($sp)
-l104:	lw $s7, 416($sp)
-l105:	jr $ra 
-=======mips code==== 106
-0 44
-45 48
-49 53
-54 92
-93 105
+l17:	t-1= t4  
+l18:	lw $ra, 384($sp)
+l19:	lw $fp, 388($sp)
+l20:	addu  $sp,  $sp,512
+l21:	lw $s0, 444($sp)
+l22:	lw $s1, 440($sp)
+l23:	lw $s2, 436($sp)
+l24:	lw $s3, 432($sp)
+l25:	lw $s4, 428($sp)
+l26:	lw $s5, 424($sp)
+l27:	lw $s6, 420($sp)
+l28:	lw $s7, 416($sp)
+l29:	jr $ra 
+l30:	subu $sp, $sp,512
+l31:	sw $ra, 384($sp)
+l32:	sw $fp, 388($sp)
+l33:	addu $fp, $sp,512
+l34:	sw $s0, 444($sp)
+l35:	sw $s1, 440($sp)
+l36:	sw $s2, 436($sp)
+l37:	sw $s3, 432($sp)
+l38:	sw $s4, 428($sp)
+l39:	sw $s5, 424($sp)
+l40:	sw $s6, 420($sp)
+l41:	sw $s7, 416($sp)
+l42:	t5= 0.4 = 
+l43:	a_1= t5 = 
+l44:	t6= 0 = 
+l45:	i_1= t6 = 
+l46:	t7= i_1 = 
+l47:	t8= 10 = 
+l48:	if t7 < t8 then goto 55
+l49:			goto 121
+l50:	t9= i_1 = 
+l51:	t10= 1 = 
+l52:	t11= t9 + t10
+l53:	i_1= t11 = 
+l54:			goto 46
+l55:	subu $sp, $sp,512
+l56:	sw $ra, 384($sp)
+l57:	sw $fp, 388($sp)
+l58:	addu $fp, $sp,512
+l59:	sw $s0, 444($sp)
+l60:	sw $s1, 440($sp)
+l61:	sw $s2, 436($sp)
+l62:	sw $s3, 432($sp)
+l63:	sw $s4, 428($sp)
+l64:	sw $s5, 424($sp)
+l65:	sw $s6, 420($sp)
+l66:	sw $s7, 416($sp)
+l67:	t12= i_1 = 
+l68:	t13= 1 = 
+l69:	t14= t12 + t13
+l70:	j_3= t14 = 
+l71:	t15= i = 
+l72:	t16= a_1 = 
+l73:	t17= i = 
+l74:	t18=x_1[t17]
+l75:	t19= t16 * t18
+l76:	t20= j = 
+l77:	t21=y_1[t20]
+l78:	lw $a0 ,x_1
+l79:	sw $t0, 476($sp)
+l80:	sw $t1, 472($sp)
+l81:	sw $t2, 468($sp)
+l82:	sw $t3, 464($sp)
+l83:	sw $t4, 460($sp)
+l84:	sw $t5, 456($sp)
+l85:	sw $t6, 452($sp)
+l86:	sw $t7, 448($sp)
+l87:	sw $t8, 412($sp)
+l88:	sw $t9, 408($sp)
+l89:	jal 0 
+l90:	lw $t0, 476($sp)
+l91:	lw $t1, 472($sp)
+l92:	lw $t2, 468($sp)
+l93:	lw $t3, 464($sp)
+l94:	lw $t4, 460($sp)
+l95:	lw $t5, 456($sp)
+l96:	lw $t6, 452($sp)
+l97:	lw $t7, 448($sp)
+l98:	lw $t8, 412($sp)
+l99:	lw $t9, 408($sp)
+l100:	t22= t-1  
+l101:	t23= t19 + t22
+l102:	y_1=t23[t15]
+l103:	t24= i = 
+l104:	t25=y_1[t24]
+l105:	t26=   t25
+l106:	move $a0 ,$26
+l107:	li $v0, 1
+l108:	syscall  
+l109:	lw $ra, 384($sp)
+l110:	lw $fp, 388($sp)
+l111:	addu  $sp,  $sp,512
+l112:	lw $s0, 444($sp)
+l113:	lw $s1, 440($sp)
+l114:	lw $s2, 436($sp)
+l115:	lw $s3, 432($sp)
+l116:	lw $s4, 428($sp)
+l117:	lw $s5, 424($sp)
+l118:	lw $s6, 420($sp)
+l119:	lw $s7, 416($sp)
+l120:			goto 50
+l121:	t27= 0 = 
+l122:	t-1= t27  
+l123:	lw $ra, 384($sp)
+l124:	lw $fp, 388($sp)
+l125:	addu  $sp,  $sp,512
+l126:	lw $s0, 444($sp)
+l127:	lw $s1, 440($sp)
+l128:	lw $s2, 436($sp)
+l129:	lw $s3, 432($sp)
+l130:	lw $s4, 428($sp)
+l131:	lw $s5, 424($sp)
+l132:	lw $s6, 420($sp)
+l133:	lw $s7, 416($sp)
+l134:	jr $ra 
+=======mips code==== 135
+0 45
+46 49
+50 54
+55 120
+121 134
 l0:	subu $sp, $sp,512
 l1:	sw $ra, 384($sp)
 l2:	sw $fp, 388($sp)
@@ -204,93 +253,129 @@ l12:	t1= 2 =
 l13:	t2= x_2 = 
 l14:	t1= t1 * t2
 l15:	y_2= t1 = 
-l16:	t0= y_2 = 
-l17:	lw $ra, 384($sp)
-l18:	lw $fp, 388($sp)
-l19:	addu  $sp,  $sp,512
-l20:	lw $s0, 444($sp)
-l21:	lw $s1, 440($sp)
-l22:	lw $s2, 436($sp)
-l23:	lw $s3, 432($sp)
-l24:	lw $s4, 428($sp)
-l25:	lw $s5, 424($sp)
-l26:	lw $s6, 420($sp)
-l27:	lw $s7, 416($sp)
-l28:	jr $ra 
-l29:	subu $sp, $sp,512
-l30:	sw $ra, 384($sp)
-l31:	sw $fp, 388($sp)
-l32:	addu $fp, $sp,512
-l33:	sw $s0, 444($sp)
-l34:	sw $s1, 440($sp)
-l35:	sw $s2, 436($sp)
-l36:	sw $s3, 432($sp)
-l37:	sw $s4, 428($sp)
-l38:	sw $s5, 424($sp)
-l39:	sw $s6, 420($sp)
-l40:	sw $s7, 416($sp)
-l41:	t1= 0.4 = 
-l42:	a_1= t1 = 
-l43:	t1= 0 = 
-l44:	i_1= t1 = 
-l45:	t1= i_1 = 
-l46:	t2= 10 = 
-l47:	if t1 < t2 then goto 54
-l48:			goto 93
-l49:	t1= i_1 = 
-l50:	t2= 1 = 
-l51:	t1= t1 + t2
-l52:	i_1= t1 = 
-l53:			goto 45
-l54:	subu $sp, $sp,512
-l55:	sw $ra, 384($sp)
-l56:	sw $fp, 388($sp)
-l57:	addu $fp, $sp,512
-l58:	sw $s0, 444($sp)
-l59:	sw $s1, 440($sp)
-l60:	sw $s2, 436($sp)
-l61:	sw $s3, 432($sp)
-l62:	sw $s4, 428($sp)
-l63:	sw $s5, 424($sp)
-l64:	sw $s6, 420($sp)
-l65:	sw $s7, 416($sp)
-l66:	t0= i = 
-l67:	t2= a_1 = 
-l68:	t0= i = 
-l69:	t3=x_1[t1]
-l70:	t2= t2 * t3
-l71:	t0= i = 
-l72:	t0=y_1[t1]
-l73:	t2= t2 + 
-l74:	y_1=t2[t1]
-l75:	t0= i = 
-l76:	t1=y_1[t1]
-l77:	t0=   t1
-l78:	move $a0 ,$22
-l79:	li $v0, 1
-l80:	syscall  
-l81:	lw $ra, 384($sp)
-l82:	lw $fp, 388($sp)
-l83:	addu  $sp,  $sp,512
-l84:	lw $s0, 444($sp)
-l85:	lw $s1, 440($sp)
-l86:	lw $s2, 436($sp)
-l87:	lw $s3, 432($sp)
-l88:	lw $s4, 428($sp)
-l89:	lw $s5, 424($sp)
-l90:	lw $s6, 420($sp)
-l91:	lw $s7, 416($sp)
-l92:			goto 49
-l93:	t0= 0 = 
-l94:	lw $ra, 384($sp)
-l95:	lw $fp, 388($sp)
-l96:	addu  $sp,  $sp,512
-l97:	lw $s0, 444($sp)
-l98:	lw $s1, 440($sp)
-l99:	lw $s2, 436($sp)
-l100:	lw $s3, 432($sp)
-l101:	lw $s4, 428($sp)
-l102:	lw $s5, 424($sp)
-l103:	lw $s6, 420($sp)
-l104:	lw $s7, 416($sp)
-l105:	jr $ra 
+l16:	t1= y_2 = 
+l17:	t-1= t1  
+l18:	lw $ra, 384($sp)
+l19:	lw $fp, 388($sp)
+l20:	addu  $sp,  $sp,512
+l21:	lw $s0, 444($sp)
+l22:	lw $s1, 440($sp)
+l23:	lw $s2, 436($sp)
+l24:	lw $s3, 432($sp)
+l25:	lw $s4, 428($sp)
+l26:	lw $s5, 424($sp)
+l27:	lw $s6, 420($sp)
+l28:	lw $s7, 416($sp)
+l29:	jr $ra 
+l30:	subu $sp, $sp,512
+l31:	sw $ra, 384($sp)
+l32:	sw $fp, 388($sp)
+l33:	addu $fp, $sp,512
+l34:	sw $s0, 444($sp)
+l35:	sw $s1, 440($sp)
+l36:	sw $s2, 436($sp)
+l37:	sw $s3, 432($sp)
+l38:	sw $s4, 428($sp)
+l39:	sw $s5, 424($sp)
+l40:	sw $s6, 420($sp)
+l41:	sw $s7, 416($sp)
+l42:	t1= 0.4 = 
+l43:	a_1= t1 = 
+l44:	t1= 0 = 
+l45:	i_1= t1 = 
+l46:	t1= i_1 = 
+l47:	t2= 10 = 
+l48:	if t1 < t2 then goto 55
+l49:			goto 121
+l50:	t1= i_1 = 
+l51:	t2= 1 = 
+l52:	t1= t1 + t2
+l53:	i_1= t1 = 
+l54:			goto 46
+l55:	subu $sp, $sp,512
+l56:	sw $ra, 384($sp)
+l57:	sw $fp, 388($sp)
+l58:	addu $fp, $sp,512
+l59:	sw $s0, 444($sp)
+l60:	sw $s1, 440($sp)
+l61:	sw $s2, 436($sp)
+l62:	sw $s3, 432($sp)
+l63:	sw $s4, 428($sp)
+l64:	sw $s5, 424($sp)
+l65:	sw $s6, 420($sp)
+l66:	sw $s7, 416($sp)
+l67:	t1= i_1 = 
+l68:	t2= 1 = 
+l69:	t1= t1 + t2
+l70:	j_3= t1 = 
+l71:	t2= i = 
+l72:	t1= a_1 = 
+l73:	t3= i = 
+l74:	t3=x_1[t3]
+l75:	t1= t1 * t3
+l76:	t3= j = 
+l77:	t21=y_1[t3]
+l78:	lw $a0 ,x_1
+l79:	sw $t0, 476($sp)
+l80:	sw $t1, 472($sp)
+l81:	sw $t2, 468($sp)
+l82:	sw $t3, 464($sp)
+l83:	sw $t4, 460($sp)
+l84:	sw $t5, 456($sp)
+l85:	sw $t6, 452($sp)
+l86:	sw $t7, 448($sp)
+l87:	sw $t8, 412($sp)
+l88:	sw $t9, 408($sp)
+l89:	jal 0 
+l90:	lw $t0, 476($sp)
+l91:	lw $t1, 472($sp)
+l92:	lw $t2, 468($sp)
+l93:	lw $t3, 464($sp)
+l94:	lw $t4, 460($sp)
+l95:	lw $t5, 456($sp)
+l96:	lw $t6, 452($sp)
+l97:	lw $t7, 448($sp)
+l98:	lw $t8, 412($sp)
+l99:	lw $t9, 408($sp)
+l100:	t3= t-1  
+l101:	t1= t1 + t3
+l102:	y_1=t1[t2]
+l103:	t1= i = 
+l104:	t1=y_1[t1]
+l105:	t26=   t1
+l106:	move $a0 ,$26
+l107:	li $v0, 1
+l108:	syscall  
+l109:	lw $ra, 384($sp)
+l110:	lw $fp, 388($sp)
+l111:	addu  $sp,  $sp,512
+l112:	lw $s0, 444($sp)
+l113:	lw $s1, 440($sp)
+l114:	lw $s2, 436($sp)
+l115:	lw $s3, 432($sp)
+l116:	lw $s4, 428($sp)
+l117:	lw $s5, 424($sp)
+l118:	lw $s6, 420($sp)
+l119:	lw $s7, 416($sp)
+l120:			goto 50
+l121:	t1= 0 = 
+l122:	t-1= t1  
+l123:	lw $ra, 384($sp)
+l124:	lw $fp, 388($sp)
+l125:	addu  $sp,  $sp,512
+l126:	lw $s0, 444($sp)
+l127:	lw $s1, 440($sp)
+l128:	lw $s2, 436($sp)
+l129:	lw $s3, 432($sp)
+l130:	lw $s4, 428($sp)
+l131:	lw $s5, 424($sp)
+l132:	lw $s6, 420($sp)
+l133:	lw $s7, 416($sp)
+l134:	jr $ra 
+leaders 0 46 50 55 121 135 
+line : 0 label: 1
+line : 46 label: 2
+line : 50 label: 3
+line : 55 label: 4
+line : 121 label: 5
+line : 135 label: 6

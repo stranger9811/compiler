@@ -83,6 +83,15 @@ decl  : type identifier';' {
 		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
 
+		for (int i = -4; i > -8 && i<temp.paramlist.total; i--)
+		{
+			code_element codeTemp;
+			codeTemp.data1 = Assignment;
+			codeTemp.arg1.temp = i;
+			codeTemp.arg2.args_type = 2;
+			codeTemp.data2 = "=";
+			codeTemp.result = $2->my_params.my_args[-4-i];
+		}
 		
 	}
 
@@ -107,6 +116,7 @@ decl  : type identifier';' {
 								free($2);
 								free($5);
 								delete $6;
+								
 								((compiler *)c)-> gencalleecode(0);
 								((compiler *)c)-> writemipscode("jr","$ra");
 								}	/*This is for function definition only. No rule yet for function declation.*/
@@ -131,6 +141,16 @@ decl  : type identifier';' {
 		while (tempTable->parent != NULL) tempTable= tempTable->parent;
 		tempTable->table[$2->lexeme]=(temp); 
 		((compiler *)c)-> gencalleecode(1);
+
+		for (int i = -4; i > -8 && i<temp.paramlist.total; i--)
+		{
+			code_element codeTemp;
+			codeTemp.data1 = Assignment;
+			codeTemp.arg1.temp = i;
+			codeTemp.arg2.args_type = 2;
+			codeTemp.data2 = "=";
+			codeTemp.result = $2->my_params.my_args[-4-i];
+		}
 
 		
 	}

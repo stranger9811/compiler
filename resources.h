@@ -67,6 +67,7 @@ struct llm {
         int element_size;
         funcparams paramlist;
         int funcline;
+        llm() {funcline = -1;}
 };
 
 
@@ -351,6 +352,7 @@ struct compiler {
 
 				savereg("$s"+to_string(i),get_addr("$s"+to_string(i)));
 			}
+
 		}
 		else
 		{
@@ -368,24 +370,13 @@ struct compiler {
 		}
 	}
 
-	void gencallercode (bool calling, funcparams paramlist) // caller saved registers: t0 through t7
+	void gencallercode (bool calling) // caller saved registers: t0 through t7
 	{
 		
 		if (calling)
 		{
 
-			for (int i = 0; i < 4; ++i)
-			{
-				if (paramlist.my_args[i].args_type== 2)
-					writemipscode("move", "$"+to_string(paramlist.my_args[i].temp), ",$a"+to_string(i));
-				else if (paramlist.my_args[i].args_type== 1)
-				{
-					string temp = paramlist.my_args[i].var;
-					int scope = get_scope(temp);
-					writemipscode("lw", "$a"+to_string(i),","+temp+"_"+to_string(scope) );
-				}
 
-			}
 			for (int i=0;i<10;i++)
 			{
 				savereg("$t"+to_string(i),get_addr("$t"+to_string(i)));

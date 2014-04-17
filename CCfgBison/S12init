@@ -75,12 +75,15 @@ S1  : expr ',' Marker_If  S1  {
 								$$->dimension[0] = $2->dimension[0];
 
 								code_element temp;
-								temp.result.temp = -1;
+								temp.result.temp = -2;		//negative of $v0
 								temp.result.args_type = 2;
 								temp.data1 = Assignment;
 								temp.arg1 = $2->place;
+								temp.data2 = "=";
 								global_code.push_back(temp);
-
+#ifdef debug2
+printf("code is at line %d:%d\n",global_code.size(), global_code[global_code.size()-1].result.temp );
+#endif
 								free($2);
 								}
 	| T_RETURN 				{
@@ -99,15 +102,15 @@ cout << "printing rule\n";
 
 									code_element temp;
 									temp.data1 = Assignment;
-									temp.data2 = "";
-									temp.result.temp = t;
+									temp.data2 = "=";
+									temp.result.temp = -4;
 									temp.result.args_type = 2;
-									temp.arg2 = $2->place;
+									temp.arg1 = $2->place;
 #ifdef debug2
 cout << "IDENTIFIER is " << $2->place.var << endl;
 #endif
 									global_code.push_back(temp) ;
-									((compiler *)c)->writemipscode("move","$a0",",$"+to_string(t) );
+									//((compiler *)c)->writemipscode("move","$a0",",$"+to_string(t) );
 									((compiler *)c)->writemipscode("li","$v0,","1");
 									((compiler *)c)->writemipscode("syscall");
 									delete $2;

@@ -138,10 +138,12 @@ int main()
 		current_symbol_table->scope_number = global_scope;
 		global_scope = global_scope + 1;
 		c = (void *) (new compiler);
+		text = fopen("mips_code.s","w");
+		fprintf(text, ".data\n\tstr: .asciiz \" Program ended. \\n\"\n\tnewLine: .asciiz \"\\n\" \n");
         yyparse();
-
+        fprintf(text, ".text\n");
         if (!maindef) yyerror("main function not defined");
-		//print();
+		print();
 		if (totalerrs>0)
 		{
 			printf("%d errors found: No code generated\n",totalerrs);
@@ -149,6 +151,6 @@ int main()
 		}
 		codegen();
 		print();
-		//create_mips();
+		create_mips();
 		return 0;
 }

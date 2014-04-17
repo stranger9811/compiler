@@ -9,7 +9,7 @@ int main()
 { 
 
 int i,a;
-a=0.4;
+a=4;
 int x[10],y[10];
 /*printf("Enter length of the vector\n");scanf("%d",&n);
 int *x=(int *)malloc(n*sizeof(int));
@@ -29,7 +29,10 @@ for (i = 0; i < n; i=i+1)
 printf("%d\t",y[i]);  */
 
 for (i = 0; i < 10; i=i+1)
-{	y[i] = a*x[i]+give_twice( y[i]);
+{
+	int j;
+	j=i+1;
+	y[i] = a*x[i]+give_twice( y[j]);
 	print_int y[i];
 }
 

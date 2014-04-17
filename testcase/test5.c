@@ -2,17 +2,23 @@
 
 int main()
 {
-int a=45;
-
+    int a,x,y,z;
+    a=45;
+    x=1;
+    y=2;
+    z=3
 
 if(a<100)
-	{ if(a<50)
-		printf(" a is less than 50\n");
+{ if(a<50)
+    {print_int x;}
 		
-	  else printf(" a is greater than 50\n");
-	}
+	  else
+      {
+          print_int y;
+      }
+}
 else    
-	{  printf(" a is greater than 100\n");
+	{  print_int z;
 		
 		
 	}

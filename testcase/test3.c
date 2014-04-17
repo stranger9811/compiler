@@ -1,21 +1,24 @@
-// in, out are m x n images (integer data)
-// K is the kernel size (KxK) - currently needs to be an odd number, e.g. 3
-// coeffs[K][K] is a 2D array of integer coefficients
-// scale is a scaling factor to normalise the filter gain
-
-#include<stdio.h>
-
 int main()
 {
 
 
 int m=5,n=5,K=5;
-int imag[m][n];
-int kernel[K][K];
+int imag[5][5];
+int Kernal[5][5];
 int i,ii,jj,j;
-int out[m][n];
+int out[5][5];
+int in[5][5];
 int scale=2;
-int coeffs[m][n];
+int coeffs[5][5];
+
+for(i=0;i<m;i=i+1)
+for(j=0;j<m;j=j+1)
+{
+
+in[i][j]=imag[i][j]=Kernal[i][j]=coeffs[i][j]=i*j;
+
+}
+
 for (i = K / 2; i < m - K / 2; ++i) // iterate through image
 {
   for (j = K / 2; j < n - K / 2; ++j)
@@ -36,6 +39,14 @@ for (i = K / 2; i < m - K / 2; ++i) // iterate through image
   }
 }
 
+for(i=0;i<m;i=i+1) {
+  for(j=0;j<m;j=j+1)
+  {
+
+  printf("%d\t",out[i][j]);
+
+  }
+}
 return 0;
 
 }

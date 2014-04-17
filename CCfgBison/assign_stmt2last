@@ -16,6 +16,7 @@ assign_stmt : identifier  '=' expr {
 							$$->code.insert ($$->code.end(),$3->code.begin(),$3->code.end());
 							$$->code.push_back(temp_code);
 							if($1->dimension[0]==2) {
+							
 								temp_code.data2 = "[][]";
 								temp_code.data1 = Array;
 								printf("double array in assign_stmt -> identifier = expr offset %d\n",$1->offset_temp_number);
@@ -33,6 +34,8 @@ assign_stmt : identifier  '=' expr {
 								cout << temp_code.result.var;
 							#endif 
 							global_code.push_back(temp_code);
+
+
 
 
 							#ifdef debug
@@ -142,6 +145,9 @@ identifier  : ID	{
 
 
 							}
+							else if(!is_declaration&& $2->dimension[0]==1) {
+								$$->offset_temp_number  = max_index;
+							}
 							$$->dimension[0] = $2->dimension[0];
 							$$->array_size[0] = $2->array_size[0];
 							$$->element_size[0] = $2->element_size[0];
@@ -157,7 +163,7 @@ array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0]
 											temp.result.temp = newTemp();
 											temp.result.args_type = 2;
 											temp.data2 = "=";
-											temp.arg1.var = $2;
+											temp.arg1.var = string($2)+"_"+to_string(((compiler *)c)->get_scope(string($2)));
 											temp.arg1.args_type = 1;
 											global_code.push_back(temp);
 								}
@@ -168,7 +174,7 @@ array  : '[' ID ']' array  {$$ = new attr(); $$->dimension[0] = $4->dimension[0]
 											temp.result.temp = newTemp();
 											temp.result.args_type = 2;
 											temp.data2 = "=";
-											temp.arg1.var = $2;
+											temp.arg1.var = string($2)+"_" +to_string(((compiler *)c)->get_scope(string($2)));
 											temp.arg1.args_type = 1;
 											global_code.push_back(temp);
 					}

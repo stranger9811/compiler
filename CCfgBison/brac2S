@@ -23,6 +23,23 @@ brac_close : '}' {
 					printf("destroying symbol table\n");
 				#endif
 				  struct symbol_table *temp = current_symbol_table;
+
+				  map<string, struct llm>::iterator it;
+
+
+				  for (map<string, struct llm>::iterator it=temp->table.begin(); it!=temp->table.end(); ++it) {
+				  		if(it->second.funcline!=-1)
+				  			continue;
+    					if(it->second.dimension>=1) {
+    						if(it->second.my_type==Int)
+    							fprintf(text,"\t%s_%s: .space %d\n",it->first.c_str(),to_string(temp->scope_number).c_str(),it->second.element_size*4);
+    					}
+    					else {
+    						if(it->second.my_type==Int)
+    							fprintf(text,"\t%s_%s: .space 4\n",it->first.c_str(),to_string(temp->scope_number).c_str());	
+    					}
+    			  }
+
 				  current_symbol_table = temp->parent;
 				  delete temp;
 		 }
