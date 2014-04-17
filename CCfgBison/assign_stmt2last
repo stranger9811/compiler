@@ -36,8 +36,6 @@ assign_stmt : identifier  '=' expr {
 							global_code.push_back(temp_code);
 
 
-
-
 							#ifdef debug
 								printf("===============CODE GENERATED====================\n");
 								for(int i=0;i<global_code.size();i++) {

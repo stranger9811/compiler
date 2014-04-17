@@ -566,8 +566,8 @@ static const yytype_uint16 yyrline[] =
      762,   769,   796,   815,   832,   842,   856,   873,   889,   905,
      934,   962,  1003,  1069,  1091,  1112,  1133,  1154,  1175,  1196,
     1202,  1244,  1285,  1326,  1358,  1374,  1390,  1398,  1403,  1455,
-    1457,  1459,  1477,  1483,  1494,  1506,  1592,  1601,  1609,  1616,
-    1661,  1672,  1683,  1696
+    1457,  1459,  1477,  1483,  1494,  1506,  1593,  1602,  1610,  1617,
+    1662,  1673,  1684,  1697
 };
 #endif
 
@@ -2635,7 +2635,7 @@ cout << "Marker if :" << (yyvsp[-2].integer) << endl;
 									}
 
 
-									((compiler *)c)->writemipscode("jal",to_string(temp->table[string((yyvsp[-3].lexeme))].funcline));
+									((compiler *)c)->writemipscode("jal","L"+to_string(temp->table[string((yyvsp[-3].lexeme))].funcline));
 
 
 									((compiler *)c)->gencallercode(0);
@@ -3222,6 +3222,7 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 							(yyval.attributes)->code.insert ((yyval.attributes)->code.end(),(yyvsp[0].attributes)->code.begin(),(yyvsp[0].attributes)->code.end());
 							(yyval.attributes)->code.push_back(temp_code);
 							if((yyvsp[-2].attributes)->dimension[0]==2) {
+							
 								temp_code.data2 = "[][]";
 								temp_code.data1 = Array;
 								printf("double array in assign_stmt -> identifier = expr offset %d\n",(yyvsp[-2].attributes)->offset_temp_number);
@@ -3290,11 +3291,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 				free((yyvsp[0].attributes));
 
 				}
-#line 3294 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3295 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 86:
-#line 1592 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1593 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						#ifdef debug 
 							printf("number-> T_DEC_INT\n");
@@ -3304,22 +3305,22 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 						(yyval.attributes)->place.args_type = 3;
 						(yyval.attributes)->my_type =Int;
 					}
-#line 3308 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3309 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 87:
-#line 1601 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1602 "Ccfg.ypp" /* yacc.c:1661  */
     {
 						(yyval.attributes) = new attr();
 						(yyval.attributes)->place.float_val = (yyvsp[0].real);
 						(yyval.attributes)->place.args_type = 4;
 						(yyval.attributes)->my_type = Int;
 					}
-#line 3319 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3320 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 88:
-#line 1609 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1610 "Ccfg.ypp" /* yacc.c:1661  */
     {  	
 						(yyval.attributes) = new attr();
 						(yyval.attributes)->place.var = (yyvsp[0].lexeme);
@@ -3327,11 +3328,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 						strcpy((yyval.attributes)->var_name[0],(yyvsp[0].lexeme));
 							(yyval.attributes)->dimension[0] = 0;
 					 }
-#line 3331 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3332 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 89:
-#line 1616 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1617 "Ccfg.ypp" /* yacc.c:1661  */
     {
 							(yyval.attributes) = new attr();
 							strcpy((yyval.attributes)->var_name[0],(yyvsp[-1].lexeme));
@@ -3376,11 +3377,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 							#endif
 							free((yyvsp[0].attributes));
 		}
-#line 3380 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3381 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 90:
-#line 1661 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1662 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = new attr(); (yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0] +1; printf("%s",(yyvsp[-2].lexeme)); free((yyvsp[0].attributes));
 								if(!is_declaration) {
 									struct code_element temp;
@@ -3392,11 +3393,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 											global_code.push_back(temp);
 								}
 }
-#line 3396 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3397 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 91:
-#line 1672 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1673 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = new attr(); (yyval.attributes)->dimension[0] = 1;
 					if(!is_declaration) {
 											struct code_element temp;
@@ -3408,11 +3409,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 											global_code.push_back(temp);
 					}
 				}
-#line 3412 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3413 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 92:
-#line 1683 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1684 "Ccfg.ypp" /* yacc.c:1661  */
     {(yyval.attributes) = new attr();  (yyval.attributes)->dimension[0] = 1; (yyval.attributes)->array_size[0] = (yyvsp[-1].integer);
 							if(is_declaration)
 								(yyval.attributes)->element_size[0] = (yyvsp[-1].integer);
@@ -3426,11 +3427,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 								global_code.push_back(temp);
 							}
 						}
-#line 3430 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3431 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
   case 93:
-#line 1696 "Ccfg.ypp" /* yacc.c:1661  */
+#line 1697 "Ccfg.ypp" /* yacc.c:1661  */
     {
 									(yyval.attributes) = new attr(); (yyval.attributes)->dimension[0] = (yyvsp[0].attributes)->dimension[0] + 1; free((yyvsp[0].attributes));
 									if((yyval.attributes)->dimension[0] == 2) {
@@ -3449,11 +3450,11 @@ printf("expr-->identifier:\nidentifier is of type %d\n",(yyval.attributes)->my_t
 									}
 
 							  }
-#line 3453 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3454 "Ccfg.tab.cpp" /* yacc.c:1661  */
     break;
 
 
-#line 3457 "Ccfg.tab.cpp" /* yacc.c:1661  */
+#line 3458 "Ccfg.tab.cpp" /* yacc.c:1661  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3681,7 +3682,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1715 "Ccfg.ypp" /* yacc.c:1906  */
+#line 1716 "Ccfg.ypp" /* yacc.c:1906  */
 
 
 int check_keyword(string identifier)

@@ -172,7 +172,7 @@ expr  : expr '+' expr 			{
 									}
 
 
-									((compiler *)c)->writemipscode("jal",to_string(temp->table[string($1)].funcline));
+									((compiler *)c)->writemipscode("jal","L"+to_string(temp->table[string($1)].funcline));
 
 
 									((compiler *)c)->gencallercode(0);

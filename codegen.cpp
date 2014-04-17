@@ -320,12 +320,13 @@ void create_mips()
 			cout << " hello "<< global_code[i].result.args_type << "&" << global_code[i].data2<< "&" << global_code[i].arg1.args_type<<"&" << endl;
 			if(global_code[i].result.args_type == 1 && global_code[i].arg1.args_type == 2 && global_code[i].data2 == "[]")
 			{
-				fprintf(text,"\tsw $%d %d(%s)\n",8+global_code[i].arg1.temp,8+global_code[i].arg2.temp,global_code[i].result.var.c_str());
+				fprintf(text, "la $v1 %s\n",global_code[i].result.var.c_str());
+				fprintf(text,"\tsw $%d %d($v1)\n",8+global_code[i].arg1.temp,8+global_code[i].arg2.temp);
 			}
 			else if(global_code[i].result.args_type == 2 && global_code[i].arg1.args_type == 1 && global_code[i].data2 == "[]")
 			{
-				
-				fprintf(text,"\tlw $%d %d(%s)\n",global_code[i].result.temp,global_code[i].arg2.temp,global_code[i].arg1.var.c_str());
+				fprintf(text, "la $v1 %s\n",global_code[i].result.var.c_str() );
+				fprintf(text,"\tlw $%d %d($v1)\n",global_code[i].result.temp,global_code[i].arg2.temp);
 			}
 			
 		}
